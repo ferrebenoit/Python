@@ -3,11 +3,16 @@ Created on 23 nov. 2016
 
 @author: FERREB
 '''
+#./save_switch_conf.py --IP 172.17.1.37 --login ferreb --vendor cisco --filterby IP
+#./save_switch_conf.py --csvfile "file.csv" --fieldfilter IP --IP 172.17.1.37 --login ferreb --vendor cisco 
 
 import argparse
 import os
 import csv
 import getpass
+import re
+from _csv import reader
+from lib2to3.patcomp import pattern_convert
 
 class ArgFromCSV:
     "Base class that accept arguments from CSV File"
@@ -29,6 +34,8 @@ class ArgFromCSV:
         
     def _define_args(self):
         self._arg_parser.add_argument('--csvfile', help='A csv file holding arguments')
+        self._arg_parser.add_argument('--filterby', help='Informations to retreive from field')
+        
     
     def _parse_argv(self, args):
         known, unknown = self._arg_parser.parse_known_args(args)
@@ -65,6 +72,25 @@ class ArgFromCSV:
     
     def _check_args(self, args):
         return self._parse_argv(self.__convert_to_argv(args))
+    
+    def __execute_with_csv_row(self, row, ask_needed_missing_args=True):
+        # Check csv values with argument parser
+        row = self._check_args(row)
+    
+        # Merge command line args with csv arguments. Command line args superseed csv args
+        row.update(self.__arguments)
+
+        # chek for missing args from csv and command line if this is the first data line
+        if(ask_needed_missing_args):
+            self.__arguments.update(self.__ask_needed_missing_args(row))
+            row.update(self.__arguments)
+                        
+                    
+        # Execute script
+        self._script_content(row)    
+        
+    def _filter_match(self, pattern, string):
+        return re.match(pattern, string) 
         
     def process(self):
         if(not 'csvfile' in self.__arguments):
@@ -72,24 +98,25 @@ class ArgFromCSV:
             self._script_content(self.__arguments)
         elif(not os.path.isfile(self.__arguments['csvfile'])):
             print('CSV File : {} NOT FOUND'.format(self.__arguments['csvfile']))
+        elif('filterby' in self.__arguments):
+            with open(self.__arguments['csvfile']) as csv_file:
+                reader = csv.DictReader(csv_file)
+                filter_by_field_name = self.__arguments['filterby']
+                filter_by_field_pattern = self.__arguments[filter_by_field_name]
+                
+                
+                for row in reader:
+                    if(filter_by_field_name in row): # check if parameter passed in filterby is found in csv row
+                        if self._filter_match(filter_by_field_pattern, row[filter_by_field_name]): # check if meet the condition Use regular expression instead
+                            self.__arguments[filter_by_field_name] = row[filter_by_field_name] 
+                            self.__execute_with_csv_row(row)
         else:
+            print("csv")
             with open(self.__arguments['csvfile']) as csv_file:
                 reader = csv.DictReader(csv_file)
                 
                 for row in reader:
-                    # Check csv values with argument parser
-                    row = self._check_args(row)
-                    
-                    # Merge command line args with csv arguments. Command line args superseed csv args
-                    row.update(self.__arguments)
-
-                    # chek for missing args from csv and command line if this is the first data line
-                    if(reader.line_num == 2):
-                        self.__arguments.update(self.__ask_needed_missing_args(row))
-                        row.update(self.__arguments)
-                        
-                    
-                    # Execute script
-                    self._script_content(row)
+                    self.__execute_with_csv_row(row, reader.line_num == 2)
+                   
             
     

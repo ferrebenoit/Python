@@ -34,7 +34,7 @@ class SwitchCisco(SwitchBase):
     def _save_conf(self):
         
         try:
-            self.connection.sendline('copy system:running-config tftp://172.17.6.28/{}.cnfg'.format(self.params['IP']))
+            self.connection.sendline('copy system:running-config tftp://172.17.6.28/{}.cnfg'.format(self.params['name']))
             
             #host confirmation
             self.connection.expect('Address or name of remote host \[.*\]\?')
@@ -64,10 +64,11 @@ class SwitchCisco(SwitchBase):
                 
             
         except TIMEOUT :
-            print("Savegarde echouee a cause d un timeout")
+            print("Sauvegarde echouee a cause d'un timeout")
             print(self.connection.before)
         except Exception as e:
             print('exception')
-            print(e)
+            #print(e)
             print(self.connection.before)
+            print(self.connection.after)
         
