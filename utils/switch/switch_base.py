@@ -6,6 +6,7 @@ Created on 23 nov. 2016
 from abc import ABCMeta, abstractmethod
 from pexpect import pxssh
 
+import types
 import pexpect
 
 class SwitchBase(metaclass=ABCMeta):
