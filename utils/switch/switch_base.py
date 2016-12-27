@@ -6,6 +6,8 @@ Created on 23 nov. 2016
 from abc import ABCMeta, abstractmethod
 from pexpect import pxssh
 
+import pexpect
+
 class SwitchBase(metaclass=ABCMeta):
 
     def __init__(self, params = None):
@@ -30,13 +32,33 @@ class SwitchBase(metaclass=ABCMeta):
     def params(self, val):
         self.__params = val
         
-    def login(self, login=None, password=None):
+    def safeExpect(self, pattern, timeout=-1, searchwindowsize=-1, async=False):
+        ''' utility method that add pexpect.EOF, pexpect.TIMEOUT to pattern to avoid exceptions
+        '''
+        localPattern = [pexpect.EOF, pexpect.TIMEOUT]
+        if isinstance(pattern, list):
+            localPattern.extend(pattern)
+        else:
+            localPattern.append(pattern)
+        
+        match = self.connection.expect(localPattern, timeout, searchwindowsize, async)
+        if match == 0:
+            return pexpect.EOF
+        elif match == 1:
+            return pexpect.TIMEOUT
+        else:
+            return match - 2 # return the original index 
+        
+        
+    def login(self, IP=None, login=None, password=None):
+        if(IP is None):
+            IP = self.__params['IP']
         if(login is None): 
             login = self.__params['login']
         if(password is None):
             password = self.__params['password']
 
-        return self._login(login, password)
+        return self._login(IP, login, password)
         
     def logout(self):
         return self._logout()
@@ -45,12 +67,22 @@ class SwitchBase(metaclass=ABCMeta):
         return self._save_conf()
         
     @abstractmethod
-    def _login(self, login, password):
-        pass
+    def _login(self, IP, login, password):
+        try:
+            return self.connection.login(self.params['IP'], self.params['login'], self.params['password'], auto_prompt_reset=False)
+        except:
+            print('login failed')
+            return False
         
     @abstractmethod
     def _logout(self):
-        pass
+        try:
+            self.connection.logout()
+            
+            return True
+        except:
+            return False
+
         
     @abstractmethod
     def _save_conf(self):

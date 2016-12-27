@@ -18,13 +18,14 @@ class SaveSwitchConf(SwitchScripter):
         
     def _script_content_cisco(self, args):
         cisco = SwitchCisco(args)
-        cisco.login()
-        
-        if cisco.save_conf():
-            print('sauvegarde effectuee')
+        if not cisco.login():
+            print('impossible de se connecter')
         else:
-            print('sauvegarde erreur')
-        
+            if cisco.save_conf():
+                print('sauvegarde effectuee')
+            else:
+                print('sauvegarde erreur')
+            
         cisco.logout()
         
 save_conf = SaveSwitchConf('desc', sys.argv[1:])

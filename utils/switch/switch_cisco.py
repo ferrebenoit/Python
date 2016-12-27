@@ -5,7 +5,7 @@ Created on 23 nov. 2016
 '''
 
 from utils.switch.switch_base import SwitchBase
-from pexpect.exceptions import TIMEOUT
+from pexpect.exceptions import TIMEOUT, EOF
 
 class SwitchCisco(SwitchBase):
 
@@ -17,22 +17,13 @@ class SwitchCisco(SwitchBase):
         
         
         
-    def _login(self, login, password):
-        try:
-            return self.connection.login(self.params['IP'], self.params['login'], self.params['password'], auto_prompt_reset=False)
-        except:
-            return False
+    def _login(self, IP, login, password):
+        return super(SwitchCisco, self)._login(IP, login, password)
         
     def _logout(self):
-        try:
-            self.connection.logout()
-            
-            return True
-        except:
-            return False
-    
-    def _save_conf(self):
+        return super(SwitchCisco, self)._logout()
         
+    def _save_conf(self):
         try:
             self.connection.sendline('copy system:running-config tftp://172.17.6.28/{}.cnfg'.format(self.params['name']))
             
@@ -40,7 +31,7 @@ class SwitchCisco(SwitchBase):
             self.connection.expect('Address or name of remote host \[.*\]\?')
             self.connection.sendline()
             
-            
+                   
             #check if host is correct and filename confirmation
             match = self.connection.expect(['Invalid host address or name', 'Destination filename \[.*\]\?'])
             if(match == 0):
@@ -57,14 +48,12 @@ class SwitchCisco(SwitchBase):
                 print('sauvegarde Echouee')
                 print(self.connection.before)
                 return False
-            else:
-                print('erreur inconnue')
-                print(self.connection.before)
-                return False
-                
             
         except TIMEOUT :
             print("Sauvegarde echouee a cause d'un timeout")
+            print(self.connection.before)
+        except EOF :
+            print("Sauvegarde echouee a cause d'une deconnexion")
             print(self.connection.before)
         except Exception as e:
             print('exception')

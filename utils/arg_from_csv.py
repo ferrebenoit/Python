@@ -12,7 +12,6 @@ import csv
 import getpass
 import re
 from _csv import reader
-from lib2to3.patcomp import pattern_convert
 
 class ArgFromCSV:
     "Base class that accept arguments from CSV File"
