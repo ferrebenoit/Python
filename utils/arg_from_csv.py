@@ -24,9 +24,6 @@ class ArgFromCSV:
         self._define_args()
         # Parse command line arguments
         self.__arguments = self._parse_argv(args)
-
-        
-        
         
     def __remove_none_args(self, param_dict):
         return {k:v for k,v in param_dict.items() if v is not None}
@@ -40,7 +37,7 @@ class ArgFromCSV:
         known, unknown = self._arg_parser.parse_known_args(args)
         return self.__remove_none_args(vars(known))
         
-    def _add_needed_arg(self, *arg):
+    def _add_mandatory_arg(self, *arg):
         for v in arg:
             self.__needed_args.append(v)
           
@@ -110,7 +107,6 @@ class ArgFromCSV:
                             self.__arguments[filter_by_field_name] = row[filter_by_field_name] 
                             self.__execute_with_csv_row(row)
         else:
-            print("csv")
             with open(self.__arguments['csvfile']) as csv_file:
                 reader = csv.DictReader(csv_file)
                 

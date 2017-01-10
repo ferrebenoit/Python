@@ -4,28 +4,43 @@ Created on 23 nov. 2016
 @author: FERREB
 '''
 
-from utils.switch.switch_base import SwitchBase
+from utils.switch.switch_base import SwitchBase, ConfigMode, Exec
 from pexpect.exceptions import TIMEOUT, EOF
+import datetime
 
 class SwitchCisco(SwitchBase):
 
-    def __init__(self, params):
-        super(SwitchCisco, self).__init__(params)
+    def __init__(self, IP):
+        super(SwitchCisco, self).__init__(IP)
         
-        self._PROMPT = '#'
+        #prompt rexex
+        self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([$,#])'
+        
         self.connection.PROMPT = self._PROMPT
         
+    def getExecLevel(self):
+        if self.exec == '$':
+            return Exec.USER
+        elif self.exec == '#':
+            return Exec.PRIVILEGED
+
+    def getConfigMode(self):
+        if self.configMode == '':
+            return ConfigMode.GLOBAL
+        elif self.configMode == 'config':
+            return ConfigMode.TERMINAL   
+        elif self.configMode == 'config-if':
+            return ConfigMode.INTERFACE
+        elif self.configMode == 'config-vlan':
+            return ConfigMode.VLAN 
         
-        
-    def _login(self, IP, login, password):
-        return super(SwitchCisco, self)._login(IP, login, password)
-        
-    def _logout(self):
-        return super(SwitchCisco, self)._logout()
-        
-    def _save_conf(self):
+    def uploadFileTFTP(self, TFTP_IP, localFilePath, RemoteFilePath):
+        self.connection.sendline('copy tftp://{} flash:/{}'.format(localFilePath, RemoteFilePath))
+        self.expectPrompt()
+
+    def downloadFileTFTP(self, TFTP_IP, localFilePath, RemoteFilePath):
         try:
-            self.connection.sendline('copy system:running-config tftp://172.17.6.28/{}.cnfg'.format(self.params['name']))
+            self.connection.sendline('copy {} tftp://{}/{}'.format(localFilePath, TFTP_IP, RemoteFilePath))
             
             #host confirmation
             self.connection.expect('Address or name of remote host \[.*\]\?')
@@ -49,6 +64,8 @@ class SwitchCisco(SwitchBase):
                 print(self.connection.before)
                 return False
             
+            # Consume prompt response
+            self.expectPrompt()
         except TIMEOUT :
             print("Sauvegarde echouee a cause d'un timeout")
             print(self.connection.before)
@@ -60,4 +77,33 @@ class SwitchCisco(SwitchBase):
             #print(e)
             print(self.connection.before)
             print(self.connection.after)
+        
+    def enable(self):
+        self.connection.sendline('enable')
+        self.expectPrompt()
+        
+    def conft(self):
+        self.connection.sendline('configure terminal')
+        self.expectPrompt()
+        
+    def exit(self):
+        self.connection.sendline('exit')
+        self.expectPrompt()
+        
+    def end(self):
+        self.connection.sendline('end')
+        self.expectPrompt()
+
+    def expectPrompt(self):
+        return super(SwitchCisco, self).expectPrompt()
+    
+    def login(self, login, password):
+        return super(SwitchCisco, self).login(login, password)
+        
+    def logout(self):
+        return super(SwitchCisco, self).logout()
+        
+    def save_conf_TFTP(self, TFTP_IP):
+        return self.downloadFileTFTP(TFTP_IP, 'system:running-config', '{}_{:%Y%m%d-%H%M%S}.cnfg'.format(self.hostname, datetime.datetime.today()))
+
         

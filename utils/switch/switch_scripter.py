@@ -4,7 +4,7 @@ Created on 23 nov. 2016
 @author: FERREB
 '''
 from utils.arg_from_csv import ArgFromCSV
-
+import re
 
 class SwitchScripter(ArgFromCSV):
     "Class That desactivate an wifi AP"
@@ -17,14 +17,17 @@ class SwitchScripter(ArgFromCSV):
         self._arg_parser.add_argument('--vendor', help='the vendor')
         self._arg_parser.add_argument('--name', help='the switch name')
                 
-        self._add_needed_arg('IP', 'vendor', 'login', 'password', 'name')
+        self._add_mandatory_arg('IP', 'vendor', 'login', 'password')
         
     def _script_content(self, args):
-        if(args['vendor'] == 'cisco'):
+        if(re.compile('cisco', flags=re.IGNORECASE).search(args['vendor'])):
+        #if(args['vendor'].lower().contains('cisco')):
             self._script_content_cisco(args)
-        elif(args['vendor'] == 'hp'):
+        if(re.compile('hp', flags=re.IGNORECASE).search(args['vendor'])):
+        #elif(args['vendor'].lower().contains('hp')):
             self._script_content_hp(args)
-        elif(args['vendor'] == 'allied'):
+        if(re.compile('allied', flags=re.IGNORECASE).search(args['vendor'])):
+        #elif(args['vendor'].lower().contains('allied')):
             self._script_content_allied(args)
 
     def _script_content_cisco(self, args):
