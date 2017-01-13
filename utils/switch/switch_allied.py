@@ -26,6 +26,14 @@ class SwitchAllied(SwitchBase):
             return ConfigMode.INTERFACE
         elif self.configMode == 'config-vlan': #vlan database
             return ConfigMode.VLAN 
+    
+    def auth_PublicKey(self, username, key, comment, TFTP_IP=''):
+        self.connection.sendline('crypto key pubkey-chain userkey {}'.format(username))
+        self.connection.expect('Type CNTL/D to finish:')
+        self.connection.send('key')
+        self.connection.sendcontrol('D')
+        self.expectPrompt()
+        
         
     def uploadFileTFTP(self, TFTP_IP, localFilePath, RemoteFilePath):
         self.connection.sendline('copy tftp://{} flash:/{}'.format(TFTP_IP, localFilePath, RemoteFilePath))

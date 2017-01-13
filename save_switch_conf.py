@@ -17,15 +17,17 @@ class SaveSwitchConf(SwitchScripter):
 
     def _define_args(self):
         super()._define_args()
+        self._arg_parser.add_argument('--TFTPIP', help='The TFTP IP', default='192.168.7.20')
         
     def _script_content_cisco(self, args):
+        print(args['TFTPIP'])
         cisco = SwitchCisco(args['IP'])
         
         if not cisco.login(args['login'], args['password']):
             print('impossible de se connecter')
         else:
-            #if cisco.save_conf_TFTP('192.168.7.20'):
-            if cisco.save_conf_TFTP('172.17.6.28'):
+            if cisco.save_conf_TFTP(args['TFTPIP']):
+            #if cisco.save_conf_TFTP('172.17.6.28'):
                 print('sauvegarde effectuee')
             else:
                 print('sauvegarde erreur')
@@ -40,7 +42,7 @@ class SaveSwitchConf(SwitchScripter):
             print('impossible de se connecter')
         else:
             allied.enable()
-            if allied.save_conf_TFTP('172.17.6.28'):
+            if allied.save_conf_TFTP(args['TFTPIP']):
                 print('sauvegarde effectuee')
             else:
                 print('sauvegarde erreur')
@@ -54,7 +56,7 @@ class SaveSwitchConf(SwitchScripter):
         if not HP.login(args['login'], args['password']):
             print('impossible de se connecter')
         else:
-            if HP.save_conf_TFTP('172.17.6.28'):
+            if HP.save_conf_TFTP(args['TFTPIP']):
                 print('sauvegarde effectuee')
             else:
                 print('sauvegarde erreur')

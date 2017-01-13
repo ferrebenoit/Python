@@ -45,6 +45,8 @@ class ConfigMode(Enum):
     TERMINAL = 2
     INTERFACE = 3    
     VLAN = 3    
+    PUBKEY = 4
+    PUBKEY_USER = 5
 
 class SwitchBase(metaclass=ABCMeta):
 
@@ -130,6 +132,10 @@ class SwitchBase(metaclass=ABCMeta):
         self.connection.sendline()
         self.expectPrompt()
         
+    @abstractmethod
+    def auth_PublicKey(self, username, key, comment, TFTP_IP=''):
+        pass 
+    
     @abstractmethod
     def uploadFileTFTP(self, localFilePath, RemoteFilePath):
         pass

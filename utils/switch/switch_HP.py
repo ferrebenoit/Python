@@ -22,7 +22,12 @@ class SwitchHP(SwitchBase):
             return ConfigMode.GLOBAL
         elif self.configMode == 'config':
             return ConfigMode.TERMINAL   
-        
+    
+    def auth_PublicKey(self, username, key, comment, TFTP_IP=''):
+        '''Comment is the TFTP IP ADDRESS
+        '''
+        self.connection.sendline('copy tftp pub-key-file {} {} manager append'.format(TFTP_IP, key))
+        self.connection.sendline('aaa authentication ssh login public-key local')            
         
     def uploadFileTFTP(self, TFTP_IP, localFilePath, RemoteFilePath):
         self.connection.sendline('copy tftp flash {} {}'.format(TFTP_IP, localFilePath, RemoteFilePath))

@@ -33,6 +33,19 @@ class SwitchCisco(SwitchBase):
             return ConfigMode.INTERFACE
         elif self.configMode == 'config-vlan':
             return ConfigMode.VLAN 
+        elif self.configMode == 'conf-ssh-pubkey':
+            return ConfigMode.PUBKEY
+        elif self.configMode == 'conf-ssh-pubkey-user':
+            return ConfigMode.PUBKEY_USER
+    
+    
+    def auth_PublicKey(self, username, key, comment, TFTP_IP=''):
+        self.connection.sendline('ip ssh pub-key-chain')
+        self.expectPrompt()
+        self.connection.sendline('username {}'.format(username))
+        self.expectPrompt()
+        self.connection.sendline('key-hash ssh-rsa {} {}'.format(key, comment))
+        self.expectPrompt()
         
     def uploadFileTFTP(self, TFTP_IP, localFilePath, RemoteFilePath):
         self.connection.sendline('copy tftp://{} flash:/{}'.format(localFilePath, RemoteFilePath))
