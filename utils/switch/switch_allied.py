@@ -8,7 +8,7 @@ class SwitchAllied(SwitchBase):
         super(SwitchAllied, self).__init__(IP)
         
         #prompt rexex
-        self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([>,#])'
+        self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([>#])'
         self.connection.PROMPT = self._PROMPT
 
     def getExecLevel(self):
@@ -30,10 +30,11 @@ class SwitchAllied(SwitchBase):
     def auth_PublicKey(self, username, key, comment, TFTP_IP=''):
         self.connection.sendline('crypto key pubkey-chain userkey {}'.format(username))
         self.connection.expect('Type CNTL/D to finish:')
-        self.connection.send('key')
-        self.connection.sendcontrol('D')
-        self.expectPrompt()
+        self.connection.sendline(key)
+        self.connection.sendcontrol('d')
         
+        self.expectPrompt()
+        return True
         
     def uploadFileTFTP(self, TFTP_IP, localFilePath, RemoteFilePath):
         self.connection.sendline('copy tftp://{} flash:/{}'.format(TFTP_IP, localFilePath, RemoteFilePath))
@@ -79,6 +80,10 @@ class SwitchAllied(SwitchBase):
             
     def end(self):
         self.connection.sendline('end')
+        self.expectPrompt()
+
+    def write(self):
+        self.connection.sendline('write')
         self.expectPrompt()
 
     def save_conf_TFTP(self, TFTP_IP):

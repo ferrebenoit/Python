@@ -14,7 +14,7 @@ class SwitchCisco(SwitchBase):
         super(SwitchCisco, self).__init__(IP)
         
         #prompt rexex
-        self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([$,#])'
+        self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([$#])'
         
         self.connection.PROMPT = self._PROMPT
         
@@ -40,12 +40,16 @@ class SwitchCisco(SwitchBase):
     
     
     def auth_PublicKey(self, username, key, comment, TFTP_IP=''):
-        self.connection.sendline('ip ssh pub-key-chain')
+        print('ip ssh pubkey-chain')
+        self.connection.sendline('ip ssh pubkey-chain')
         self.expectPrompt()
+        print('username {}'.format(username))
         self.connection.sendline('username {}'.format(username))
         self.expectPrompt()
+        print('key-hash ssh-rsa {} {}'.format(key, comment))
         self.connection.sendline('key-hash ssh-rsa {} {}'.format(key, comment))
         self.expectPrompt()
+        return True
         
     def uploadFileTFTP(self, TFTP_IP, localFilePath, RemoteFilePath):
         self.connection.sendline('copy tftp://{} flash:/{}'.format(localFilePath, RemoteFilePath))
@@ -105,6 +109,11 @@ class SwitchCisco(SwitchBase):
         
     def end(self):
         self.connection.sendline('end')
+        self.expectPrompt()
+
+    
+    def write(self):
+        self.connection.sendline('write')
         self.expectPrompt()
 
     def expectPrompt(self):

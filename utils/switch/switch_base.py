@@ -100,6 +100,10 @@ class SwitchBase(metaclass=ABCMeta):
         return self.__configModeWithParenthesis
         
     @property
+    def IP(self):
+        return self.__IP
+    
+    @property
     def connection(self):
         return self.__connection
     
@@ -131,6 +135,10 @@ class SwitchBase(metaclass=ABCMeta):
     def _loadPromptState(self):
         self.connection.sendline()
         self.expectPrompt()
+    
+    @abstractmethod
+    def create_vlan(self, ID, name, IP, mask, CIDR):
+        pass
         
     @abstractmethod
     def auth_PublicKey(self, username, key, comment, TFTP_IP=''):
@@ -158,6 +166,10 @@ class SwitchBase(metaclass=ABCMeta):
             
     @abstractmethod
     def end(self):
+        pass
+    
+    @abstractmethod
+    def write(self):
         pass
 
     @abstractmethod
@@ -187,7 +199,8 @@ class SwitchBase(metaclass=ABCMeta):
     @abstractmethod
     def logout(self):
         try:
-            self.connection.logout()
+            self.end()
+            self.connection.sendline('logout')
             
             return True
         except:

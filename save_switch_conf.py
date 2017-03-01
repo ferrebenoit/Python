@@ -20,9 +20,7 @@ class SaveSwitchConf(SwitchScripter):
         self._arg_parser.add_argument('--TFTPIP', help='The TFTP IP', default='192.168.7.20')
         
     def _script_content_cisco(self, args):
-        print(args['TFTPIP'])
         cisco = SwitchCisco(args['IP'])
-        
         if not cisco.login(args['login'], args['password']):
             print('impossible de se connecter')
         else:
