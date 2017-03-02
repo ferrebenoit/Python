@@ -28,12 +28,18 @@ class SwitchAllied(SwitchBase):
             return ConfigMode.VLAN 
     
     def auth_PublicKey(self, username, key, comment, TFTP_IP=''):
+        self.end()
+        self.enable()
+        self.conft()
+        
         self.connection.sendline('crypto key pubkey-chain userkey {}'.format(username))
         self.connection.expect('Type CNTL/D to finish:')
         self.connection.sendline(key)
         self.connection.sendcontrol('d')
         
         self.expectPrompt()
+        
+        self.write()
         return True
         
     def uploadFileTFTP(self, TFTP_IP, localFilePath, RemoteFilePath):
@@ -65,7 +71,65 @@ class SwitchAllied(SwitchBase):
             #print(e)
             print(self.connection.before)
             print(self.connection.after)
-            
+    
+    def add_ospf_router(self, network, ospfwildcard, CIDR):
+        self.end()
+        self.enable()
+        self.conft()
+        
+        self.connection.sendline('router ospf 1')
+        self.expectPrompt()
+
+        self.connection.sendline('network {}/{} area 0'.format(network, CIDR))
+        self.expectPrompt()
+        
+        self.write()
+    
+    def create_vlan(self, ID, name, IP=-1, mask=-1, CIDR=-1, IP_helper=-1):
+        self.end()
+        self.enable()
+        self.conft()
+        
+        self.vlan(ID, name)
+        
+        self.exit()
+        
+        # If IP mask and CIDR are provided add an IP to the vlan 
+        if IP != -1 and CIDR != -1:
+            self.int_vlan(ID, name)
+            self.ip_address(IP, mask, CIDR)
+        
+            if (IP_helper != -1):
+                self.ip_helper(IP_helper)
+        
+        self.write()
+    
+    def vlan(self, ID ,name):
+        self.connection.sendline('vlan database')
+        self.expectPrompt()
+        
+        self.connection.sendline('vlan {} name {}'.format(ID, name))
+        self.expectPrompt()
+        
+
+    def int_vlan(self, ID ,name):
+        self.connection.sendline('interface vlan{}'.format(ID))
+        self.expectPrompt()
+        
+        self.connection.sendline('description {}'.format(name))
+        self.expectPrompt()
+
+
+    def ip_address(self, IP, mask, CIDR):
+        self.connection.sendline('ip address {}/{}'.format(IP, CIDR))
+        self.expectPrompt()
+
+    def ip_helper(self, IP):
+        self.connection.sendline('ip dhcp-relay server-address {}'.format(IP))
+        self.expectPrompt()
+        self.connection.sendline('ip helper-address {}'.format(IP))
+        self.expectPrompt()
+                    
     def enable(self):
         self.connection.sendline('enable')
         self.expectPrompt()
@@ -87,6 +151,8 @@ class SwitchAllied(SwitchBase):
         self.expectPrompt()
 
     def save_conf_TFTP(self, TFTP_IP):
+        self.end()
+        self.enable()
         return self.downloadFileTFTP(TFTP_IP, 'running-config', '{}_{:%Y%m%d-%H%M%S}.cnfg'.format(self.hostname, datetime.datetime.today()))
     
     def expectPrompt(self):

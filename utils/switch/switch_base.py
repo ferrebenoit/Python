@@ -137,7 +137,27 @@ class SwitchBase(metaclass=ABCMeta):
         self.expectPrompt()
     
     @abstractmethod
-    def create_vlan(self, ID, name, IP, mask, CIDR):
+    def add_ospf_router(self, network, ospfwildcard, CIDR):
+        pass
+    
+    @abstractmethod
+    def create_vlan(self, ID, name, IP=-1, mask=-1, CIDR=-1, IP_helper=-1):
+        pass
+    
+    @abstractmethod
+    def vlan(self, ID ,name):
+        pass
+
+    @abstractmethod
+    def int_vlan(self, ID ,name):
+        pass
+
+    @abstractmethod
+    def ip_address(self, IP, mask, CIDR):
+        pass
+
+    @abstractmethod
+    def ip_helper(self, IP):
         pass
         
     @abstractmethod

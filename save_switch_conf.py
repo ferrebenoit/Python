@@ -6,10 +6,6 @@ Created on 23 nov. 2016
 import sys
 
 from utils.switch.switch_scripter import SwitchScripter
-from utils.switch.switch_cisco import SwitchCisco
-from utils.switch.switch_allied import SwitchAllied
-from utils.switch.switch_HP import SwitchHP
-
 
 
 class SaveSwitchConf(SwitchScripter):
@@ -19,49 +15,16 @@ class SaveSwitchConf(SwitchScripter):
         super()._define_args()
         self._arg_parser.add_argument('--TFTPIP', help='The TFTP IP', default='192.168.7.20')
         
-    def _script_content_cisco(self, args):
-        cisco = SwitchCisco(args['IP'])
-        if not cisco.login(args['login'], args['password']):
+    def _common_actions(self, switch, args):
+        if not switch.login(args['login'], args['password']):
             print('impossible de se connecter')
         else:
-            if cisco.save_conf_TFTP(args['TFTPIP']):
+            if switch.save_conf_TFTP(args['TFTPIP']):
             #if cisco.save_conf_TFTP('172.17.6.28'):
                 print('sauvegarde effectuee')
             else:
                 print('sauvegarde erreur')
-            
-        cisco.logout()
-    
-    def _script_content_allied(self, args):
-        allied = SwitchAllied(args['IP'])
-        
-               
-        if not allied.login(args['login'], args['password']):
-            print('impossible de se connecter')
-        else:
-            allied.enable()
-            if allied.save_conf_TFTP(args['TFTPIP']):
-                print('sauvegarde effectuee')
-            else:
-                print('sauvegarde erreur')
-            
-        allied.logout()
-    
-    def _script_content_hp(self, args):
-        HP = SwitchHP(args['IP'])
-        
-               
-        if not HP.login(args['login'], args['password']):
-            print('impossible de se connecter')
-        else:
-            if HP.save_conf_TFTP(args['TFTPIP']):
-                print('sauvegarde effectuee')
-            else:
-                print('sauvegarde erreur')
-            
-        HP.logout()
-        
-        
-        
-save_conf_TFTP = SaveSwitchConf('desc', sys.argv[1:])
+        switch.logout()
+
+save_conf_TFTP = SaveSwitchConf('Save the running config', sys.argv[1:])
 save_conf_TFTP.process()

@@ -40,15 +40,19 @@ class SwitchCisco(SwitchBase):
     
     
     def auth_PublicKey(self, username, key, comment, TFTP_IP=''):
-        print('ip ssh pubkey-chain')
+        self.end()
+        self.conft()
+        
         self.connection.sendline('ip ssh pubkey-chain')
         self.expectPrompt()
-        print('username {}'.format(username))
+
         self.connection.sendline('username {}'.format(username))
         self.expectPrompt()
-        print('key-hash ssh-rsa {} {}'.format(key, comment))
+        
         self.connection.sendline('key-hash ssh-rsa {} {}'.format(key, comment))
         self.expectPrompt()
+        
+        self.write()
         return True
         
     def uploadFileTFTP(self, TFTP_IP, localFilePath, RemoteFilePath):
@@ -94,6 +98,59 @@ class SwitchCisco(SwitchBase):
             #print(e)
             print(self.connection.before)
             print(self.connection.after)
+
+    def add_ospf_router(self, network, ospfwildcard, CIDR):
+        self.end()
+        self.conft()
+        
+        self.connection.sendline('router ospf 1')
+        self.expectPrompt()
+        
+        self.connection.sendline('network {} {} area 0'.format(network, ospfwildcard))
+        self.expectPrompt()
+        
+        self.write()        
+     
+    def create_vlan(self, ID, name, IP=-1, mask=-1, CIDR=-1, IP_helper=-1):
+        '''        
+            If IP mask and CIDR are provided add an IP to the vlan 
+        '''
+        self.end()
+        self.conft()
+        
+        self.vlan(ID, name)
+        
+        self.exit()
+
+        # If IP mask and CIDR are provided add an IP to the vlan 
+        if IP != -1 and mask != -1:
+            self.int_vlan(ID, name)
+            self.ip_address(IP, mask, CIDR)
+        
+            if (IP_helper != -1):
+                self.ip_helper(IP_helper)
+        
+        self.write()
+    
+    def vlan(self, ID ,name):
+        self.connection.sendline('vlan {}'.format(ID))
+        self.expectPrompt()
+        self.connection.sendline('name {}'.format(name))
+        self.expectPrompt()
+
+    def int_vlan(self, ID ,name):
+        self.connection.sendline('interface vlan{}'.format(ID))
+        self.expectPrompt()
+        self.connection.sendline('description {}'.format(name))
+        self.expectPrompt()
+
+    def ip_address(self, IP, mask, CIDR):
+        self.connection.sendline('ip address {} {}'.format(IP, mask))
+        self.expectPrompt()
+
+    def ip_helper(self, IP):
+        self.connection.sendline('ip helper-address {}'.format(IP))
+        self.expectPrompt()
         
     def enable(self):
         self.connection.sendline('enable')
@@ -113,6 +170,7 @@ class SwitchCisco(SwitchBase):
 
     
     def write(self):
+        self.end()
         self.connection.sendline('write')
         self.expectPrompt()
 
@@ -126,6 +184,7 @@ class SwitchCisco(SwitchBase):
         return super(SwitchCisco, self).logout()
         
     def save_conf_TFTP(self, TFTP_IP):
+        self.end()
         return self.downloadFileTFTP(TFTP_IP, 'system:running-config', '{}_{:%Y%m%d-%H%M%S}.cnfg'.format(self.hostname, datetime.datetime.today()))
 
         

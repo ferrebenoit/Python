@@ -34,10 +34,17 @@ class SwitchHP(SwitchBase):
             return ConfigMode.TERMINAL   
     
     def auth_PublicKey(self, username, key, comment, TFTP_IP=''):
+        self.end()
+                
         self.connection.sendline('copy tftp pub-key-file {} {} manager append'.format(TFTP_IP, key))
-        self.conft()
-        self.connection.sendline('aaa authentication ssh login public-key')
+        self.expectPrompt()
         
+        self.conft()
+
+        self.connection.sendline('aaa authentication ssh login public-key')
+        self.expectPrompt()
+        
+        self.write()
         return True            
         
     def uploadFileTFTP(self, TFTP_IP, localFilePath, RemoteFilePath):
@@ -93,6 +100,8 @@ class SwitchHP(SwitchBase):
         self.expectPrompt()
 
     def save_conf_TFTP(self, TFTP_IP):
+        self.end()
+        
         return self.downloadFileTFTP(TFTP_IP, 'running-config', '{}_{:%Y%m%d-%H%M%S}.cnfg'.format(self.hostname, datetime.datetime.today()))
 
     def expectPrompt(self):

@@ -25,6 +25,7 @@ class ArgFromCSV:
         # Parse command line arguments
         self.__arguments = self._parse_argv(args)
         
+      
     def __remove_none_args(self, param_dict):
         return {k:v for k,v in param_dict.items() if v is not None}
         
@@ -35,6 +36,7 @@ class ArgFromCSV:
     
     def _parse_argv(self, args):
         known, unknown = self._arg_parser.parse_known_args(args)
+        
         return self.__remove_none_args(vars(known))
         
     def _add_mandatory_arg(self, *arg):
@@ -43,6 +45,7 @@ class ArgFromCSV:
           
     def __ask_needed_missing_args(self, args):
     
+        result_args = {}
         tmp_args = {}
         for v in self.__needed_args:
             if(not v in args):
@@ -50,11 +53,16 @@ class ArgFromCSV:
                     tmp_args[v] = getpass.getpass('Enter a value for {} : '.format(v))
                 else:
                     tmp_args[v] = input('Enter a value for {} : '.format(v))
-            
-        # Check 
+        
+        # Check
+        # to avoid having default values coming back 
+        result_args = tmp_args
         tmp_args = self._check_args(tmp_args)
         
-        return tmp_args
+        for k, v in result_args.items():
+            result_args[k] = tmp_args[k]
+        
+        return result_args
     
     def __convert_to_argv(self, param_dict):
         result = []
@@ -91,6 +99,7 @@ class ArgFromCSV:
     def process(self):
         if(not 'csvfile' in self.__arguments):
             self.__arguments.update(self.__ask_needed_missing_args(self.__arguments))
+            
             self._script_content(self.__arguments)
         elif(not os.path.isfile(self.__arguments['csvfile'])):
             print('CSV File : {} NOT FOUND'.format(self.__arguments['csvfile']))
