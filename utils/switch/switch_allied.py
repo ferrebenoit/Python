@@ -4,8 +4,8 @@ import datetime
 
 class SwitchAllied(SwitchBase):
 
-    def __init__(self, IP):
-        super(SwitchAllied, self).__init__(IP)
+    def __init__(self, IP, on_screen_log=True, dryrun=False):
+        super(SwitchAllied, self).__init__(IP, on_screen_log, dryrun)
         
         #prompt rexex
         self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([>#])'
@@ -32,10 +32,10 @@ class SwitchAllied(SwitchBase):
         self.enable()
         self.conft()
         
-        self.connection.sendline('crypto key pubkey-chain userkey {}'.format(username))
-        self.connection.expect('Type CNTL/D to finish:')
-        self.connection.sendline(key)
-        self.connection.sendcontrol('d')
+        self.sendline('crypto key pubkey-chain userkey {}'.format(username))
+        self.connection.expect('Tself.sendnish:')
+        self.sendline(key)
+        self.sendcontrol('d')
         
         self.expectPrompt()
         
@@ -43,13 +43,13 @@ class SwitchAllied(SwitchBase):
         return True
         
     def uploadFileTFTP(self, TFTP_IP, localFilePath, RemoteFilePath):
-        self.connection.sendline('copy tftp://{} flash:/{}'.format(TFTP_IP, localFilePath, RemoteFilePath))
+        self.sendline('copy tftp://{} flash:/{}'.format(TFTP_IP, localFilePath, RemoteFilePath))
         self.expectPrompt()
             
     def downloadFileTFTP(self, TFTP_IP, localFilePath, RemoteFilePath):
         # copy running-config tftp://192.168.0.1/
         try:
-            self.connection.sendline('copy {} tftp://{}/{}'.format(localFilePath, TFTP_IP, RemoteFilePath))
+            self.sendline('copy {} tftp://{}/{}'.format(localFilePath, TFTP_IP, RemoteFilePath))
             
             match = self.connection.expect(['Successful operation', '% Network is unreachable', '% Invalid tftp destination'])
             if match > 0 :
@@ -77,10 +77,10 @@ class SwitchAllied(SwitchBase):
         self.enable()
         self.conft()
         
-        self.connection.sendline('router ospf 1')
+        self.sendline('router ospf 1')
         self.expectPrompt()
 
-        self.connection.sendline('network {}/{} area 0'.format(network, CIDR))
+        self.sendline('network {}/{} area 0'.format(network, CIDR))
         self.expectPrompt()
         
         self.write()
@@ -108,46 +108,46 @@ class SwitchAllied(SwitchBase):
         self.connection.sendline('vlan database')
         self.expectPrompt()
         
-        self.connection.sendline('vlan {} name {}'.format(ID, name))
+        self.sendline('vlan {} name {}'.format(ID, name))
         self.expectPrompt()
         
 
     def int_vlan(self, ID ,name):
-        self.connection.sendline('interface vlan{}'.format(ID))
+        self.sendline('interface vlan{}'.format(ID))
         self.expectPrompt()
         
-        self.connection.sendline('description {}'.format(name))
+        self.sendline('description {}'.format(name))
         self.expectPrompt()
 
 
     def ip_address(self, IP, mask, CIDR):
-        self.connection.sendline('ip address {}/{}'.format(IP, CIDR))
+        self.sendline('ip address {}/{}'.format(IP, CIDR))
         self.expectPrompt()
 
     def ip_helper(self, IP):
-        self.connection.sendline('ip dhcp-relay server-address {}'.format(IP))
+        self.sendline('ip dhcp-relay server-address {}'.format(IP))
         self.expectPrompt()
-        self.connection.sendline('ip helper-address {}'.format(IP))
+        self.sendline('ip helper-address {}'.format(IP))
         self.expectPrompt()
                     
     def enable(self):
-        self.connection.sendline('enable')
+        self.sendline('enable')
         self.expectPrompt()
     
     def conft(self):
-        self.connection.sendline('configure terminal')
+        self.sendline('configure terminal')
         self.expectPrompt()
     
     def exit(self):
-        self.connection.sendline('exit')
+        self.sendline('exit')
         self.expectPrompt()
             
     def end(self):
-        self.connection.sendline('end')
+        self.sendline('end')
         self.expectPrompt()
 
     def write(self):
-        self.connection.sendline('write')
+        self.sendline('write')
         self.expectPrompt()
 
     def save_conf_TFTP(self, TFTP_IP):
@@ -161,10 +161,10 @@ class SwitchAllied(SwitchBase):
     def login(self, login, password):
 #        try:
 #            self.connection.expect('login as:')
-#            self.connection.sendline(login)
+#            self.sendline(login)
 #
 #            self.connection.expect('Password:')
-#            self.connection.sendline(password)
+#            self.sendline(password)
 #            
 #            # check errors before
 #            self.expectPrompt()

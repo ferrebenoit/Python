@@ -10,8 +10,8 @@ import datetime
 
 class SwitchCisco(SwitchBase):
 
-    def __init__(self, IP):
-        super(SwitchCisco, self).__init__(IP)
+    def __init__(self, IP, on_screen_log=True, dryrun=False):
+        super(SwitchCisco, self).__init__(IP, on_screen_log,dryrun)
         
         #prompt rexex
         self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([$#])'
@@ -43,41 +43,42 @@ class SwitchCisco(SwitchBase):
         self.end()
         self.conft()
         
-        self.connection.sendline('ip ssh pubkey-chain')
+        self.sendline('ip ssh pubkey-chain')
         self.expectPrompt()
 
-        self.connection.sendline('username {}'.format(username))
+        self.sendline('username {}'.format(username))
         self.expectPrompt()
         
-        self.connection.sendline('key-hash ssh-rsa {} {}'.format(key, comment))
+        self.sendline('key-hash ssh-rsa {} {}'.format(key, comment))
         self.expectPrompt()
         
         self.write()
         return True
         
     def uploadFileTFTP(self, TFTP_IP, localFilePath, RemoteFilePath):
-        self.connection.sendline('copy tftp://{} flash:/{}'.format(localFilePath, RemoteFilePath))
+        self.sendline('copy tftp://{} flash:/{}'.format(localFilePath, RemoteFilePath))
         self.expectPrompt()
 
     def downloadFileTFTP(self, TFTP_IP, localFilePath, RemoteFilePath):
         try:
-            self.connection.sendline('copy {} tftp://{}/{}'.format(localFilePath, TFTP_IP, RemoteFilePath))
+            self.sendline('copy {} tftp://{}/{}'.format(localFilePath, TFTP_IP, RemoteFilePath))
             
             #host confirmation
-            self.connection.expect('Address or name of remote host \[.*\]\?')
-            self.connection.sendline()
+            self.expect('Address or name of remote host \[.*\]\?')
+            self.sendline()
             
                    
             #check if host is correct and filename confirmation
-            match = self.connection.expect(['Invalid host address or name', 'Destination filename \[.*\]\?'])
-            if(match == 0):
+            match = self.expect(['Destination filename \[.*\]\?', 'Invalid host address or name'])
+            if(match == 1):
                 print('Hote inconnu')
                 return False
             
-            self.connection.sendline()
+            self.sendline()
             
             # check if all good
-            match = self.connection.expect(['[0-9]* bytes copied in .*\r\n', '%Error opening tftp.*\r\n'], timeout=60 )
+            match = self.expect(['[0-9]* bytes copied in .*\r\n', '%Error opening tftp.*\r\n'], timeout=60 )
+            
             if(match == 0):
                 return True
             elif(match == 1):
@@ -99,14 +100,33 @@ class SwitchCisco(SwitchBase):
             print(self.connection.before)
             print(self.connection.after)
 
+    def create_ACL(self, name, acl_entries):
+        self.end()
+        self.conft()
+
+        self.ACL(name)
+
+        for row in acl_entries:
+            self.ACL_add_entry(name, row['index'], row['action'], row['protocol'], row['src1'], row['src2'], row['src_port_operator'], row['src_port'], row['dst1'], row['dst2'], row['dst_port_operator'], row['dst_port'])
+
+        self.write()
+
+    def ACL(self, name):
+        self.sendline('ip access-list extended {}'.format(name))
+        self.expectPrompt()
+
+    def ACL_add_entry(self, name, index, action, protocol, src1, src2, src_port_operator, src_port, dst1, dst2, dst_port_operator, dst_port):
+        self.sendline('{} {} {} {} {} {} {} {} {} {} {}'.format(index, action, protocol, src1, src2, src_port_operator, src_port, dst1, dst2, dst_port_operator, dst_port))
+        self.expectPrompt()
+
     def add_ospf_router(self, network, ospfwildcard, CIDR):
         self.end()
         self.conft()
         
-        self.connection.sendline('router ospf 1')
+        self.sendline('router ospf 1')
         self.expectPrompt()
         
-        self.connection.sendline('network {} {} area 0'.format(network, ospfwildcard))
+        self.sendline('network {} {} area 0'.format(network, ospfwildcard))
         self.expectPrompt()
         
         self.write()        
@@ -133,45 +153,45 @@ class SwitchCisco(SwitchBase):
         self.write()
     
     def vlan(self, ID ,name):
-        self.connection.sendline('vlan {}'.format(ID))
+        self.sendline('vlan {}'.format(ID))
         self.expectPrompt()
-        self.connection.sendline('name {}'.format(name))
+        self.sendline('name {}'.format(name))
         self.expectPrompt()
 
     def int_vlan(self, ID ,name):
-        self.connection.sendline('interface vlan{}'.format(ID))
+        self.sendline('interface vlan{}'.format(ID))
         self.expectPrompt()
-        self.connection.sendline('description {}'.format(name))
+        self.sendline('description {}'.format(name))
         self.expectPrompt()
 
     def ip_address(self, IP, mask, CIDR):
-        self.connection.sendline('ip address {} {}'.format(IP, mask))
+        self.sendline('ip address {} {}'.format(IP, mask))
         self.expectPrompt()
 
     def ip_helper(self, IP):
-        self.connection.sendline('ip helper-address {}'.format(IP))
+        self.sendline('ip helper-address {}'.format(IP))
         self.expectPrompt()
         
     def enable(self):
-        self.connection.sendline('enable')
+        self.sendline('enable')
         self.expectPrompt()
         
     def conft(self):
-        self.connection.sendline('configure terminal')
+        self.sendline('configure terminal')
         self.expectPrompt()
         
     def exit(self):
-        self.connection.sendline('exit')
+        self.sendline('exit')
         self.expectPrompt()
         
     def end(self):
-        self.connection.sendline('end')
+        self.sendline('end')
         self.expectPrompt()
 
     
     def write(self):
         self.end()
-        self.connection.sendline('write')
+        self.sendline('write')
         self.expectPrompt()
 
     def expectPrompt(self):

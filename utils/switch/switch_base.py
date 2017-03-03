@@ -50,10 +50,12 @@ class ConfigMode(Enum):
 
 class SwitchBase(metaclass=ABCMeta):
 
-    def __init__(self, IP):
+    def __init__(self, IP, on_screen_log=True, dryrun=False):
        
        
         self.__IP = IP
+        self.__on_screen_log = on_screen_log
+        self.__dryrun = dryrun
                
         self.__hostname = None
         self.__configModeWithParenthesis = None 
@@ -114,6 +116,22 @@ class SwitchBase(metaclass=ABCMeta):
     @params.setter
     def params(self, val):
         self.__params = val
+
+    @property
+    def on_screen_log(self):
+        return self.__on_screen_log
+
+    @on_screen_log.setter
+    def on_screen_log(self, val):
+        self.__on_screen_log = val
+
+    @property
+    def dryrun(self):
+        return self.__dryrun
+
+    @dryrun.setter
+    def dryrun(self, val):
+        self.__dryrun = val
         
     def safeExpect(self, pattern, timeout=-1, searchwindowsize=-1, async=False):
         ''' utility method that add pexpect.EOF, pexpect.TIMEOUT to pattern to avoid exceptions
@@ -124,17 +142,77 @@ class SwitchBase(metaclass=ABCMeta):
         else:
             localPattern.append(pattern)
         
-        match = self.connection.expect(localPattern, timeout, searchwindowsize, async)
-        if match == 0:
-            return pexpect.EOF
-        elif match == 1:
-            return pexpect.TIMEOUT
-        else:
-            return match - 2 # return the original index 
+        match = self.expect(localPattern, timeout, searchwindowsize, async)
+        if not self.dryrun:
+            if match == 0:
+                return pexpect.EOF
+            elif match == 1:
+                return pexpect.TIMEOUT
+            else:
+                return match - 2 # return the original index 
         
     def _loadPromptState(self):
-        self.connection.sendline()
+        self.sendline()
         self.expectPrompt()
+    
+    def log(self, message):
+        if self.__on_screen_log:
+            print(message)
+    
+    def sendline(self, s=''):
+        if (s == ''):
+            self.log("send : \\r\\n")
+        else:
+            self.log("send : {}".format(s))
+        
+        if not self.dryrun:
+            self.connection.sendline(s)
+    
+    def send(self, s):
+        self.log("send : {}".format(s))
+        
+        if not self.dryrun:
+            self.connection.send(s)
+
+    def sendcontrol(self, char):
+        self.log('send : CNTRL/{}'.format(char))
+        
+        if not self.dryrun:
+            self.connection.sendcontrol(char)
+
+    def sendintr(self):
+        self.log('send : interrupt')
+        
+        if not self.dryrun:
+            self.connection.sendintr()
+
+    def sendeof(self):
+        self.log('send : eof')
+        
+        if not self.dryrun:
+            self.connection.sendeof()
+        
+    def expect(self, pattern, timeout=-1, searchwindowsize=-1, async=False):
+        self.log('expect : {}'.format(pattern))
+        
+        if self.dryrun:
+            return 0
+            
+        return self.connection.expect(pattern, timeout, searchwindowsize, async)
+
+    @abstractmethod
+    def create_ACL(self, name, acl_entries):
+        pass
+
+    
+    @abstractmethod
+    def ACL(self, name):
+        pass
+
+    @abstractmethod
+    def ACL_add_entry(self, name, action, protocol, src1, src2, src_port_operator, dst1, dst2, dst_port_operator):
+        pass
+    
     
     @abstractmethod
     def add_ospf_router(self, network, ospfwildcard, CIDR):
@@ -198,6 +276,10 @@ class SwitchBase(metaclass=ABCMeta):
     
     @abstractmethod
     def expectPrompt(self):
+        self.log('expect : PROMPT')
+        if self.dryrun:
+            return
+            
         self.connection.expect(self._PROMPT)
         #load swtch state
         self.__hostname, self.__configModeWithParenthesis, self.__configMode, self.__exec = self.connection.match.groups()
@@ -205,6 +287,9 @@ class SwitchBase(metaclass=ABCMeta):
     @abstractmethod
     def login(self, login, password):
         try:
+            if self.dryrun:
+                return True
+            
             if self.connection.login(self.__IP, login, password, auto_prompt_reset=False):
                 self._loadPromptState()
                 return True
@@ -220,7 +305,7 @@ class SwitchBase(metaclass=ABCMeta):
     def logout(self):
         try:
             self.end()
-            self.connection.sendline('logout')
+            self.sendline('logout')
             
             return True
         except:

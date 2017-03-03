@@ -4,8 +4,8 @@ import datetime
 
 class SwitchHP(SwitchBase):
 
-    def __init__(self, IP):
-        super(SwitchHP, self).__init__(IP)
+    def __init__(self, IP, on_screen_log=True, dryrun=False):
+        super(SwitchHP, self).__init__(IP, on_screen_log, dryrun)
 
         #prompt rexex
         self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([>#])'
@@ -36,19 +36,19 @@ class SwitchHP(SwitchBase):
     def auth_PublicKey(self, username, key, comment, TFTP_IP=''):
         self.end()
                 
-        self.connection.sendline('copy tftp pub-key-file {} {} manager append'.format(TFTP_IP, key))
+        self.sendline('copy tftp pub-key-file {} {} manager append'.format(TFTP_IP, key))
         self.expectPrompt()
         
         self.conft()
 
-        self.connection.sendline('aaa authentication ssh login public-key')
+        self.sendline('aaa authentication ssh login public-key')
         self.expectPrompt()
         
         self.write()
         return True            
         
     def uploadFileTFTP(self, TFTP_IP, localFilePath, RemoteFilePath):
-        self.connection.sendline('copy tftp flash {} {}'.format(TFTP_IP, localFilePath, RemoteFilePath))
+        self.sendline('copy tftp flash {} {}'.format(TFTP_IP, localFilePath, RemoteFilePath))
         self.expectPrompt()
         
         return True
@@ -56,7 +56,7 @@ class SwitchHP(SwitchBase):
     def downloadFileTFTP(self, TFTP_IP, localFilePath, RemoteFilePath):
         # copy running-config tftp://192.168.0.1/
         try:
-            self.connection.sendline('copy {} tftp {} {}'.format(localFilePath, TFTP_IP, RemoteFilePath))
+            self.sendline('copy {} tftp {} {}'.format(localFilePath, TFTP_IP, RemoteFilePath))
             
             match = self.connection.expect([self._PROMPT, '00000K Peer unreachable.', 'Invalid input:'])
             if match > 0 :
@@ -78,25 +78,61 @@ class SwitchHP(SwitchBase):
             #print(e)
             print(self.connection.before)
             print(self.connection.after)
-            
+
+    def create_vlan(self, ID, name, IP=-1, mask=-1, CIDR=-1, IP_helper=-1):
+        self.end()
+        self.enable()
+        self.conft()
+        
+        self.vlan(ID, name)
+
+        # If IP mask and CIDR are provided add an IP to the vlan 
+        if IP != -1 and mask != -1:
+            self.ip_address(IP, mask, CIDR)
+            self.ip_helper(IP_helper)
+        
+        self.write()
+        
+    def add_ospf_router(self, network, ospfwildcard, CIDR):
+        pass
+    
+    def vlan(self, ID ,name):
+        self.sendline('vlan {}'.format(ID))
+        self.expectPrompt()
+        
+        self.sendline('name "{}"'.format(name))
+        self.expectPrompt()
+
+
+    def int_vlan(self, ID ,name):
+        self.vlan(ID, name)
+
+    def ip_address(self, IP, mask, CIDR):
+        self.sendline('ip address {} {}'.format(IP, mask))
+        self.expectPrompt()
+
+    def ip_helper(self, IP):
+        self.sendline('ip helper-address {}'.format(IP))
+        self.expectPrompt()
+                
     def enable(self):
-        self.connection.sendline('enable')
+        self.sendline('enable')
         self.expectPrompt()
     
     def conft(self):
-        self.connection.sendline('configure terminal')
+        self.sendline('configure terminal')
         self.expectPrompt()
     
     def exit(self):
-        self.connection.sendline('exit')
+        self.sendline('exit')
         self.expectPrompt()
             
     def end(self):
-        self.connection.sendline('end')
+        self.sendline('end')
         self.expectPrompt()
  
     def write(self):
-        self.connection.sendline('write memory')
+        self.sendline('write memory')
         self.expectPrompt()
 
     def save_conf_TFTP(self, TFTP_IP):
@@ -112,9 +148,9 @@ class SwitchHP(SwitchBase):
             self.connection._spawn("ssh {}@{} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null".format(login, self.IP))
 
             self.connection.expect('password:')
-            self.connection.sendline(password)
+            self.sendline(password)
             
-            self.connection.sendline()
+            self.sendline()
             self._loadPromptState()
             
             return True
@@ -128,7 +164,7 @@ class SwitchHP(SwitchBase):
     def logout(self):
         if super(SwitchHP, self).logout():
             self.connection.expect('[y/n]?')
-            self.connection.send('y')
+            self.send('y')
             return True
         else:
             return False

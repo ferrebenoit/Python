@@ -15,6 +15,9 @@ class SwitchScripter(ArgFromCSV):
 
     def _define_args(self):
         super()._define_args()
+        self._arg_parser.add_argument('--onscreenlog', help='Print log on screen', default='yes')
+        self._arg_parser.add_argument('--dryrun', help='No Action taken! Only print what would have been executed.', default='no')
+
         self._arg_parser.add_argument('--IP', help='AP IP address')
         self._arg_parser.add_argument('--login', help='login')
         self._arg_parser.add_argument('--password', help='password')
@@ -26,13 +29,13 @@ class SwitchScripter(ArgFromCSV):
     def _script_content(self, args):
         if(re.compile('cisco', flags=re.IGNORECASE).search(args['vendor'])):
         #if(args['vendor'].lower().contains('cisco')):
-            self._script_content_cisco(SwitchCisco(args['IP']), args)
+            self._script_content_cisco(SwitchCisco(args['IP'], args['onscreenlog'] == 'yes', args['dryrun'] == 'yes'), args)
         if(re.compile('hp', flags=re.IGNORECASE).search(args['vendor'])):
         #elif(args['vendor'].lower().contains('hp')):
-            self._script_content_hp(SwitchHP(args['IP']), args)
+            self._script_content_hp(SwitchHP(args['IP'], args['onscreenlog'] == 'yes', args['dryrun'] == 'yes'), args)
         if(re.compile('allied', flags=re.IGNORECASE).search(args['vendor'])):
         #elif(args['vendor'].lower().contains('allied')):
-            self._script_content_allied(SwitchAllied(args['IP']), args)
+            self._script_content_allied(SwitchAllied(args['IP'], args['onscreenlog'] == 'yes', args['dryrun'] == 'yes'), args)
 
     def _script_content_cisco(self, switch_cisco, args):
         self._common_actions(switch_cisco, args)
