@@ -129,6 +129,12 @@ class SwitchBase(metaclass=ABCMeta):
     def dryrun(self, val):
         self.__dryrun = val
         
+    def before(self):
+        return self.connection.before.decode('UTF-8')
+        
+    def after(self):
+        return self.connection.after.decode('UTF-8')
+
     def safeExpect(self, pattern, timeout=-1, searchwindowsize=-1, async=False):
         ''' utility method that add pexpect.EOF, pexpect.TIMEOUT to pattern to avoid exceptions
         '''
@@ -218,11 +224,11 @@ class SwitchBase(metaclass=ABCMeta):
         pass
     
     @abstractmethod
-    def vlan(self, ID ,name):
+    def vlan(self, ID, name=None):
         pass
 
     @abstractmethod
-    def int_vlan(self, ID ,name):
+    def int_vlan(self, ID, name=None):
         pass
 
     @abstractmethod

@@ -104,20 +104,22 @@ class SwitchAllied(SwitchBase):
         
         self.write()
     
-    def vlan(self, ID ,name):
+    def vlan(self, ID, name=None):
         self.connection.sendline('vlan database')
         self.expectPrompt()
         
-        self.sendline('vlan {} name {}'.format(ID, name))
-        self.expectPrompt()
+        if name != None:
+            self.sendline('vlan {} name {}'.format(ID, name))
+            self.expectPrompt()
         
 
-    def int_vlan(self, ID ,name):
+    def int_vlan(self, ID, name=None):
         self.sendline('interface vlan{}'.format(ID))
         self.expectPrompt()
         
-        self.sendline('description {}'.format(name))
-        self.expectPrompt()
+        if name != None:
+            self.sendline('description {}'.format(name))
+            self.expectPrompt()
 
 
     def ip_address(self, IP, mask, CIDR):

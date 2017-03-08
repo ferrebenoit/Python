@@ -96,15 +96,16 @@ class SwitchHP(SwitchBase):
     def add_ospf_router(self, network, ospfwildcard, CIDR):
         pass
     
-    def vlan(self, ID ,name):
+    def vlan(self, ID, name=None):
         self.sendline('vlan {}'.format(ID))
         self.expectPrompt()
         
-        self.sendline('name "{}"'.format(name))
-        self.expectPrompt()
+        if name != None:
+            self.sendline('name "{}"'.format(name))
+            self.expectPrompt()
 
 
-    def int_vlan(self, ID ,name):
+    def int_vlan(self, ID, name=None):
         self.vlan(ID, name)
 
     def ip_address(self, IP, mask, CIDR):
