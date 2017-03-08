@@ -4,8 +4,8 @@ import datetime
 
 class SwitchHP(SwitchBase):
 
-    def __init__(self, IP, on_screen_log=True, dryrun=False):
-        super(SwitchHP, self).__init__(IP, on_screen_log, dryrun)
+    def __init__(self, IP, dryrun=False):
+        super(SwitchHP, self).__init__(IP, dryrun)
 
         #prompt rexex
         self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([>#])'
@@ -138,13 +138,24 @@ class SwitchHP(SwitchBase):
     def save_conf_TFTP(self, TFTP_IP):
         self.end()
         
-        return self.downloadFileTFTP(TFTP_IP, 'running-config', '{}_{:%Y%m%d-%H%M%S}.cnfg'.format(self.hostname, datetime.datetime.today()))
+        result = self.downloadFileTFTP(TFTP_IP, 'running-config', '{}_{:%Y%m%d-%H%M%S}.cnfg'.format(self.hostname, datetime.datetime.today()))
+    
+        if result :
+            self.logger.info('Backup complete')
+        else:
+            self.error('Backup error')
+        return result 
+    
 
     def expectPrompt(self):
         return super(SwitchHP, self).expectPrompt()
              
     def login(self, login, password):
         try:
+            if self.dryrun:
+                self.logger.info("Login ok as user {}".format(login))
+                return True
+                
             self.connection._spawn("ssh {}@{} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null".format(login, self.IP))
 
             self.connection.expect('password:')
@@ -153,13 +164,20 @@ class SwitchHP(SwitchBase):
             self.sendline()
             self._loadPromptState()
             
-            return True
+            result = True
         except:
-            print('login failed')
-            print(self.connection.before)
-            print(self.connection.after)
-            return False
-        #return super(SwitchHP, self).login(login, password)
+            self.logger.critical('login failed')
+            self.logger.critical(self.connection.before)
+            self.logger.critical(self.connection.after)
+            result =  False
+            
+        if result:
+            self.logger.info("Login ok as user {}".format(login))
+        else:
+            self.logger.error("Login error as user {}".format(login))
+        
+        return result
+        
             
     def logout(self):
         if super(SwitchHP, self).logout():

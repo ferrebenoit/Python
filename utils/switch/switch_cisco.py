@@ -10,8 +10,8 @@ import datetime
 
 class SwitchCisco(SwitchBase):
 
-    def __init__(self, IP, on_screen_log=True, dryrun=False):
-        super(SwitchCisco, self).__init__(IP, on_screen_log,dryrun)
+    def __init__(self, IP, dryrun=False):
+        super(SwitchCisco, self).__init__(IP, dryrun)
         
         #prompt rexex
         self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([$#])'
@@ -205,6 +205,11 @@ class SwitchCisco(SwitchBase):
         
     def save_conf_TFTP(self, TFTP_IP):
         self.end()
-        return self.downloadFileTFTP(TFTP_IP, 'system:running-config', '{}_{:%Y%m%d-%H%M%S}.cnfg'.format(self.hostname, datetime.datetime.today()))
+        result = self.downloadFileTFTP(TFTP_IP, 'system:running-config', '{}_{:%Y%m%d-%H%M%S}.cnfg'.format(self.hostname, datetime.datetime.today()))
+        if result :
+            self.logger.info('Backup complete')
+        else:
+            self.error('Backup error')
+        return result 
 
         

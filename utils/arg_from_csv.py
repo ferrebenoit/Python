@@ -17,15 +17,15 @@ class ArgFromCSV:
     "Base class that accept arguments from CSV File"
     
     def __init__(self, description, args):
+        
         self.__needed_args = []
         # create argument parser
         self._arg_parser = argparse.ArgumentParser(description=description)
         # Add script arguments
         self._define_args()
         # Parse command line arguments
-        self.__arguments = self._parse_argv(args)
+        self._arguments = self._parse_argv(args)
         
-      
     def __remove_none_args(self, param_dict):
         return {k:v for k,v in param_dict.items() if v is not None}
         
@@ -45,7 +45,6 @@ class ArgFromCSV:
           
     def __ask_needed_missing_args(self, args):
     
-        result_args = {}
         tmp_args = {}
         for v in self.__needed_args:
             if(not v in args):
@@ -82,12 +81,12 @@ class ArgFromCSV:
         row = self._check_args(row)
     
         # Merge command line args with csv arguments. Command line args superseed csv args
-        row.update(self.__arguments)
+        row.update(self._arguments)
 
         # chek for missing args from csv and command line if this is the first data line
         if(ask_needed_missing_args):
-            self.__arguments.update(self.__ask_needed_missing_args(row))
-            row.update(self.__arguments)
+            self._arguments.update(self.__ask_needed_missing_args(row))
+            row.update(self._arguments)
                         
                     
         # Execute script
@@ -97,26 +96,26 @@ class ArgFromCSV:
         return re.match(pattern, string) 
         
     def process(self):
-        if(not 'csvfile' in self.__arguments):
-            self.__arguments.update(self.__ask_needed_missing_args(self.__arguments))
+        if(not 'csvfile' in self._arguments):
+            self._arguments.update(self.__ask_needed_missing_args(self._arguments))
             
-            self._script_content(self.__arguments)
-        elif(not os.path.isfile(self.__arguments['csvfile'])):
-            print('CSV File : {} NOT FOUND'.format(self.__arguments['csvfile']))
-        elif('filterby' in self.__arguments):
-            with open(self.__arguments['csvfile']) as csv_file:
+            self._script_content(self._arguments)
+        elif(not os.path.isfile(self._arguments['csvfile'])):
+            print('CSV File : {} NOT FOUND'.format(self._arguments['csvfile']))
+        elif('filterby' in self._arguments):
+            with open(self._arguments['csvfile']) as csv_file:
                 reader = csv.DictReader(csv_file)
-                filter_by_field_name = self.__arguments['filterby']
-                filter_by_field_pattern = self.__arguments[filter_by_field_name]
+                filter_by_field_name = self._arguments['filterby']
+                filter_by_field_pattern = self._arguments[filter_by_field_name]
                 
                 
                 for row in reader:
                     if(filter_by_field_name in row): # check if parameter passed in filterby is found in csv row
                         if self._filter_match(filter_by_field_pattern, row[filter_by_field_name]): # check if meet the condition Use regular expression instead
-                            self.__arguments[filter_by_field_name] = row[filter_by_field_name] 
+                            self._arguments[filter_by_field_name] = row[filter_by_field_name] 
                             self.__execute_with_csv_row(row)
         else:
-            with open(self.__arguments['csvfile']) as csv_file:
+            with open(self._arguments['csvfile']) as csv_file:
                 reader = csv.DictReader(csv_file)
                 
                 for row in reader:

@@ -4,8 +4,8 @@ import datetime
 
 class SwitchAllied(SwitchBase):
 
-    def __init__(self, IP, on_screen_log=True, dryrun=False):
-        super(SwitchAllied, self).__init__(IP, on_screen_log, dryrun)
+    def __init__(self, IP, dryrun=False):
+        super(SwitchAllied, self).__init__(IP, dryrun)
         
         #prompt rexex
         self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([>#])'
@@ -153,28 +153,19 @@ class SwitchAllied(SwitchBase):
     def save_conf_TFTP(self, TFTP_IP):
         self.end()
         self.enable()
-        return self.downloadFileTFTP(TFTP_IP, 'running-config', '{}_{:%Y%m%d-%H%M%S}.cnfg'.format(self.hostname, datetime.datetime.today()))
+        result = self.downloadFileTFTP(TFTP_IP, 'running-config', '{}_{:%Y%m%d-%H%M%S}.cnfg'.format(self.hostname, datetime.datetime.today()))
+        
+        if result :
+            self.logger.info('Backup complete')
+        else:
+            self.error('Backup error')
+        return result 
     
     def expectPrompt(self):
         return super(SwitchAllied, self).expectPrompt()
              
     def login(self, login, password):
-#        try:
-#            self.connection.expect('login as:')
-#            self.sendline(login)
-#
-#            self.connection.expect('Password:')
-#            self.sendline(password)
-#            
-#            # check errors before
-#            self.expectPrompt()
-#            
-#            return True
-#        except:
-#            print('login failed')
-#            print(self.connection.before)
-#            print(self.connection.after)
-#            return False
+
         return super(SwitchAllied, self).login(login, password)
             
     def logout(self):

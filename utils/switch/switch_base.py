@@ -35,6 +35,7 @@ from pexpect import pxssh
 
 import pexpect
 from enum import Enum
+import logging
 
 class Exec(Enum):
     USER = 1
@@ -50,11 +51,13 @@ class ConfigMode(Enum):
 
 class SwitchBase(metaclass=ABCMeta):
 
-    def __init__(self, IP, on_screen_log=True, dryrun=False):
-       
+    def __init__(self, IP, dryrun=False):
+
+        # Create logger
+        self.logger = logging.getLogger('switch.{}'.format(IP))
+        self.logger.addHandler(logging.NullHandler())
        
         self.__IP = IP
-        self.__on_screen_log = on_screen_log
         self.__dryrun = dryrun
                
         self.__hostname = None
@@ -67,6 +70,7 @@ class SwitchBase(metaclass=ABCMeta):
         self.__connection = pxssh.pxssh(options={
                                             "StrictHostKeyChecking": "no",
                                             "UserKnownHostsFile": "/dev/null"})
+        
     @abstractmethod
     def getExecLevel(self):
         pass
@@ -118,14 +122,6 @@ class SwitchBase(metaclass=ABCMeta):
         self.__params = val
 
     @property
-    def on_screen_log(self):
-        return self.__on_screen_log
-
-    @on_screen_log.setter
-    def on_screen_log(self, val):
-        self.__on_screen_log = val
-
-    @property
     def dryrun(self):
         return self.__dryrun
 
@@ -155,45 +151,44 @@ class SwitchBase(metaclass=ABCMeta):
         self.sendline()
         self.expectPrompt()
     
-    def log(self, message):
-        if self.__on_screen_log:
-            print(message)
+    def logInfo(self, message):
+        self.logger.info(message)
     
     def sendline(self, s=''):
         if (s == ''):
-            self.log("send : \\r\\n")
+            self.logInfo("send : \\r\\n")
         else:
-            self.log("send : {}".format(s))
+            self.logInfo("send : {}".format(s))
         
         if not self.dryrun:
             self.connection.sendline(s)
     
     def send(self, s):
-        self.log("send : {}".format(s))
+        self.logInfo("send : {}".format(s))
         
         if not self.dryrun:
             self.connection.send(s)
 
     def sendcontrol(self, char):
-        self.log('send : CNTRL/{}'.format(char))
+        self.logInfo('send : CNTRL/{}'.format(char))
         
         if not self.dryrun:
             self.connection.sendcontrol(char)
 
     def sendintr(self):
-        self.log('send : interrupt')
+        self.logInfo('send : interrupt')
         
         if not self.dryrun:
             self.connection.sendintr()
 
     def sendeof(self):
-        self.log('send : eof')
+        self.logInfo('send : eof')
         
         if not self.dryrun:
             self.connection.sendeof()
         
     def expect(self, pattern, timeout=-1, searchwindowsize=-1, async=False):
-        self.log('expect : {}'.format(pattern))
+        self.logInfo('expect : {}'.format(pattern))
         
         if self.dryrun:
             return 0
@@ -276,7 +271,7 @@ class SwitchBase(metaclass=ABCMeta):
     
     @abstractmethod
     def expectPrompt(self):
-        self.log('expect : PROMPT')
+        self.logInfo('expect : PROMPT')
         if self.dryrun:
             return
             
@@ -288,18 +283,26 @@ class SwitchBase(metaclass=ABCMeta):
     def login(self, login, password):
         try:
             if self.dryrun:
+                self.logger.info("Login ok as user {}".format(login))
                 return True
             
             if self.connection.login(self.__IP, login, password, auto_prompt_reset=False):
                 self._loadPromptState()
-                return True
+                result = True
             else:    
-                return False
+                result =  False
         except:
-            print('login failed')
-            print(self.connection.before)
-            print(self.connection.after)
-            return False
+            self.logger.critical(self.connection.before)
+            self.logger.critical(self.connection.after)
+            result =  False
+            
+        if result:
+            self.logger.info("Login ok as user {}".format(login))
+        else:
+            self.logger.error("Login error as user {}".format(login))
+        
+        return result
+            
         
     @abstractmethod
     def logout(self):

@@ -19,11 +19,7 @@ class SaveSwitchConf(SwitchScripter):
         if not switch.login(args['login'], args['password']):
             print('impossible de se connecter')
         else:
-            if switch.save_conf_TFTP(args['TFTPIP']):
-            #if cisco.save_conf_TFTP('172.17.6.28'):
-                print('sauvegarde effectuee')
-            else:
-                print('sauvegarde erreur')
+            switch.save_conf_TFTP(args['TFTPIP'])
         switch.logout()
 
 save_conf_TFTP = SaveSwitchConf('Save the running config', sys.argv[1:])
