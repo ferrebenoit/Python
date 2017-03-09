@@ -100,14 +100,14 @@ class SwitchCisco(SwitchBase):
             print(self.connection.before)
             print(self.connection.after)
 
-    def create_ACL(self, name, acl_entries):
+    def create_ACL(self, name, acl_entries, acl_replace=None):
         self.end()
         self.conft()
 
         self.ACL(name)
 
         for row in acl_entries:
-            self.ACL_add_entry(name, row['index'], row['action'], row['protocol'], row['src1'], row['src2'], row['src_port_operator'], row['src_port'], row['dst1'], row['dst2'], row['dst_port_operator'], row['dst_port'])
+            self.ACL_add_row(name, row, acl_replace)
 
         self.write()
 
@@ -115,8 +115,16 @@ class SwitchCisco(SwitchBase):
         self.sendline('ip access-list extended {}'.format(name))
         self.expectPrompt()
 
-    def ACL_add_entry(self, name, index, action, protocol, src1, src2, src_port_operator, src_port, dst1, dst2, dst_port_operator, dst_port):
-        self.sendline('{} {} {} {} {} {} {} {} {} {} {}'.format(index, action, protocol, src1, src2, src_port_operator, src_port, dst1, dst2, dst_port_operator, dst_port))
+    def ACL_add_row(self, name, row, acl_replace=None):
+        if acl_replace != None:
+            for k in row.keys():
+                if(k in acl_replace): 
+                    row[k] = row[k].format(**acl_replace[k]) 
+        
+        self.ACL_add_entry(name, row['index'], row['action'], row['protocol'], row['src1'], row['src2'], row['src_port_operator'], row['src_port'], row['dst1'], row['dst2'], row['dst_port_operator'], row['dst_port'], row['log'])
+
+    def ACL_add_entry(self, name, index, action, protocol, src1, src2, src_port_operator, src_port, dst1, dst2, dst_port_operator, dst_port, log):
+        self.sendline('{} {} {} {} {} {} {} {} {} {} {} {}'.format(index, action, protocol, src1, src2, src_port_operator, src_port, dst1, dst2, dst_port_operator, dst_port, log))
         self.expectPrompt()
 
     def add_ospf_router(self, network, ospfwildcard, CIDR):

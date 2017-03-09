@@ -17,11 +17,11 @@ class PubkeyAuth(SwitchScripter):
             #switch.conft()
             switch.sendline('sh run int vlan 262')
             switch.expectPrompt()
-            print(switch.before().replace("\\r\\n",os.linesep))
+            print(switch.before())
 
             switch.sendline('sh run int vlan 252')
             switch.expectPrompt()
-            print(switch.before().replace("\\r\\n",os.linesep))
+            print(switch.before())
             
             
         switch.logout()

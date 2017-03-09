@@ -12,10 +12,13 @@ class CreateAcl(SwitchScripter):
     def _define_args(self):
         super()._define_args()
         self._arg_parser.add_argument('--Name', help='The acl Name')
+        self._arg_parser.add_argument('--vlanid', help='the vlan id')
+        self._arg_parser.add_argument('--siteid', help='the site id')
+        self._arg_parser.add_argument('--secondaryserver', help='the secondary server')
         self._arg_parser.add_argument('--csvaclentries', help='The csv file that holds the contents')
         
         
-        self._add_mandatory_arg('Name', 'csvaclentries')
+        self._add_mandatory_arg('Name', 'csvaclentries', 'vlanid', 'siteid', 'secondaryserver')
 
     def _common_actions(self, switch, args):
         if not os.path.isfile(args['csvaclentries']):
@@ -26,8 +29,16 @@ class CreateAcl(SwitchScripter):
             print('impossible de se connecter')
         else:
             with open(args['csvaclentries']) as csv_file:
-                reader = csv.DictReader(csv_file)
-                switch.create_ACL(args['Name'], reader)
+                reader = csv.DictReader(csv_file, delimiter=';')
+                
+                aclreplace = {}
+                aclreplace['src1'] = {'vlanid': args['vlanid'], 'siteid': args['siteid']}
+                aclreplace['dst2'] = {'secondaryserver': args['secondaryserver']}
+                
+                switch.end()
+                switch.conft()
+                switch
+                switch.create_ACL(args['Name'], reader, aclreplace)
             
             switch.logout()
 
