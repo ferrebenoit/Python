@@ -202,7 +202,7 @@ class SwitchBase(metaclass=ABCMeta):
         return self.connection.expect(pattern, timeout, searchwindowsize, async)
 
     @abstractmethod
-    def create_ACL(self, name, acl_entries, acl_replace=None):
+    def create_ACL(self, name, acl_entries, acl_replace=None, inverse_src_and_dst = False):
         pass
 
     @abstractmethod
@@ -210,11 +210,11 @@ class SwitchBase(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def ACL_add_row(self, name, row, acl_replace=None):
+    def ACL_add_row(self, name, row, acl_replace=None, inverse_src_and_dst = False):
         pass
 
     @abstractmethod
-    def ACL_add_entry(self, name, action, protocol, src1, src2, src_port_operator, dst1, dst2, dst_port_operator, dst_port, log):
+    def ACL_add_entry(self, name, action, protocol, src1, src2, src_port_operator, dst1, dst2, dst_port_operator, dst_port, log, inverse_src_and_dst = False):
         pass
     
     @abstractmethod

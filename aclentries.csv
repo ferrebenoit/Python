@@ -1,1 +1,0 @@
-index,action,protocol,src1,src2,src_port_operator,src_port,dst1,dst2,dst_port_operator,dst_port10,permit,TCP,10.80.17.0,0.0.0.255,eq,433,172.17.0.0,0.0.0.255,eq,44320,deny,ip,host,10.80.17.20,,,host,172.18.2.2,,

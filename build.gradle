@@ -1,0 +1,42 @@
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'org.hidetake:gradle-ssh-plugin:2.8.0'
+  }
+}
+
+apply plugin: 'org.hidetake.ssh'
+
+ssh.settings {
+  //knownHosts = allowAnyHosts
+  //dryRun = true
+}
+
+
+remotes {
+  squidanalyser {
+    host = '172.18.2.31'
+    //host = '127.0.0.1'
+    user = 'root'
+    password = 'password'
+    //identity = file('id_rsa')
+    knownHosts = allowAnyHosts
+  }
+}
+
+
+task deploy  {
+	doLast {    
+      ssh.run {
+        session(remotes.squidanalyser) {
+        	execute 'mkdir -p /opt/cd60/python'
+			put from: 'utils', into: '/opt/cd60/python', filter: {it.name =~ /.py$/}
+			put from: 'scripts', into: '/opt/cd60/python', filter: {it.name =~ /.py$/}
+			execute 'chmod 755 /opt/cd60/python/scripts/*' 
+			execute 'dos2unix /opt/cd60/python/scripts/*' 
+      }
+    }
+  }
+}

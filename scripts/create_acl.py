@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import sys
 
 from utils.switch.switch_scripter import SwitchScripter
@@ -35,9 +36,6 @@ class CreateAcl(SwitchScripter):
                 aclreplace['src1'] = {'vlanid': args['vlanid'], 'siteid': args['siteid']}
                 aclreplace['dst2'] = {'secondaryserver': args['secondaryserver']}
                 
-                switch.end()
-                switch.conft()
-                switch
                 switch.create_ACL(args['Name'], reader, aclreplace)
             
             switch.logout()

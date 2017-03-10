@@ -72,16 +72,16 @@ class SwitchAllied(SwitchBase):
             print(self.connection.before)
             print(self.connection.after)
     
-    def create_ACL(self, name, acl_entries, acl_replace=None):
+    def create_ACL(self, name, acl_entries, acl_replace=None, inverse_src_and_dst = False):
         pass
 
     def ACL(self, name):
         pass
 
-    def ACL_add_row(self, name, row, acl_replace=None):
+    def ACL_add_row(self, name, row, acl_replace=None, inverse_src_and_dst = False):
         pass
 
-    def ACL_add_entry(self, name, action, protocol, src1, src2, src_port_operator, dst1, dst2, dst_port_operator, dst_port, log):
+    def ACL_add_entry(self, name, action, protocol, src1, src2, src_port_operator, dst1, dst2, dst_port_operator, dst_port, log, inverse_src_and_dst = False):
         pass
 
     def add_ospf_router(self, network, ospfwildcard, CIDR):
