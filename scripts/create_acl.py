@@ -29,15 +29,19 @@ class CreateAcl(SwitchScripter):
         if not switch.login(args['login'], args['password']):
             print('impossible de se connecter')
         else:
+            aclreplace = {}
+            aclreplace['src1'] = {'vlanid': args['vlanid'], 'siteid': args['siteid']}
+            aclreplace['dst2'] = {'secondaryserver': args['secondaryserver']}
+                
             with open(args['csvaclentries']) as csv_file:
                 reader = csv.DictReader(csv_file, delimiter=';')
-                
-                aclreplace = {}
-                aclreplace['src1'] = {'vlanid': args['vlanid'], 'siteid': args['siteid']}
-                aclreplace['dst2'] = {'secondaryserver': args['secondaryserver']}
-                
-                switch.create_ACL(args['Name'], reader, aclreplace)
+                switch.create_ACL(args['Name']+'IN', reader, aclreplace)
             
+            # do the reverse
+            with open(args['csvaclentries']) as csv_file:
+                reader = csv.DictReader(csv_file, delimiter=';')
+                switch.create_ACL(args['Name']+'OUT', reader, aclreplace, inverse_src_and_dst = True)
+
             switch.logout()
 
 create_acl = CreateAcl('Add access list', sys.argv[1:])

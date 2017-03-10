@@ -40,3 +40,14 @@ task deploy  {
     }
   }
 }
+
+task deployresources  {
+	doLast {    
+      ssh.run {
+        session(remotes.squidanalyser) {
+        	execute 'mkdir -p /opt/cd60/python'
+			put from: 'resources', into: '/opt/cd60/python'
+      }
+    }
+  }
+}

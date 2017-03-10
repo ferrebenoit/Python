@@ -25,7 +25,7 @@ class SwitchCisco(SwitchBase):
             return Exec.PRIVILEGED
 
     def getConfigMode(self):
-        if self.configMode == '':
+        if self.configMode == None:
             return ConfigMode.GLOBAL
         elif self.configMode == 'config':
             return ConfigMode.TERMINAL   
@@ -199,8 +199,9 @@ class SwitchCisco(SwitchBase):
         self.expectPrompt()
         
     def end(self):
-        self.sendline('end')
-        self.expectPrompt()
+        if not self.getConfigMode() == ConfigMode.GLOBAL: 
+            self.sendline('end')
+            self.expectPrompt()
 
     
     def write(self):

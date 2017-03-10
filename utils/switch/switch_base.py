@@ -82,21 +82,21 @@ class SwitchBase(metaclass=ABCMeta):
     @property
     def hostname(self):
         if not self.__hostname:
-            return 'None'
+            return None
         
         return self.__hostname.decode('UTF-8')
 
     @property
     def configMode(self):
         if not self.__configMode:
-            return 'None'
+            return None
 
         return self.__configMode.decode('UTF-8')
 
     @property
     def exec(self):
         if not self.__exec:
-            return 'None'
+            return None
         
         return self.__exec.decode('UTF-8')
 
