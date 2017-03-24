@@ -32,8 +32,8 @@ task deploy  {
       ssh.run {
         session(remotes.squidanalyser) {
         	execute 'mkdir -p /opt/cd60/python'
-			put from: 'utils', into: '/opt/cd60/python', filter: {it.name =~ /.py$/}
 			put from: 'scripts', into: '/opt/cd60/python', filter: {it.name =~ /.py$/}
+			put from: 'utils', into: '/opt/cd60/python', filter: {it.name =~ /.py$/}
 			execute 'chmod 755 /opt/cd60/python/scripts/*' 
 			execute 'dos2unix /opt/cd60/python/scripts/*' 
       }

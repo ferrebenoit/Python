@@ -35,12 +35,12 @@ class CreateAcl(SwitchScripter):
                 
             with open(args['csvaclentries']) as csv_file:
                 reader = csv.DictReader(csv_file, delimiter=';')
-                switch.create_ACL(args['Name']+'IN', reader, aclreplace)
+                switch.create_ACL(args['Name']+'In', reader, aclreplace)
             
             # do the reverse
             with open(args['csvaclentries']) as csv_file:
                 reader = csv.DictReader(csv_file, delimiter=';')
-                switch.create_ACL(args['Name']+'OUT', reader, aclreplace, inverse_src_and_dst = True)
+                switch.create_ACL(args['Name']+'Out', reader, aclreplace, inverse_src_and_dst = True)
 
             switch.logout()
 

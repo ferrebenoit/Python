@@ -36,6 +36,7 @@ from pexpect import pxssh
 import pexpect
 from enum import Enum
 import logging
+import time
 
 class Exec(Enum):
     USER = 1
@@ -52,7 +53,7 @@ class ConfigMode(Enum):
 class SwitchBase(metaclass=ABCMeta):
 
     def __init__(self, IP, dryrun=False):
-
+        
         # Create logger
         self.logger = logging.getLogger('switch.{}'.format(IP))
         self.logger.addHandler(logging.NullHandler())
@@ -70,6 +71,7 @@ class SwitchBase(metaclass=ABCMeta):
         self.__connection = pxssh.pxssh(options={
                                             "StrictHostKeyChecking": "no",
                                             "UserKnownHostsFile": "/dev/null"})
+        self.__connection.delaybeforesend = 0.25 
         
     @abstractmethod
     def getExecLevel(self):
@@ -209,20 +211,24 @@ class SwitchBase(metaclass=ABCMeta):
     def ACL(self, name):
         pass
 
-    @abstractmethod
     def ACL_add_row(self, name, row, acl_replace=None, inverse_src_and_dst = False):
-        pass
+        if acl_replace != None:
+            for k in row.keys():
+                if(k in acl_replace): 
+                    row[k] = row[k].format(**acl_replace[k]) 
+        
+        self.ACL_add_entry(name, row['index'], row['action'], row['protocol'], row['src1'], row['src2'], row['src_port_operator'], row['src_port'], row['dst1'], row['dst2'], row['dst_port_operator'], row['dst_port'], row['log'], inverse_src_and_dst)
 
     @abstractmethod
     def ACL_add_entry(self, name, action, protocol, src1, src2, src_port_operator, dst1, dst2, dst_port_operator, dst_port, log, inverse_src_and_dst = False):
         pass
     
     @abstractmethod
-    def add_ospf_router(self, network, ospfwildcard, CIDR):
+    def add_ospf_router(self, network, networkID):
         pass
     
     @abstractmethod
-    def create_vlan(self, ID, name, IP=-1, mask=-1, CIDR=-1, IP_helper=-1):
+    def create_vlan(self, ID, name, IP=-1, network=-1, IP_helper=-1):
         pass
     
     @abstractmethod
@@ -234,7 +240,7 @@ class SwitchBase(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def ip_address(self, IP, mask, CIDR):
+    def ip_address(self, IP, network):
         pass
 
     @abstractmethod
@@ -287,6 +293,9 @@ class SwitchBase(metaclass=ABCMeta):
         #load swtch state
         self.__hostname, self.__configModeWithParenthesis, self.__configMode, self.__exec = self.connection.match.groups()
     
+        self.logger.debug('before {}'.format(self.connection.before))
+        self.logger.debug('after {}'.format(self.connection.after))
+        
     @abstractmethod
     def login(self, login, password):
         try:

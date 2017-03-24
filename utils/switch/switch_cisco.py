@@ -7,6 +7,8 @@ Created on 23 nov. 2016
 from utils.switch.switch_base import SwitchBase, ConfigMode, Exec
 from pexpect.exceptions import TIMEOUT, EOF
 import datetime
+from utils.network.net_tools import convert_to_cidr, convert_to_netmask,\
+    convert_to_wildcard
 
 class SwitchCisco(SwitchBase):
 
@@ -115,35 +117,33 @@ class SwitchCisco(SwitchBase):
         self.sendline('ip access-list extended {}'.format(name))
         self.expectPrompt()
 
-    def ACL_add_row(self, name, row, acl_replace=None, inverse_src_and_dst = False):
-        if acl_replace != None:
-            for k in row.keys():
-                if(k in acl_replace): 
-                    row[k] = row[k].format(**acl_replace[k]) 
-        
-        self.ACL_add_entry(name, row['index'], row['action'], row['protocol'], row['src1'], row['src2'], row['src_port_operator'], row['src_port'], row['dst1'], row['dst2'], row['dst_port_operator'], row['dst_port'], row['log'], inverse_src_and_dst)
-
     def ACL_add_entry(self, name, index, action, protocol, src1, src2, src_port_operator, src_port, dst1, dst2, dst_port_operator, dst_port, log, inverse_src_and_dst = False):
     
+        if (src1.lower() != 'host'):
+            src2 = convert_to_wildcard(src2)
+            
+        if (dst1.lower() != 'host'):
+            dst2 = convert_to_wildcard(dst2)
+        
         if inverse_src_and_dst:
             self.sendline('{} {} {} {} {} {} {} {} {} {} {} {}'.format(index, action, protocol, dst1, dst2, dst_port_operator, dst_port, src1, src2, src_port_operator, src_port, log))    
         else:
             self.sendline('{} {} {} {} {} {} {} {} {} {} {} {}'.format(index, action, protocol, src1, src2, src_port_operator, src_port, dst1, dst2, dst_port_operator, dst_port, log))
         self.expectPrompt()
 
-    def add_ospf_router(self, network, ospfwildcard, CIDR):
+    def add_ospf_router(self, network, networkID):
         self.end()
         self.conft()
         
         self.sendline('router ospf 1')
         self.expectPrompt()
         
-        self.sendline('network {} {} area 0'.format(network, ospfwildcard))
+        self.sendline('network {} {} area 0'.format(network, convert_to_wildcard(networkID)))
         self.expectPrompt()
         
         self.write()        
      
-    def create_vlan(self, ID, name, IP=-1, mask=-1, CIDR=-1, IP_helper=-1):
+    def create_vlan(self, ID, name, IP=-1, network=-1, IP_helper=-1):
         '''        
             If IP mask and CIDR are provided add an IP to the vlan 
         '''
@@ -155,9 +155,9 @@ class SwitchCisco(SwitchBase):
         self.exit()
 
         # If IP mask and CIDR are provided add an IP to the vlan 
-        if IP != -1 and mask != -1:
+        if IP != -1 and network != -1:
             self.int_vlan(ID, name)
-            self.ip_address(IP, mask, CIDR)
+            self.ip_address(IP, network)
         
             if (IP_helper != -1):
                 self.ip_helper(IP_helper)
@@ -178,8 +178,8 @@ class SwitchCisco(SwitchBase):
             self.sendline('description {}'.format(name))
             self.expectPrompt()
 
-    def ip_address(self, IP, mask, CIDR):
-        self.sendline('ip address {} {}'.format(IP, mask))
+    def ip_address(self, IP, network):
+        self.sendline('ip address {} {}'.format(IP, convert_to_netmask(network)))
         self.expectPrompt()
 
     def ip_helper(self, IP):

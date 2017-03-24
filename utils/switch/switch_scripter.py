@@ -48,7 +48,7 @@ class SwitchScripter(ArgFromCSV):
         self._arg_parser.add_argument('--login', help='login')
         self._arg_parser.add_argument('--password', help='password')
         self._arg_parser.add_argument('--vendor', help='the vendor')
-        self._arg_parser.add_argument('--name', help='the switch name')
+        self._arg_parser.add_argument('--switchname', help='the switch name')
                 
         self._add_mandatory_arg('IP', 'vendor', 'login', 'password')
         

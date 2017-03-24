@@ -1,6 +1,7 @@
 from utils.switch.switch_base import SwitchBase, ConfigMode, Exec
 from pexpect.exceptions import TIMEOUT, EOF
 import datetime
+from utils.network.net_tools import convert_to_netmask, convert_to_wildcard
 
 class SwitchHP(SwitchBase):
 
@@ -79,7 +80,7 @@ class SwitchHP(SwitchBase):
             print(self.connection.before)
             print(self.connection.after)
 
-    def create_vlan(self, ID, name, IP=-1, mask=-1, CIDR=-1, IP_helper=-1):
+    def create_vlan(self, ID, name, IP=-1, network=-1, IP_helper=-1):
         self.end()
         self.enable()
         self.conft()
@@ -87,25 +88,44 @@ class SwitchHP(SwitchBase):
         self.vlan(ID, name)
 
         # If IP mask and CIDR are provided add an IP to the vlan 
-        if IP != -1 and mask != -1:
-            self.ip_address(IP, mask, CIDR)
+        if IP != -1 and network != -1:
+            self.ip_address(IP, network)
             self.ip_helper(IP_helper)
         
         self.write()
         
     def create_ACL(self, name, acl_entries, acl_replace=None, inverse_src_and_dst = False):
-        pass
+        self.end()
+        self.conft()
+
+        self.ACL(name)
+
+        for row in acl_entries:
+            self.ACL_add_row(name, row, acl_replace, inverse_src_and_dst)
+
+        self.write()
+
 
     def ACL(self, name):
-        pass
+        self.sendline('ip access-list extended "{}"'.format(name))
+        self.expectPrompt()
 
-    def ACL_add_row(self, name, row, acl_replace=None, inverse_src_and_dst = False):
-        pass
+    def ACL_add_entry(self, name, index, action, protocol, src1, src2, src_port_operator, src_port, dst1, dst2, dst_port_operator, dst_port, log, inverse_src_and_dst = False):
+        if (src1.lower() != 'host'):
+            src2 = convert_to_wildcard(src2)
+            
+        if (dst1.lower() != 'host'):
+            dst2 = convert_to_wildcard(dst2)
+            
+        if inverse_src_and_dst:
+            self.sendline('{} {} {} {} {} {} {} {} {} {}'.format(action, protocol, dst1, dst2, dst_port_operator, dst_port, src1, src2, src_port_operator, src_port))    
+        else:
+            self.sendline('{} {} {} {} {} {} {} {} {} {}'.format(action, protocol, src1, src2, src_port_operator, src_port, dst1, dst2, dst_port_operator, dst_port))
+        self.expectPrompt()
+        
+        
 
-    def ACL_add_entry(self, name, action, protocol, src1, src2, src_port_operator, dst1, dst2, dst_port_operator, dst_port, log, inverse_src_and_dst = False):
-        pass
-
-    def add_ospf_router(self, network, ospfwildcard, CIDR):
+    def add_ospf_router(self, network, networkID):
         pass
     
     def vlan(self, ID, name=None):
@@ -120,8 +140,8 @@ class SwitchHP(SwitchBase):
     def int_vlan(self, ID, name=None):
         self.vlan(ID, name)
 
-    def ip_address(self, IP, mask, CIDR):
-        self.sendline('ip address {} {}'.format(IP, mask))
+    def ip_address(self, IP, network):
+        self.sendline('ip address {} {}'.format(IP, convert_to_netmask(network)))
         self.expectPrompt()
 
     def ip_helper(self, IP):
@@ -172,7 +192,7 @@ class SwitchHP(SwitchBase):
             self.connection._spawn("ssh {}@{} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null".format(login, self.IP))
 
             self.connection.expect('password:')
-            self.sendline(password)
+            self.connection.sendline(password)
             
             self.sendline()
             self._loadPromptState()
