@@ -1,7 +1,8 @@
 from utils.switch.switch_base import SwitchBase, ConfigMode, Exec
 from pexpect.exceptions import TIMEOUT, EOF
 import datetime
-from utils.network.net_tools import convert_to_cidr
+from utils.network.net_tools import convert_to_cidr, convert_mac_allied
+import re
 
 class SwitchAllied(SwitchBase):
 
@@ -210,12 +211,55 @@ class SwitchAllied(SwitchBase):
             self.error('Backup error')
         return result 
     
+    def ping(self, ip, repeat=5):
+        self.sendline("ping {} repeat {}".format(ip, repeat))
+
+    def find_port_from_mac(self, mac, ip=None):
+        self.end()
+        self.enable()
+        
+        mac = convert_mac_allied(mac)
+        
+        if ip != None:
+            self.ping(ip, 3)
+            self.expectPrompt()
+            
+        self.sendline("show mac address-table | include {}".format(mac))
+        self.expectPrompt()
+
+        match = re.search('^([0-9][0-9]*)[ ]*([^ ]*)[ ]*([^ ]*)[ ]*([^ ]*)[ ]*([^ ]*)$', self.before(), re.MULTILINE)
+        if match:
+            return match.group(2)
+        else:
+            return ""
+        
+    def add_vlan_to_port(self, vlan_id, port, description=None):
+        self.sendline('int {}'.format(port))
+        
+        if description != None:
+            self.sendline('description {}'.format(description))
+        
+        self.sendline('switchport trunk allowed vlan add {}'.format(vlan_id))
+
+    def add_vlan_to_portlist(self, vlan_id, port_list, description=None):
+        self.end()
+        self.enable()
+        self.conft()
+        
+        for port in port_list:
+            self.add_vlan_to_port(vlan_id, port, description)
+        
+        self.write()
+
     def expectPrompt(self):
         return super(SwitchAllied, self).expectPrompt()
              
     def login(self, login, password):
-
-        return super(SwitchAllied, self).login(login, password)
+        if super(SwitchAllied, self).login(login, password):
+            self.expectPrompt()
+            return True
+        else:
+            return False
             
     def logout(self):
         return super(SwitchAllied, self).logout()

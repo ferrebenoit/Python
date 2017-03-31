@@ -284,6 +284,18 @@ class SwitchBase(metaclass=ABCMeta):
         pass
     
     @abstractmethod
+    def ping(self, ip, repeat=5):
+        pass
+
+    @abstractmethod
+    def find_port_from_mac(self, mac, ip=None):
+        pass
+
+    @abstractmethod
+    def add_vlan_to_port(self, vlan_id, port):
+        pass
+
+    @abstractmethod
     def expectPrompt(self):
         self.logInfo('expect : PROMPT')
         if self.dryrun:

@@ -18,6 +18,7 @@ Created on 16 mars 2017
 #
 #ip_network._make_netmask('255.255.255.0')
 from ipaddress import ip_network
+import re
 
 
 def convert_to_cidr(value):
@@ -37,6 +38,29 @@ def convert_to_wildcard(value):
         return ip_network('0.0.0.0/{}'.format(value)).hostmask.compressed
     except:
         return ''
+
+def convert_mac_allied(mac):
+    mac = mac.lower()
+    
+    matchgroup = re.match('([0-9a-f][0-9a-f])[:-]([0-9a-f][0-9a-f])[:-]([0-9a-f][0-9a-f])[:-]([0-9a-f][0-9a-f])[:-]([0-9a-f][0-9a-f])[:-]([0-9a-f][0-9a-f])', mac)
+    return "{}{}.{}{}.{}{}".format(matchgroup.group(1), 
+                                   matchgroup.group(2), 
+                                   matchgroup.group(3), 
+                                   matchgroup.group(4), 
+                                   matchgroup.group(5), 
+                                   matchgroup.group(6))
+
+def convert_mac_cisco(mac):
+    mac = mac.lower()
+    
+    matchgroup = re.match('([0-9a-f][0-9a-f])[:-]([0-9a-f][0-9a-f])[:-]([0-9a-f][0-9a-f])[:-]([0-9a-f][0-9a-f])[:-]([0-9a-f][0-9a-f])[:-]([0-9a-f][0-9a-f])', mac)
+    return "{}{}.{}{}.{}{}".format(matchgroup.group(1), 
+                                   matchgroup.group(2), 
+                                   matchgroup.group(3), 
+                                   matchgroup.group(4), 
+                                   matchgroup.group(5), 
+                                   matchgroup.group(6))
+
 
 class NetTools:
     

@@ -8,7 +8,8 @@ from utils.switch.switch_base import SwitchBase, ConfigMode, Exec
 from pexpect.exceptions import TIMEOUT, EOF
 import datetime
 from utils.network.net_tools import convert_to_cidr, convert_to_netmask,\
-    convert_to_wildcard
+    convert_to_wildcard, convert_mac_cisco
+import re
 
 class SwitchCisco(SwitchBase):
 
@@ -178,6 +179,35 @@ class SwitchCisco(SwitchBase):
             self.sendline('description {}'.format(name))
             self.expectPrompt()
 
+    def add_vlan_to_portlist(self, vlan_id, port_list, description=None):
+        pass
+
+    def add_vlan_to_port(self, vlan_id, port, description=None):
+        pass
+
+    def find_port_from_mac(self, mac, ip=None):
+        self.end()
+        
+        mac = convert_mac_cisco(mac)
+        
+        if ip != None:
+            self.ping(ip, 3)
+            self.expectPrompt()
+            
+        self.sendline("show mac address-table | include {}".format(mac))
+        self.expectPrompt()
+        
+        match = re.search('^[ ]*([0-9][0-9]*)[ ]*([^ ]*)[ ]*([^ ]*)[ ]*([^ ^\n]*)$', self.before(), re.MULTILINE)
+
+        if match:
+            return match.group(4)
+        else: 
+            return ""
+
+
+    def ping(self, ip, repeat=5):
+        self.sendline("ping {} repeat {}".format(ip, repeat))
+    
     def ip_address(self, IP, network):
         self.sendline('ip address {} {}'.format(IP, convert_to_netmask(network)))
         self.expectPrompt()
@@ -213,7 +243,10 @@ class SwitchCisco(SwitchBase):
         return super(SwitchCisco, self).expectPrompt()
     
     def login(self, login, password):
-        return super(SwitchCisco, self).login(login, password)
+        if super(SwitchCisco, self).login(login, password):
+            return True
+        else:
+            return False
         
     def logout(self):
         return super(SwitchCisco, self).logout()
