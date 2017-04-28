@@ -12,15 +12,23 @@ import csv
 import getpass
 import re
 from _csv import reader
+from utils.script.custom_argparse import CustomArgumentParser
 
 class ArgFromCSV:
-    "Base class that accept arguments from CSV File"
+    """This function does something.
+
+        :param description: La description du script.
+        :type description: str
+        :arg args: Les parametres du script a parser.
+        :type args: dict
+
+    """
     
     def __init__(self, description, args):
         
         self.__needed_args = []
         # create argument parser
-        self._arg_parser = argparse.ArgumentParser(description=description)
+        self._arg_parser = CustomArgumentParser(description=description)
         # Add script arguments
         self._define_args()
         # Parse command line arguments
@@ -41,7 +49,7 @@ class ArgFromCSV:
         
     def _add_mandatory_arg(self, *arg):
         for v in arg:
-            self.__needed_args.append(v)
+            self.__needed_args.append(v.lower())
           
     def __ask_needed_missing_args(self, args):
     
@@ -93,9 +101,12 @@ class ArgFromCSV:
         self._script_content(row)    
         
     def _filter_match(self, pattern, string):
-        return re.match(pattern, string) 
+        return re.match(pattern, string, re.IGNORECASE) 
         
     def process(self):
+        """
+            La fonction à appeler pour exécuter le script
+        """
         if(not 'csvfile' in self._arguments):
             self._arguments.update(self.__ask_needed_missing_args(self._arguments))
             
@@ -107,7 +118,6 @@ class ArgFromCSV:
                 reader = csv.DictReader(csv_file)
                 filter_by_field_name = self._arguments['filterby']
                 filter_by_field_pattern = self._arguments[filter_by_field_name]
-                
                 
                 for row in reader:
                     if(filter_by_field_name in row): # check if parameter passed in filterby is found in csv row

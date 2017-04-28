@@ -1,16 +1,18 @@
 from utils.switch.switch_base import SwitchBase, ConfigMode, Exec
 from pexpect.exceptions import TIMEOUT, EOF
 import datetime
-from utils.network.net_tools import convert_to_netmask, convert_to_wildcard
+from utils.network.net_tools import convert_to_netmask, convert_to_wildcard,\
+    convert_mac_HP
+import re
 
 class SwitchHP(SwitchBase):
 
-    def __init__(self, IP, dryrun=False):
-        super(SwitchHP, self).__init__(IP, dryrun)
+    def __init__(self, IP, site=None, dryrun=False):
+        super(SwitchHP, self).__init__(IP, 'hp', site, dryrun)
 
         #prompt rexex
         self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([>#])'
-        self.connection.PROMPT = self._PROMPT
+
 
     @property
     def hostname(self):
@@ -111,6 +113,10 @@ class SwitchHP(SwitchBase):
         self.expectPrompt()
 
     def ACL_add_entry(self, name, index, action, protocol, src1, src2, src_port_operator, src_port, dst1, dst2, dst_port_operator, dst_port, log, inverse_src_and_dst = False):
+        # if protocol is icmp discard the entry as HP does not deny/accept ICMP 
+        if (protocol.lower() == 'icmp'):
+            return
+        
         if (src1.lower() != 'host'):
             src2 = convert_to_wildcard(src2)
             
@@ -124,6 +130,11 @@ class SwitchHP(SwitchBase):
         self.expectPrompt()
         
         
+    def delete_acl(self, name):
+        pass
+
+    def add_acl_to_interface(self, acl_name, interface_name, inbound=True):
+        pass
 
     def add_ospf_router(self, network, networkID):
         pass
@@ -168,10 +179,10 @@ class SwitchHP(SwitchBase):
         self.sendline('write memory')
         self.expectPrompt()
 
-    def save_conf_TFTP(self, TFTP_IP):
+    def save_conf_TFTP(self, TFTP_IP, folder=None, add_timestamp=False):
         self.end()
         
-        result = self.downloadFileTFTP(TFTP_IP, 'running-config', '{}_{:%Y%m%d-%H%M%S}.cnfg'.format(self.hostname, datetime.datetime.today()))
+        result = self.downloadFileTFTP(TFTP_IP, 'running-config', self._build_tftp_filepath(folder, add_timestamp))
     
         if result :
             self.logger.info('Backup complete')
@@ -179,6 +190,41 @@ class SwitchHP(SwitchBase):
             self.error('Backup error')
         return result 
     
+    def ping(self, ip, repeat=5):
+        self.sendline("ping {} repetitions {}".format(ip, repeat))
+
+    def find_port_from_mac(self, mac, ip=None):
+        self.end()
+        mac = convert_mac_HP(mac)
+        
+        if ip != None:
+            self.ping(ip, 3)
+            self.expectPrompt()
+
+        self.sendline("show mac-address {}".format(mac))
+        self.expectPrompt()
+
+        match = re.search('Located on Port : ([A-Z][0-9]+)', self.before(), re.MULTILINE)
+        if match:
+            return match.group(1)
+        else:
+            return ""
+       
+        
+
+    def add_tagged_vlan_to_port(self, vlan_id, port, description=None):
+        self.sendline('vlan {}'.format(vlan_id))
+        self.expectPrompt()
+        
+        self.sendline('tagged {}'.format(port))
+        self.expectPrompt()
+        
+        if description != None:
+            self.sendline('interface {}'.format(port))
+            self.expectPrompt()
+            self.sendline('name {}'.format(description))
+            self.expectPrompt()
+        
 
     def expectPrompt(self):
         return super(SwitchHP, self).expectPrompt()
@@ -188,7 +234,8 @@ class SwitchHP(SwitchBase):
             if self.dryrun:
                 self.logger.info("Login ok as user {}".format(login))
                 return True
-                
+            
+            self.connect()    
             self.connection._spawn("ssh {}@{} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null".format(login, self.IP))
 
             self.connection.expect('password:')
@@ -196,25 +243,23 @@ class SwitchHP(SwitchBase):
             
             self.sendline()
             self._loadPromptState()
+
+            self.expectPrompt()
             
-            result = True
+            self.logger.info("Login ok as user {}".format(login))
+            return True
         except:
-            self.logger.critical('login failed')
             self.logger.critical(self.connection.before)
             self.logger.critical(self.connection.after)
-            result =  False
+            self.logger.error("Connection error")
+            return  False
             
-        if result:
-            self.logger.info("Login ok as user {}".format(login))
-        else:
-            self.logger.error("Login error as user {}".format(login))
-        
-        return result
+        return False
         
             
     def logout(self):
         if super(SwitchHP, self).logout():
-            self.connection.expect('[y/n]?')
+            self.expect('[y/n]?')
             self.send('y')
             return True
         else:

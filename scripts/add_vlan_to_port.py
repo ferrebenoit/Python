@@ -30,7 +30,7 @@ class PubkeyAuth(SwitchScripter):
                 switch.enable()
                 switch.conft()
                 for row in reader:
-                    switch.add_vlan_to_port(args['vlan'], row['port'], args['description'])
+                    switch.add_tagged_vlan_to_port(args['vlan'], row['port'], args['description'])
                 
                 switch.write()
             

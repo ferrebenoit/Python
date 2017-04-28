@@ -6,12 +6,11 @@ import re
 
 class SwitchAllied(SwitchBase):
 
-    def __init__(self, IP, dryrun=False):
-        super(SwitchAllied, self).__init__(IP, dryrun)
+    def __init__(self, IP, site=None, dryrun=False):
+        super(SwitchAllied, self).__init__(IP, 'allied', site, dryrun)
         
         #prompt rexex
         self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([>#])'
-        self.connection.PROMPT = self._PROMPT
 
     def getExecLevel(self):
         if self.exec == '>':
@@ -86,11 +85,23 @@ class SwitchAllied(SwitchBase):
 
         self.write()
 
+    def delete_acl(self, name):
+        pass
+
     def ACL(self, name):
         self.sendline('access-list extended {}'.format(name))
         self.expectPrompt()
 
     def ACL_add_entry(self, name, index, action, protocol, src1, src2, src_port_operator, src_port, dst1, dst2, dst_port_operator, dst_port, log, inverse_src_and_dst = False):
+        #TODO: if protocol is ICMP and not inverse_src_and_dst assign icmp-type 0 to  src_port_operator
+        # if protocol is ICMP and inverse_src_and_dst assign icmp-type 8 to  dst_port_operator
+    
+        # if we ask icmp add icmp type at the end of request
+        if (protocol.lower() == 'icmp'):
+            if inverse_src_and_dst:
+                src_port_operator = "8"
+            else:
+                dst_port_operator = "0"    
     
         if (src1.lower() != 'host'):
             src2 = convert_to_cidr(src2)
@@ -120,6 +131,9 @@ class SwitchAllied(SwitchBase):
             self.sendline('{} {} {}{} {} {} {}{} {} {} {}'.format(action, protocol, src1, src2, src_port_operator, src_port, dst1, dst2, dst_port_operator, dst_port, log))
         self.expectPrompt()
 
+    def add_acl_to_interface(self, acl_name, interface_name, inbound=True):
+        pass
+        
     def add_ospf_router(self, network, networkID):
         self.end()
         self.enable()
@@ -200,15 +214,15 @@ class SwitchAllied(SwitchBase):
         self.sendline('write')
         self.expectPrompt()
 
-    def save_conf_TFTP(self, TFTP_IP):
+    def save_conf_TFTP(self, TFTP_IP, folder=None, add_timestamp=False):
         self.end()
         self.enable()
-        result = self.downloadFileTFTP(TFTP_IP, 'running-config', '{}_{:%Y%m%d-%H%M%S}.cnfg'.format(self.hostname, datetime.datetime.today()))
+        result = self.downloadFileTFTP(TFTP_IP, 'running-config', self._build_tftp_filepath(folder, add_timestamp))
         
         if result :
             self.logger.info('Backup complete')
         else:
-            self.error('Backup error')
+            self.logger.error('Backup error')
         return result 
     
     def ping(self, ip, repeat=5):
@@ -233,13 +247,16 @@ class SwitchAllied(SwitchBase):
         else:
             return ""
         
-    def add_vlan_to_port(self, vlan_id, port, description=None):
+    def add_tagged_vlan_to_port(self, vlan_id, port, description=None):
         self.sendline('int {}'.format(port))
+        self.expectPrompt()
         
         if description != None:
             self.sendline('description {}'.format(description))
+            self.expectPrompt()
         
         self.sendline('switchport trunk allowed vlan add {}'.format(vlan_id))
+        self.expectPrompt()
 
     def add_vlan_to_portlist(self, vlan_id, port_list, description=None):
         self.end()

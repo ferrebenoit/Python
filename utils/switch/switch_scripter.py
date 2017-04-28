@@ -9,7 +9,6 @@ from utils.switch.switch_allied import SwitchAllied
 from utils.switch.switch_HP import SwitchHP
 
 import re
-import logging
 import logging.handlers
 
 class SwitchScripter(ArgFromCSV):
@@ -39,29 +38,30 @@ class SwitchScripter(ArgFromCSV):
     def _define_args(self):
         super()._define_args()
         self._arg_parser.add_argument('--loglevel', help='Loglevel', choices=['debug', 'info', 'warning', 'error', 'critical'], default='info')
-        self._arg_parser.add_argument('--screenlog', help='Print log on screen', default='yes')
+        self._arg_parser.add_argument('--screenlog', help='Print log on screen', choices=['yes', 'no'], default='yes')
         self._arg_parser.add_argument('--filelog', help='Save la on file', default='none')
 
-        self._arg_parser.add_argument('--dryrun', help='No Action taken! Only print what would have been executed.', default='no')
+        self._arg_parser.add_argument('--dryrun', help='No Action taken! Only print what would have been executed.', choices=['yes', 'no'], default='no')
 
-        self._arg_parser.add_argument('--IP', help='Switch IP address')
+        self._arg_parser.add_argument('--ip', help='Switch IP address')
         self._arg_parser.add_argument('--login', help='login')
         self._arg_parser.add_argument('--password', help='password')
-        self._arg_parser.add_argument('--vendor', help='the vendor')
+        self._arg_parser.add_argument('--vendor', '--type', help='the vendor')
         self._arg_parser.add_argument('--switchname', help='the switch name')
+        self._arg_parser.add_argument('--site', help='The switch site')
                 
         self._add_mandatory_arg('IP', 'vendor', 'login', 'password')
         
-    def _script_content(self, args):
+    def _script_content(self, args):        
         if(re.compile('cisco', flags=re.IGNORECASE).search(args['vendor'])):
         #if(args['vendor'].lower().contains('cisco')):
-            self._script_content_cisco(SwitchCisco(args['IP'], args['dryrun'] == 'yes'), args)
+            self._script_content_cisco(SwitchCisco(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
         if(re.compile('hp', flags=re.IGNORECASE).search(args['vendor'])):
         #elif(args['vendor'].lower().contains('hp')):
-            self._script_content_hp(SwitchHP(args['IP'], args['dryrun'] == 'yes'), args)
+            self._script_content_hp(SwitchHP(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
         if(re.compile('allied', flags=re.IGNORECASE).search(args['vendor'])):
         #elif(args['vendor'].lower().contains('allied')):
-            self._script_content_allied(SwitchAllied(args['IP'], args['dryrun'] == 'yes'), args)
+            self._script_content_allied(SwitchAllied(args['ip'],args.get('site', None), args['dryrun'] == 'yes'), args)
 
     def _script_content_cisco(self, switch_cisco, args):
         self._common_actions(switch_cisco, args)

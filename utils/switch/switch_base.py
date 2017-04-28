@@ -37,6 +37,7 @@ import pexpect
 from enum import Enum
 import logging
 import time
+import datetime
 
 class Exec(Enum):
     USER = 1
@@ -52,15 +53,21 @@ class ConfigMode(Enum):
 
 class SwitchBase(metaclass=ABCMeta):
 
-    def __init__(self, IP, dryrun=False):
+    def __init__(self, IP, vendor, site=None, dryrun=False):
         
         # Create logger
-        self.logger = logging.getLogger('switch.{}'.format(IP))
+        if site:
+            self.logger = logging.getLogger('switch.{}.{}.{}'.format(vendor, site, IP))
+        else:
+            self.logger = logging.getLogger('switch.{}.{}'.format(vendor, IP))
+        
         self.logger.addHandler(logging.NullHandler())
        
         self.__IP = IP
+        self.__site= site
         self.__dryrun = dryrun
-               
+        self.__vendor = vendor
+        
         self.__hostname = None
         self.__configModeWithParenthesis = None 
         self.__configMode = None
@@ -68,11 +75,20 @@ class SwitchBase(metaclass=ABCMeta):
         
         self._PROMPT = None
         
-        self.__connection = pxssh.pxssh(options={
+        self.__connection = None
+    
+    def connect(self):    
+        try:
+            self.__connection = pxssh.pxssh(options={
                                             "StrictHostKeyChecking": "no",
                                             "UserKnownHostsFile": "/dev/null"})
-        self.__connection.delaybeforesend = 0.25 
+            self.__connection.delaybeforesend = 0.25
+            self.__connection.PROMPT = self._PROMPT
+        except:
+            return False
         
+        return True 
+    
     @abstractmethod
     def getExecLevel(self):
         pass
@@ -108,9 +124,17 @@ class SwitchBase(metaclass=ABCMeta):
         return self.__configModeWithParenthesis
         
     @property
+    def vendor(self):
+        return self.__vendor
+
+    @property
     def IP(self):
         return self.__IP
     
+    @property
+    def site(self):
+        return self.__site
+
     @property
     def connection(self):
         return self.__connection
@@ -159,6 +183,17 @@ class SwitchBase(metaclass=ABCMeta):
         self.sendline()
         self.expectPrompt()
     
+    def _build_tftp_filepath(self, folder, add_timestamp):
+        filepath = "{}_{}_{}".format(self.IP, self.hostname, self.vendor)
+        
+        if folder:
+            filepath = "{}/{}".format(folder, filepath)
+        
+        if add_timestamp:
+            filepath = "{}_{:%Y%m%d-%H%M%S}".format(filepath, datetime.datetime.today())
+            
+        return filepath
+    
     def logInfo(self, message):
         self.logger.info(message)
     
@@ -204,6 +239,10 @@ class SwitchBase(metaclass=ABCMeta):
         return self.connection.expect(pattern, timeout, searchwindowsize, async)
 
     @abstractmethod
+    def delete_acl(self, name):
+        pass
+
+    @abstractmethod
     def create_ACL(self, name, acl_entries, acl_replace=None, inverse_src_and_dst = False):
         pass
 
@@ -223,6 +262,10 @@ class SwitchBase(metaclass=ABCMeta):
     def ACL_add_entry(self, name, action, protocol, src1, src2, src_port_operator, dst1, dst2, dst_port_operator, dst_port, log, inverse_src_and_dst = False):
         pass
     
+    @abstractmethod
+    def add_acl_to_interface(self, acl_name, interface_name, inbound=True):
+        pass
+        
     @abstractmethod
     def add_ospf_router(self, network, networkID):
         pass
@@ -280,7 +323,7 @@ class SwitchBase(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def save_conf_TFTP(self):
+    def save_conf_TFTP(self, TFTP_IP, folder=None, add_timestamp=False):
         pass
     
     @abstractmethod
@@ -292,7 +335,7 @@ class SwitchBase(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def add_vlan_to_port(self, vlan_id, port):
+    def add_tagged_vlan_to_port(self, vlan_id, port, description=None):
         pass
 
     @abstractmethod
@@ -315,20 +358,20 @@ class SwitchBase(metaclass=ABCMeta):
                 self.logger.info("Login ok as user {}".format(login))
                 return True
             
+            self.connect()
             if self.connection.login(self.__IP, login, password, auto_prompt_reset=False):
                 self._loadPromptState()
                 result = True
+                self.logger.info("Login ok as user {}".format(login))
             else:    
                 result =  False
+                self.logger.error("Login error as user {}".format(login))
         except:
             self.logger.critical(self.connection.before)
             self.logger.critical(self.connection.after)
+            self.logger.error("Connection error")
             result =  False
             
-        if result:
-            self.logger.info("Login ok as user {}".format(login))
-        else:
-            self.logger.error("Login error as user {}".format(login))
         
         return result
             

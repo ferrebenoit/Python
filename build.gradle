@@ -26,8 +26,7 @@ remotes {
   }
 }
 
-
-task deploy  {
+task deploysources  {
 	doLast {    
       ssh.run {
         session(remotes.squidanalyser) {
@@ -41,6 +40,18 @@ task deploy  {
   }
 }
 
+task deploydocs  {
+	doLast {    
+      ssh.run {
+        session(remotes.squidanalyser) {
+        	execute 'mkdir -p /opt/cd60/python'
+			put from: 'documentation', into: '/opt/cd60/python'
+      }
+    }
+  }
+}
+
+
 task deployresources  {
 	doLast {    
       ssh.run {
@@ -51,3 +62,20 @@ task deployresources  {
     }
   }
 }
+  
+task deployall  {
+	doLast {    
+		tasks.deploysources.execute()
+		tasks.deploydocs.execute()
+		tasks.deployresources.execute()
+	}
+}
+
+task builddoc (type:Exec){
+	doFirst { 
+		workingDir 'documentation/'
+		commandLine 'C:/Users/ferreb/Documents/dev/Python/documentation/make.bat', 'html'
+    }
+
+}
+  

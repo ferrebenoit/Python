@@ -1,3 +1,4 @@
+# coding: utf-8
 '''
 Created on 23 nov. 2016
 
@@ -10,17 +11,18 @@ import datetime
 from utils.network.net_tools import convert_to_cidr, convert_to_netmask,\
     convert_to_wildcard, convert_mac_cisco
 import re
+#from utils.switch import switchCiscoCommands
+
+
 
 class SwitchCisco(SwitchBase):
 
-    def __init__(self, IP, dryrun=False):
-        super(SwitchCisco, self).__init__(IP, dryrun)
+    def __init__(self, IP, site=None, dryrun=False):
+        super(SwitchCisco, self).__init__(IP, 'cisco', site, dryrun)
         
         #prompt rexex
         self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([$#])'
-        
-        self.connection.PROMPT = self._PROMPT
-        
+         
     def getExecLevel(self):
         if self.exec == '$':
             return Exec.USER
@@ -103,9 +105,15 @@ class SwitchCisco(SwitchBase):
             print(self.connection.before)
             print(self.connection.after)
 
+    def delete_acl(self, name):
+        self.sendline('no ip access-list extended {}'.format(name))
+        self.expectPrompt()
+
     def create_ACL(self, name, acl_entries, acl_replace=None, inverse_src_and_dst = False):
         self.end()
         self.conft()
+
+        self.delete_acl(name)
 
         self.ACL(name)
 
@@ -119,7 +127,16 @@ class SwitchCisco(SwitchBase):
         self.expectPrompt()
 
     def ACL_add_entry(self, name, index, action, protocol, src1, src2, src_port_operator, src_port, dst1, dst2, dst_port_operator, dst_port, log, inverse_src_and_dst = False):
-    
+        #TODO: if protocol is ICMP and not inverse_src_and_dst assign echo_reply to  src_port_operator
+        # if protocol is ICMP and inverse_src_and_dst assign echo to  dst_port_operator
+        
+        # if we ask icmp add icmp type at the end of request
+        if (protocol.lower() == 'icmp'):
+            if inverse_src_and_dst:
+                src_port_operator = "echo"
+            else:
+                dst_port_operator = "echo-reply"
+        
         if (src1.lower() != 'host'):
             src2 = convert_to_wildcard(src2)
             
@@ -131,6 +148,22 @@ class SwitchCisco(SwitchBase):
         else:
             self.sendline('{} {} {} {} {} {} {} {} {} {} {} {}'.format(index, action, protocol, src1, src2, src_port_operator, src_port, dst1, dst2, dst_port_operator, dst_port, log))
         self.expectPrompt()
+
+    def add_acl_to_interface(self, acl_name, interface_name, inbound=True):
+        self.end()
+        self.conft()
+        
+        self.sendline('interface {}'.format(interface_name))
+        self.expectPrompt()
+        
+        
+        if inbound :
+            self.sendline('ip access-group {} in'.format(acl_name))
+        else:
+            self.sendline('ip access-group {} out'.format(acl_name))
+        self.expectPrompt()
+        
+        self.write()
 
     def add_ospf_router(self, network, networkID):
         self.end()
@@ -179,10 +212,7 @@ class SwitchCisco(SwitchBase):
             self.sendline('description {}'.format(name))
             self.expectPrompt()
 
-    def add_vlan_to_portlist(self, vlan_id, port_list, description=None):
-        pass
-
-    def add_vlan_to_port(self, vlan_id, port, description=None):
+    def add_tagged_vlan_to_port(self, vlan_id, port, description=None):
         pass
 
     def find_port_from_mac(self, mac, ip=None):
@@ -251,13 +281,14 @@ class SwitchCisco(SwitchBase):
     def logout(self):
         return super(SwitchCisco, self).logout()
         
-    def save_conf_TFTP(self, TFTP_IP):
-        self.end()
-        result = self.downloadFileTFTP(TFTP_IP, 'system:running-config', '{}_{:%Y%m%d-%H%M%S}.cnfg'.format(self.hostname, datetime.datetime.today()))
+    def save_conf_TFTP(self, TFTP_IP, folder=None, add_timestamp=False):
+        self.end()        
+        
+        result = self.downloadFileTFTP(TFTP_IP, 'system:running-config', self._build_tftp_filepath(folder, add_timestamp))
         if result :
             self.logger.info('Backup complete')
         else:
-            self.error('Backup error')
+            self.logger.error('Backup error')
         return result 
 
         
