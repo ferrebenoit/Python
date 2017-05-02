@@ -9,6 +9,6 @@ Here is something I want to talk about::
 
         Returns None
         """
-        
-.. todo:: blah blah blah   
+
+.. todo:: blah blah blah
 '''

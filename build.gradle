@@ -7,6 +7,16 @@ buildscript {
   }
 }
 
+plugins {
+    id "com.linkedin.python-sdist" version "0.4.9"
+}
+
+repositories {
+    pyGradlePyPi()
+}
+
+version = '1.0'
+
 apply plugin: 'org.hidetake.ssh'
 
 ssh.settings {
