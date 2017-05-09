@@ -8,7 +8,7 @@ Created oén 23 nov. 2016
 '''
 import sys
 
-from utils.switch.switch_scripter import SwitchScripter
+from switchhandler.switch.switch_scripter import SwitchScripter
 
 
 class SaveSwitchConf(SwitchScripter):

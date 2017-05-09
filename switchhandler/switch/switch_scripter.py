@@ -6,10 +6,10 @@ Created on 23 nov. 2016
 import logging.handlers
 import re
 
-from utils.arg_from_csv import ArgFromCSV
-from utils.switch.switch_HP import SwitchHP
-from utils.switch.switch_allied import SwitchAllied
-from utils.switch.switch_cisco import SwitchCisco
+from switchhandler.arg_from_csv import ArgFromCSV
+from switchhandler.switch.switch_HP import SwitchHP
+from switchhandler.switch.switch_allied import SwitchAllied
+from switchhandler.switch.switch_cisco import SwitchCisco
 
 
 class SwitchScripter(ArgFromCSV):

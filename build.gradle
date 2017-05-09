@@ -6,24 +6,47 @@ buildscript {
     classpath 'org.hidetake:gradle-ssh-plugin:2.8.0'
   }
 }
-
+/////////////////Pygradle section/////////////////////////////////////////////
 plugins {
     id "com.linkedin.python-sdist" version "0.4.9"
+    //id "com.linkedin.python" version "0.4.9"
 }
 
 repositories {
     pyGradlePyPi()
+
+    ivy {
+    name 'pypi-local'   //optional, but nice
+    url 'c:/LOGICIEL/pypi'
+    layout "pattern", {
+      ivy "[organisation]/[module]/[revision]/[module]-[revision].ivy"
+      artifact "[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"
+      m2compatible = true
+    }
+  }
 }
 
-version = '1.0'
+dependencies {
+    //python 'pypi:pexpect:4.2.1'
+    //python 'pypi:packaging:16.8'
+    //python 'pypi:appdirs:1.4.3'
+    //test 'pypi:mock:1.3.0'
+}
 
+python {
+	srcDir = project.file('switchhandler').path
+
+    //forceVersion('pypi', 'setuptools', '35.0.2')
+}
+
+version = '1.3'
+//////////////////////////////////////////////////////////////////////////////
 apply plugin: 'org.hidetake.ssh'
 
 ssh.settings {
   //knownHosts = allowAnyHosts
   //dryRun = true
 }
-
 
 remotes {
   squidanalyser {

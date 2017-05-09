@@ -13,16 +13,16 @@ Welcome to Switch automation's documentation!
 utils
 =====
 
-Documentation de utils
+Documentation de switchhandler
 
-.. automodule:: utils
+.. automodule:: switchhandler
 
 network
 =======
 
 Documentation de network
 
-.. automodule:: utils.network
+.. automodule:: switchhandler.network
 
 Indices and tables
 ==================

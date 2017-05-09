@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import sys
 
-from utils.network.net_tools import convert_to_wildcard
-from utils.switch.switch_scripter import SwitchScripter
+from switchhandler.network.net_tools import convert_to_wildcard
+from switchhandler.switch.switch_scripter import SwitchScripter
 
 
 class PubkeyAuth(SwitchScripter):

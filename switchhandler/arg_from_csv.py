@@ -11,7 +11,7 @@ import getpass
 import os
 import re
 
-from utils.script.custom_argparse import CustomArgumentParser
+from switchhandler.script.custom_argparse import CustomArgumentParser
 
 
 class ArgFromCSV:

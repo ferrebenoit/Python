@@ -2,8 +2,8 @@ import re
 
 from pexpect.exceptions import TIMEOUT, EOF
 
-from utils.network.net_tools import convert_to_cidr, convert_mac_allied
-from utils.switch.switch_base import SwitchBase, ConfigMode, Exec
+from switchhandler.network.net_tools import convert_to_cidr, convert_mac_allied
+from switchhandler.switch.switch_base import SwitchBase, ConfigMode, Exec
 
 
 class SwitchAllied(SwitchBase):

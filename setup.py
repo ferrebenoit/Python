@@ -139,13 +139,20 @@ class GradleDistribution(Distribution, object):
 
 setup(
     distclass=GradleDistribution,
-    package_dir={'': 'src'},
-    packages=find_packages('src'),
+    package_dir={'switchhandler': 'switchhandler'},
+    packages=find_packages(),
     include_package_data=True,
+    author="Benoit Ferre",
+    url='http://example.com',
+    author_email="benoit.ferre@oise.fr",
+    description="Library for interacting with switchs",
+    long_description="Library for interacting with switchs\n supported vendor are Allied, Cisco, HP",
+    platforms="Unix",
+    # setup_requires=['pexpect'],
 
-    entry_points={
-        'console_scripts': [
-            'hello_world = foo.hello:main',
-        ],
-    }
+    #    entry_points={
+    #        'console_scripts': [
+    #            'hello_world = foo.hello:main',
+    #        ],
+    #    }
 )

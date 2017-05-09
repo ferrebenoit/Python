@@ -4,7 +4,7 @@ import csv
 import os
 import sys
 
-from utils.switch.switch_scripter import SwitchScripter
+from switchhandler.switch.switch_scripter import SwitchScripter
 
 
 class PubkeyAuth(SwitchScripter):
