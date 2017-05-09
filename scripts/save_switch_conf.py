@@ -8,7 +8,7 @@ Created oén 23 nov. 2016
 '''
 import sys
 
-from utils.switch.switch_scripter import SwitchScripter
+from switchhandler.switch.switch_scripter import SwitchScripter
 
 
 class SaveSwitchConf(SwitchScripter):
@@ -17,7 +17,7 @@ class SaveSwitchConf(SwitchScripter):
     def _define_args(self):
         super()._define_args()
         self._arg_parser.add_argument('--TFTPIP', help='The TFTP IP', default='192.168.7.20')
-        
+
     def _common_actions(self, switch, args):
         if not switch.login(args['login'], args['password']):
             print('impossible de se connecter')

@@ -1,5 +1,5 @@
 '''
-.. automodule:: utils.arg_from_csv
+.. automodule:: switchhandler.arg_from_csv
    :members:
 
 Here is something I want to talk about::
@@ -9,6 +9,6 @@ Here is something I want to talk about::
 
         Returns None
         """
-        
-.. todo:: blah blah blah   
+
+.. todo:: blah blah blah
 '''
