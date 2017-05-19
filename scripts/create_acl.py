@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from _csv import reader
+from asyncio.tasks import sleep
 import csv
 import os
 import sys
@@ -35,10 +36,12 @@ class CreateAcl(SwitchScripter):
             pass
             aclreplace = {}
             aclreplace['src1'] = {'vlanid': args['vlanid'], 'siteid': args['siteid']}
+            aclreplace['dst1'] = {'vlanid': args['vlanid'], 'siteid': args['siteid']}
             aclreplace['dst2'] = {'secondaryserver': args['secondaryserver']}
 
             with open(args['csvaclentries']) as csv_file:
                 reader = csv.DictReader(csv_file, delimiter=';')
+                #switch.create_ACL(args['aclname'] + acl_suffix, reader, ['wyse={}'.format(args['wyse'])], aclreplace, inverse_src_and_dst)
                 switch.create_ACL(args['aclname'] + acl_suffix, reader, aclreplace, inverse_src_and_dst)
 
             switch.logout()

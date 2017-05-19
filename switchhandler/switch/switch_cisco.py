@@ -12,9 +12,9 @@ from pexpect.exceptions import TIMEOUT, EOF
 from switchhandler.network.net_tools import convert_to_netmask, \
     convert_to_wildcard, convert_mac_cisco
 from switchhandler.switch.switch_base import SwitchBase, ConfigMode, Exec
+from switchhandler.switch.cisco import switchCiscoCommands
 
 
-# from switchhandler.switch import switchCiscoCommands
 class SwitchCisco(SwitchBase):
 
     def __init__(self, IP, site=None, dryrun=False):
@@ -111,6 +111,7 @@ class SwitchCisco(SwitchBase):
         self.sendline('no ip access-list extended {}'.format(name))
         self.expectPrompt()
 
+    # def create_ACL(self, name, acl_entries, condition=None, acl_replace=None, inverse_src_and_dst=False):
     def create_ACL(self, name, acl_entries, acl_replace=None, inverse_src_and_dst=False):
         self.end()
         self.conft()
@@ -129,7 +130,7 @@ class SwitchCisco(SwitchBase):
         self.expectPrompt()
 
     def ACL_add_entry(self, name, index, action, protocol, src1, src2, src_port_operator, src_port, dst1, dst2, dst_port_operator, dst_port, log, inverse_src_and_dst=False):
-        # TODO: if protocol is ICMP and not inverse_src_and_dst assign echo_reply to  src_port_operator
+        # if protocol is ICMP and not inverse_src_and_dst assign echo_reply to  src_port_operator
         # if protocol is ICMP and inverse_src_and_dst assign echo to
         # dst_port_operator
 
@@ -295,3 +296,6 @@ class SwitchCisco(SwitchBase):
         else:
             self.logger.error('Backup error')
         return result
+
+    def getSwitchCommands(self):
+        return switchCiscoCommands

@@ -23,6 +23,7 @@ class CustomArgumentParser(ArgumentParser):
         lowerargs = []
 
         for arg in args:
+            # If this is an option --xxx
             if (len(arg) > 0) and (arg[0] in ['-']):
                 lowerargs.append(arg.lower())
             else:

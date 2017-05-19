@@ -22,7 +22,11 @@ class SaveSwitchConf(SwitchScripter):
         if not switch.login(args['login'], args['password']):
             print('impossible de se connecter')
         else:
-            switch.save_conf_TFTP(args['tftpip'], folder="switch.git/{}".format(args['site']), add_timestamp=False)
+            switch.execute(
+                'save_conf_tftp',
+                tftp_ip=args['tftpip'],
+                folder="switch.git/{}".format(args['site']),
+                add_timestamp=False)
             #switch.save_conf_TFTP(args['TFTPIP'], folder="DN", add_timestamp=False)
         switch.logout()
 

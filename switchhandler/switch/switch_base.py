@@ -37,6 +37,7 @@ import logging
 
 from pexpect import pxssh
 import pexpect
+from switchhandler.switch.switch_exception import CommandNotFoundException
 
 
 class Exec(Enum):
@@ -258,7 +259,22 @@ class SwitchBase(metaclass=ABCMeta):
                 if(k in acl_replace):
                     row[k] = row[k].format(**acl_replace[k])
 
-        self.ACL_add_entry(name, row['index'], row['action'], row['protocol'], row['src1'], row['src2'], row['src_port_operator'], row['src_port'], row['dst1'], row['dst2'], row['dst_port_operator'], row['dst_port'], row['log'], inverse_src_and_dst)
+        # if condition in row['condition']:
+
+        self.ACL_add_entry(name,
+                           row['index'],
+                           row['action'],
+                           row['protocol'],
+                           row['src1'],
+                           row['src2'],
+                           row['src_port_operator'],
+                           row['src_port'],
+                           row['dst1'],
+                           row['dst2'],
+                           row['dst_port_operator'],
+                           row['dst_port'],
+                           row['log'],
+                           inverse_src_and_dst)
 
     @abstractmethod
     def ACL_add_entry(self, name, action, protocol, src1, src2, src_port_operator, dst1, dst2, dst_port_operator, dst_port, log, inverse_src_and_dst=False):
@@ -385,3 +401,18 @@ class SwitchBase(metaclass=ABCMeta):
             return True
         except:
             return False
+
+    @abstractmethod
+    def getSwitchCommands(self):
+        pass
+
+    def execute(self, command_name, *args, **kwargs):
+        command_class = self.getSwitchCommands().get(command_name, None)
+
+        # TODO: Raise excpetion or add an log entry warning
+        if command_class is None:
+            raise CommandNotFoundException("command with Name {} not implemented".format(command_name))
+
+        command = command_class(self, *args, **kwargs)
+
+        return command.run()

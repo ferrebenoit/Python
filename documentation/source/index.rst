@@ -17,6 +17,11 @@ Documentation de switchhandler
 
 .. automodule:: switchhandler
 
+CISCO
+=====
+.. automodule:: switchhandler.switch.cisco
+
+
 network
 =======
 
