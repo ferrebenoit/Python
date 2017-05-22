@@ -7,9 +7,10 @@ import logging.handlers
 import re
 
 from switchhandler.arg_from_csv import ArgFromCSV
-from switchhandler.switch.switch_HP import SwitchHP
+
 from switchhandler.switch.allied.switch_allied import SwitchAllied
 from switchhandler.switch.cisco.switch_cisco import SwitchCisco
+from switchhandler.switch.hp.switch_HP import SwitchHP
 
 
 class SwitchScripter(ArgFromCSV):

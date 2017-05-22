@@ -4,6 +4,7 @@ from pexpect.exceptions import TIMEOUT, EOF
 
 from switchhandler.network.net_tools import convert_to_cidr, convert_mac_allied
 from switchhandler.switch.switch_base import SwitchBase, ConfigMode, Exec
+from switchhandler.switch.allied import switchAlliedCommands
 
 
 class SwitchAllied(SwitchBase):
@@ -284,3 +285,6 @@ class SwitchAllied(SwitchBase):
 
     def logout(self):
         return super(SwitchAllied, self).logout()
+
+    def getSwitchCommands(self):
+        return switchAlliedCommands

@@ -80,7 +80,7 @@ from switchhandler.switch.allied.view.view_save_conf_tftp import ViewSaveConfTFT
 from switchhandler.switch.allied.view.view_upload_file_tftp import ViewUploadFileTFTP
 
 
-switchalliedCommands = {
+switchAlliedCommands = {
     #    "add_acl_to_interface": ActionAddACLToInterface,
     "add_ospf_router": ActionAddOSPFRouter,
     "create_acl": ActionCreateACL,
