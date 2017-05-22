@@ -7,8 +7,8 @@ Created on 23 nov. 2016
 '''
 # def command(self, *validMode, cmdStr, )
 
-# liste de fontion a créer
-# utiliser ces fonctions pour simplifier la création de script
+# liste de fontion a crï¿½er
+# utiliser ces fonctions pour simplifier la crï¿½ation de script
 
 # Enregistrer le hostname
 
@@ -31,13 +31,16 @@ Created on 23 nov. 2016
 # $ python3 ./save_switch_conf.py --IP "172.17.1.37|172.17.1.38" --login ferreb --filterby IP  --csvfile file.csv
 
 from abc import ABCMeta, abstractmethod
+from builtins import AttributeError
 import datetime
 from enum import Enum
 import logging
 
 from pexpect import pxssh
 import pexpect
-from switchhandler.switch.switch_exception import CommandNotFoundException
+
+from switchhandler.switch.switch_exception import CommandNotFoundException,\
+    CommandParameterNotFoundException
 
 
 class Exec(Enum):
@@ -415,4 +418,7 @@ class SwitchBase(metaclass=ABCMeta):
 
         command = command_class(self, *args, **kwargs)
 
-        return command.run()
+        try:
+            return command.run()
+        except AttributeError as e:
+            raise CommandParameterNotFoundException(e)

@@ -28,6 +28,7 @@ class ActionCreateACL(ActionBase):
 
     def do_run(self):
         self.switch.execute('end')
+        self.switch.execute('enable')
         self.switch.execute('conft')
 
         self.switch.execute('delete_acl', name=self.name)

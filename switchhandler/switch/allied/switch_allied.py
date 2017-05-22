@@ -46,7 +46,11 @@ class SwitchAllied(SwitchBase):
         return True
 
     def uploadFileTFTP(self, TFTP_IP, localFilePath, RemoteFilePath):
-        self.sendline('copy tftp://{} flash:/{}'.format(TFTP_IP, localFilePath, RemoteFilePath))
+        self.sendline('copy tftp://{} flash:/{}'.format(
+            TFTP_IP,
+            localFilePath,
+            RemoteFilePath
+        ))
         self.expectPrompt()
 
     def downloadFileTFTP(self, TFTP_IP, localFilePath, RemoteFilePath):
@@ -214,7 +218,10 @@ class SwitchAllied(SwitchBase):
     def save_conf_TFTP(self, TFTP_IP, folder=None, add_timestamp=False):
         self.end()
         self.enable()
-        result = self.downloadFileTFTP(TFTP_IP, 'running-config', self._build_tftp_filepath(folder, add_timestamp))
+        result = self.downloadFileTFTP(
+            TFTP_IP,
+            'running-config',
+            self._build_tftp_filepath(folder, add_timestamp))
 
         if result:
             self.logger.info('Backup complete')

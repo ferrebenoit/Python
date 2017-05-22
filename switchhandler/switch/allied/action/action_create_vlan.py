@@ -46,6 +46,7 @@ class ActionCreateVlan(ActionBase):
 
     def do_run(self):
         switch.execute('end')
+        switch.execute('enable')
         switch.execute('conft')
 
         switch.execute('vlan', id=slelf.id, name=self.name)

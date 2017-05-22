@@ -4,7 +4,7 @@ Created on 9 mai 2017
 
 @author: ferreb
 '''
-from switchhandler.network.net_tools import convert_to_netmask
+from switchhandler.network.net_tools import convert_to_cidr
 
 from switchhandler.switch.command_base import CommandBase
 
@@ -30,5 +30,5 @@ class CommandIPAddress(CommandBase):
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
 
     def do_run(self):
-        self.switch.sendline('ip address {} {}'.format(self.ip, convert_to_netmask(self.network_id)))
+        self.switch.sendline('ip address {}/{}'.format(self.ip, convert_to_cidr(self.network_id)))
         self.switch.expectPrompt()

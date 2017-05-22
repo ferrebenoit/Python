@@ -4,7 +4,7 @@ Created on 9 mai 2017
 
 @author: ferreb
 '''
-from switchhandler.network.net_tools import convert_to_wildcard
+from switchhandler.network.net_tools import convert_to_cidr
 
 from switchhandler.switch.command_base import CommandBase
 
@@ -53,26 +53,38 @@ class CommandACLAddEntry(CommandBase):
         self.inverse_src_and_dst = getattr(self, 'inverse_src_and_dst', False)
 
     def do_run(self):
-                # if protocol is ICMP and not inverse_src_and_dst assign echo_reply to  src_port_operator
-        # if protocol is ICMP and inverse_src_and_dst assign echo to
-        # dst_port_operator
+        # if protocol is ICMP and not inverse_src_and_dst assign icmp-type 0 to  src_port_operator
+        # if protocol is ICMP and inverse_src_and_dst assign icmp-type 8 to  dst_port_operator
 
         # if we ask icmp add icmp type at the end of request
         if (self.protocol.lower() == 'icmp'):
             if self.inverse_src_and_dst:
-                self.src_port_operator = "echo"
+                self.src_port_operator = "8"
             else:
-                self.dst_port_operator = "echo-reply"
+                self.dst_port_operator = "0"
 
         if (self.src1.lower() != 'host'):
-            self.src2 = convert_to_wildcard(self.src2)
+            self.src2 = convert_to_cidr(self.src2)
 
         if (self.dst1.lower() != 'host'):
-            self.dst2 = convert_to_wildcard(self.dst2)
+            self.dst2 = convert_to_cidr(self.dst2)
+
+        if (self.src1.lower() == 'host'):
+            self.src1 = self.src2
+            self.src2 = '0'
+
+        if (self.dst1.lower() == 'host'):
+            self.dst1 = self.dst2
+            self.dst2 = '0'
+
+        if self.src2 != '':
+            self.src2 = '/{}'.format(self.src2)
+
+        if self.dst2 != '':
+            self.dst2 = '/{}'.format(self.dst2)
 
         if self.inverse_src_and_dst:
-            self.switch.sendline('{} {} {} {} {} {} {} {} {} {} {} {}'.format(
-                self.index,
+            self.switch.sendline('{} {} {}{} {} {} {}{} {} {} {}'.format(
                 self.action,
                 self.protocol,
                 self.dst1,
@@ -86,8 +98,7 @@ class CommandACLAddEntry(CommandBase):
                 self.log
             ))
         else:
-            self.switch.sendline('{} {} {} {} {} {} {} {} {} {} {} {}'.format(
-                self.index,
+            self.switch.sendline('{} {} {}{} {} {} {}{} {} {} {}'.format(
                 self.action,
                 self.protocol,
                 self.src1,
