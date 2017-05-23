@@ -11,12 +11,12 @@ class ViewUploadFileTFTP(CommandBase):
     '''Charger un fichier sur le switch
 
 
-    :param tftp_ip, 
-    :type  tftp_ip, 
-    :param local_file_path, 
-    :type  local_file_path, 
-    :param remote_file_path
-    :type  remote_file_path
+    :param tftp_ip:
+    :type  tftp_ip:
+    :param local_file_path:
+    :type  local_file_path:
+    :param remote_file_path:
+    :type  remote_file_path:
 
     Commandes exécutées::
 

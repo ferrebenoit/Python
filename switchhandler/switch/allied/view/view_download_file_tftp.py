@@ -4,6 +4,8 @@ Created on 9 mai 2017
 
 @author: ferreb
 '''
+from pexpect.exceptions import TIMEOUT, EOF
+
 from switchhandler.switch.command_base import CommandBase
 
 
@@ -11,12 +13,12 @@ class ViewDownloadFileTFTP(CommandBase):
     '''télécharger un fichier depuis le switch
 
 
-    :param tftp_ip, 
-    :type  tftp_ip, 
-    :param local_file_path, 
-    :type  local_file_path, 
-    :param remote_file_path
-    :type  remote_file_path
+    :param tftp_ip:
+    :type  tftp_ip:
+    :param local_file_path:
+    :type  local_file_path:
+    :param remote_file_path:
+    :type  remote_file_path:
 
     Commandes exécutées::
 

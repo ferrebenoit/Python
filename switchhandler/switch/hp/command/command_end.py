@@ -4,8 +4,6 @@ Created on 9 mai 2017
 
 @author: ferreb
 '''
-from switchhandler.switch.switch_base import ConfigMode
-
 from switchhandler.switch.command_base import CommandBase
 
 

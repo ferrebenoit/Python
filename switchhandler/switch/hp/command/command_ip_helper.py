@@ -4,8 +4,6 @@ Created on 9 mai 2017
 
 @author: ferreb
 '''
-from switchhandler.network.net_tools import convert_to_netmask
-
 from switchhandler.switch.command_base import CommandBase
 
 

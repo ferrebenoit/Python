@@ -12,7 +12,7 @@ from switchhandler.switch.command_base import CommandBase
 class CommandACLAddEntry(CommandBase):
     '''Ajoute une liegne dans l'acl courante
 
-    :param index: L'index de la ligne d'ACL 
+    :param index: L'index de la ligne d'ACL
     :type  index: int
     :param action: Permit ou Deny
     :type  action: str
@@ -26,25 +26,26 @@ class CommandACLAddEntry(CommandBase):
     :type  src_port_operator: str
     :param src_port: Port source sur lequel s'applique la ligne d'acl
     :type  src_port: str
-    :param dst1: partie destination de l'acl host ou Subnet 
-    :type  dst1: str                                   
-    :param dst2: partie destination de l'acl IP ou masque   
-    :type  dst2: str                                   
-    :param dst_port_operator: operateur eq ...  
-    :type  dst_port_operator: str               
+    :param dst1: partie destination de l'acl host ou Subnet
+    :type  dst1: str
+    :param dst2: partie destination de l'acl IP ou masque
+    :type  dst2: str
+    :param dst_port_operator: operateur eq ...
+    :type  dst_port_operator: str
     :param dst_port: Port source sur lequel s'applique la ligne d'acl
-    :type  dst_port: str                                             
-    :param log: mettre la valeur log dans cette variable pour que le switch 
+    :type  dst_port: str
+    :param log: mettre la valeur log dans cette variable pour que le switch
                 logue les accés
     :type  log: str
     :param inverse_src_and_dst: Par défaut ajoute une entrée d'ACL en Input mettre cette valeur à True pour faire une ACL en Output
-    :type  inverse_src_and_dst: bool 
+    :type  inverse_src_and_dst: bool
+
     :default :type  inverse_src_and_dst: False
 
 
     Commandes exécutée::
 
-      prompt# 
+      prompt#
       prompt#
 
     '''
@@ -60,7 +61,7 @@ class CommandACLAddEntry(CommandBase):
         if (self.src1.lower() != 'host'):
             self.src2 = convert_to_wildcard(self.src2)
 
-        if (dst1.lower() != 'host'):
+        if (self.dst1.lower() != 'host'):
             self.dst2 = convert_to_wildcard(self.dst2)
 
         if self.inverse_src_and_dst:

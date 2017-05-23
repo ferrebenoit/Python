@@ -14,8 +14,8 @@ class ActionAddOSPFRouter(CommandBase):
 
     :param network: Adresse du Réseau
     :type  network: str
-    :param networkID: Peut être un CIDR un Netmask ou un wildcard
-    :type  networkID:
+    :param network_id: Peut être un CIDR un Netmask ou un wildcard
+    :type  network_id:
 
     Commandes exécutées::
 
@@ -36,7 +36,7 @@ class ActionAddOSPFRouter(CommandBase):
 
         self.switch.sendline('network {} {} area 0'.format(
             self.network,
-            self.convert_to_wildcard(networkID)
+            convert_to_wildcard(self.network_id)
         ))
         self.switch.expectPrompt()
 

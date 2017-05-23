@@ -13,15 +13,15 @@ class ViewSaveConfTFTP(CommandBase):
     '''Charger un fichier sur le switch
 
 
-    :param tftp_ip: 
-    :type  tftp_ip: 
-    :param folder: 
-    :type  folder: 
+    :param tftp_ip:
+    :type  tftp_ip:
+    :param folder:
+    :type  folder:
     :param add_timestamp:
     :type  add_timestamp:
 
     :default add_timestamp:False
-    :default folder:None: 
+    :default folder:None:
 
     Commandes exécutées::
 

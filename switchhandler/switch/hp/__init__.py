@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
 
- automodule switchhandler.switch.hp.action.action_add_acl_to_interface
-   members
-
-.. automodule:: switchhandler.switch.hp.action.action_add_ospf_router
-   :members:
-
 .. automodule:: switchhandler.switch.hp.action.action_create_acl
    :members:
 
@@ -15,7 +9,7 @@
 
 .. automodule:: switchhandler.switch.hp.command.command_acl
    :members:
-   
+
 .. automodule:: switchhandler.switch.hp.command.command_acl_add_entry
    :members:
 
@@ -59,8 +53,6 @@
    :members:
 '''
 
-from switchhandler.switch.hp.action.action_add_acl_to_interface import ActionAddACLToInterface
-from switchhandler.switch.hp.action.action_add_ospf_router import ActionAddOSPFRouter
 from switchhandler.switch.hp.action.action_create_acl import ActionCreateACL
 from switchhandler.switch.hp.action.action_create_vlan import ActionCreateVlan
 from switchhandler.switch.hp.command.command_acl import CommandACL
@@ -81,8 +73,6 @@ from switchhandler.switch.hp.view.view_upload_file_tftp import ViewUploadFileTFT
 
 
 switchHPCommands = {
-    "add_acl_to_interface": ActionAddACLToInterface,
-    "add_ospf_router": ActionAddOSPFRouter,
     "create_acl": ActionCreateACL,
     "create_vlan": ActionCreateVlan,
 

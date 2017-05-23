@@ -5,7 +5,7 @@ import sys
 from switchhandler.switch.switch_scripter import SwitchScripter
 
 
-class PubkeyAuth(SwitchScripter):
+class AddVlanToPort(SwitchScripter):
 
     def _define_args(self):
         super()._define_args()
@@ -24,14 +24,18 @@ class PubkeyAuth(SwitchScripter):
             with open(args['portcsv']) as csv_file:
                 reader = csv.DictReader(csv_file, delimiter=';')
 
-                switch.enable()
-                switch.conft()
+                switch.execute('enable')
+                switch.execute('conft')
                 for row in reader:
-                    switch.add_tagged_vlan_to_port(args['vlan'], row['port'], args['description'])
+                    switch.execute('add_tagged_vlan_to_port',
+                                   args['vlan'],
+                                   row['port'],
+                                   args['description']
+                                   )
 
-                switch.write()
+                switch.execute('write')
 
         switch.logout()
 
-pubkey_auth = PubkeyAuth('Configure ssh public key authentication', sys.argv[1:])
+pubkey_auth = AddVlanToPort('Configure ssh public key authentication', sys.argv[1:])
 pubkey_auth.process()

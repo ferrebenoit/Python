@@ -4,6 +4,8 @@ Created on 9 mai 2017
 
 @author: ferreb
 '''
+from pexpect.exceptions import EOF, TIMEOUT
+
 from switchhandler.switch.command_base import CommandBase
 
 
@@ -11,10 +13,10 @@ class ViewDownloadFileTFTP(CommandBase):
     '''télécharger un fichier depuis le switch
 
 
-    :param tftp_ip, 
-    :type  tftp_ip, 
-    :param local_file_path, 
-    :type  local_file_path, 
+    :param tftp_ip,
+    :type  tftp_ip,
+    :param local_file_path,
+    :type  local_file_path,
     :param remote_file_path
     :type  remote_file_path
 
@@ -32,9 +34,9 @@ class ViewDownloadFileTFTP(CommandBase):
         try:
             self.switch.sendline(
                 'copy {} tftp {} {}'.format(
-                    localFilePath,
-                    TFTP_IP,
-                    RemoteFilePath
+                    self.localFilePath,
+                    self.TFTP_IP,
+                    self.RemoteFilePath
                 ))
 
             match = self.switch.connection.expect([self._PROMPT, '00000K Peer unreachable.', 'Invalid input:'])

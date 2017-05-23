@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
 
- automodule switchhandler.switch.allied.action.action_add_acl_to_interface
-   members
-
 .. automodule:: switchhandler.switch.allied.action.action_add_ospf_router
    :members:
 
@@ -15,7 +12,7 @@
 
 .. automodule:: switchhandler.switch.allied.command.command_acl
    :members:
-   
+
 .. automodule:: switchhandler.switch.allied.command.command_acl_add_entry
    :members:
 
@@ -59,7 +56,7 @@
    :members:
 '''
 
-#from switchhandler.switch.allied.action.action_add_acl_to_interface import ActionAddACLToInterface
+
 from switchhandler.switch.allied.action.action_add_ospf_router import ActionAddOSPFRouter
 from switchhandler.switch.allied.action.action_create_acl import ActionCreateACL
 from switchhandler.switch.allied.action.action_create_vlan import ActionCreateVlan

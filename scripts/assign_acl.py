@@ -18,8 +18,16 @@ class CreateAcl(SwitchScripter):
         if not switch.login(args['login'], args['password']):
             print('impossible de s''authentifier')
         else:
-            switch.add_acl_to_interface(args['aclname'] + 'IN', args['intname'], True)
-            switch.add_acl_to_interface(args['aclname'] + 'OUT', args['intname'], False)
+            switch.execute('add_acl_to_interface',
+                           args['aclname'] + 'IN',
+                           args['intname'],
+                           True
+                           )
+            switch.execute('add_acl_to_interface',
+                           args['aclname'] + 'OUT',
+                           args['intname'],
+                           False
+                           )
 
             switch.logout()
 

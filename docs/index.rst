@@ -21,6 +21,14 @@ CISCO
 =====
 .. automodule:: switchhandler.switch.cisco
 
+Allied
+======
+.. automodule:: switchhandler.switch.allied
+
+HP
+==
+.. automodule:: switchhandler.switch.hp
+
 network
 =======
 
