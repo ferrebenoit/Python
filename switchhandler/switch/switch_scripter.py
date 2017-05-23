@@ -8,9 +8,9 @@ import re
 
 from switchhandler.arg_from_csv import ArgFromCSV
 
-from switchhandler.switch.allied.switch_allied import SwitchAllied
-from switchhandler.switch.cisco.switch_cisco import SwitchCisco
-from switchhandler.switch.hp.switch_HP import SwitchHP
+from switchhandler.switch.vendor.allied.switch_allied import SwitchAllied
+from switchhandler.switch.vendor.cisco.switch_cisco import SwitchCisco
+from switchhandler.switch.vendor.hp.switch_HP import SwitchHP
 
 
 class SwitchScripter(ArgFromCSV):

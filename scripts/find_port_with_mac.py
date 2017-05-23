@@ -11,7 +11,7 @@ class PubkeyAuth(SwitchScripter):
 
     def _define_args(self):
         super()._define_args()
-        self._arg_parser.add_argument('--findip', help='The IP to find')
+        self._arg_parser.add_argument('--findip', help='The IP to ping')
         self._arg_parser.add_argument('--findmac', help='The mac to find')
         self._arg_parser.add_argument('--csvmac', help='CSV file that contain mac and ip')
 
@@ -26,7 +26,13 @@ class PubkeyAuth(SwitchScripter):
                 reader = csv.DictReader(csv_file, delimiter=';')
 
                 for row in reader:
-                    print(row['IPAddress'], ';', switch.find_port_from_mac(row['ClientId'], row['IPAddress']))
+                    print(
+                        row['IPAddress'], ';',
+                        switch.execute('port_from_mac',
+                                       mac=row['ClientId'],
+                                       ip=row['IPAddress']
+                                       )
+                    )
 
         switch.logout()
 

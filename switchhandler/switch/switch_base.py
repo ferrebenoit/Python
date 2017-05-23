@@ -38,6 +38,7 @@ import logging
 
 from pexpect import pxssh
 import pexpect
+from switchhandler.switch import switchBaseCommands
 
 from switchhandler.switch.switch_exception import CommandNotFoundException,\
     CommandParameterNotFoundException
@@ -407,7 +408,7 @@ class SwitchBase(metaclass=ABCMeta):
 
     @abstractmethod
     def getSwitchCommands(self):
-        pass
+        return switchBaseCommands
 
     def execute(self, command_name, *args, **kwargs):
         command_class = self.getSwitchCommands().get(command_name, None)

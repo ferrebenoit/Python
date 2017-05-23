@@ -19,17 +19,17 @@ class CreateAcl(SwitchScripter):
             print('impossible de s''authentifier')
         else:
             switch.execute('add_acl_to_interface',
-                           args['aclname'] + 'IN',
-                           args['intname'],
-                           True
+                           acl_name=args['aclname'] + 'IN',
+                           interface_name=args['intname'],
+                           inbound=True
                            )
             switch.execute('add_acl_to_interface',
-                           args['aclname'] + 'OUT',
-                           args['intname'],
-                           False
+                           acl_name=args['aclname'] + 'OUT',
+                           interface_nameargs['intname'],
+                           inbound=False
                            )
 
             switch.logout()
 
-create_acl = CreateAcl('Add access list', sys.argv[1:])
+create_acl = CreateAcl('Assign access list to interface', sys.argv[1:])
 create_acl.process()

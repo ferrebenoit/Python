@@ -7,6 +7,7 @@ buildscript {
   }
 }
 /////////////////Pygradle section/////////////////////////////////////////////
+// to generate skel of documentation : sphinx-apidoc -o docs switchhandler
 plugins {
     id "com.linkedin.python-sdist" version "0.4.9"
     //id "com.linkedin.python" version "0.4.9"
@@ -15,6 +16,17 @@ plugins {
 repositories {
     pyGradlePyPi()
 
+//    ivy {
+//    name 'pypi-local'   //optional, but nice
+//    url 'https://pypi.python.org/simple/'
+//    layout "pattern", {
+//      ivy "[module]/[module]-[revision].ivy"
+//      artifact "[module]/[module]-[revision].tar.gz"
+//      m2compatible = true
+//    }
+
+	// Import packages
+	// java -jar C:\Users\ferreb\Downloads\pivy-importer-0.4.9-all.jar --repo C:\LOGICIEL\pypi ptyprocess:0.5.1
     ivy {
     name 'pypi-local'   //optional, but nice
     url 'c:/LOGICIEL/pypi'
@@ -27,7 +39,8 @@ repositories {
 }
 
 dependencies {
-    //python 'pypi:pexpect:4.2.1'
+    python 'pypi:pexpect:4.2.1'
+    python 'pypi:ptyprocess:0.5.1'
     //python 'pypi:packaging:16.8'
     //python 'pypi:appdirs:1.4.3'
     //test 'pypi:mock:1.3.0'
