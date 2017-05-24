@@ -12,8 +12,8 @@ from switchhandler.switch.command.command_base import CommandBase
 class CommandACLAddEntry(CommandBase):
     '''Ajoute une liegne dans l'acl courante
 
-    :param index: L'index de la ligne d'ACL
-    :type  index: int
+    :param name: Le nom del'ACL
+    :type  name: str
     :param action: Permit ou Deny
     :type  action: str
     :param protocol: TCP, UDP, IP et ICMP
@@ -60,9 +60,11 @@ class CommandACLAddEntry(CommandBase):
         # if we ask icmp add icmp type at the end of request
         if (self.protocol.lower() == 'icmp'):
             if self.inverse_src_and_dst:
-                self.src_port_operator = "8"
+                # self.src_port_operator = "8"  not supported
+                self.src_port_operator = ""
             else:
-                self.dst_port_operator = "0"
+                # self.dst_port_operator = "0"  not supported
+                self.dst_port_operator = ""
 
         if (self.src1.lower() != 'host'):
             self.src2 = convert_to_cidr(self.src2)
@@ -85,7 +87,8 @@ class CommandACLAddEntry(CommandBase):
             self.dst2 = '/{}'.format(self.dst2)
 
         if self.inverse_src_and_dst:
-            self.switch.sendline('{} {} {}{} {} {} {}{} {} {} {}'.format(
+            self.switch.sendline('access-list extended {} {} {} {}{} {} {} {}{} {} {} {}'.format(
+                self.name,
                 self.action,
                 self.protocol,
                 self.dst1,
@@ -99,7 +102,8 @@ class CommandACLAddEntry(CommandBase):
                 self.log
             ))
         else:
-            self.switch.sendline('{} {} {}{} {} {} {}{} {} {} {}'.format(
+            self.switch.sendline('access-list extended {} {} {} {}{} {} {} {}{} {} {} {}'.format(
+                self.name,
                 self.action,
                 self.protocol,
                 self.src1,

@@ -6,29 +6,14 @@ Subpackages
 
 .. toctree::
 
-    switchhandler.switch.allied
+    switchhandler.switch.action
     switchhandler.switch.analyse
-    switchhandler.switch.cisco
-    switchhandler.switch.hp
+    switchhandler.switch.command
+    switchhandler.switch.vendor
+    switchhandler.switch.view
 
 Submodules
 ----------
-
-switchhandler\.switch\.action\_base module
-------------------------------------------
-
-.. automodule:: switchhandler.switch.action_base
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-switchhandler\.switch\.command\_base module
--------------------------------------------
-
-.. automodule:: switchhandler.switch.command_base
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 switchhandler\.switch\.switch\_base module
 ------------------------------------------

@@ -26,7 +26,7 @@ class CommandIPHelper(CommandBase):
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
 
     def do_run(self):
-        self.switch.sendline('ip helper-address {}'.format(self.ip))
+        self.switch.sendline('ip dhcp-relay server-address {}'.format(self.ip))
         self.switch.expectPrompt()
         self.switch.sendline('ip helper-address {}'.format(self.ip))
         self.switch.expectPrompt()

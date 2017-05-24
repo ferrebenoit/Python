@@ -25,7 +25,7 @@ class CreateAcl(SwitchScripter):
                            )
             switch.execute('add_acl_to_interface',
                            acl_name=args['aclname'] + 'OUT',
-                           interface_nameargs['intname'],
+                           interface_name=args['intname'],
                            inbound=False
                            )
 

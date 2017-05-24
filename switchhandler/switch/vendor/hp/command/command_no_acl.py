@@ -7,27 +7,23 @@ Created on 9 mai 2017
 from switchhandler.switch.command.command_base import CommandBase
 
 
-class CommandIntVlan(CommandBase):
-    '''Créer/se placer dans la configuration d'une interface Vlan
+class CommandNoACL(CommandBase):
+    '''Créer/se placer dans la configuration d'une ACL
 
-    :param id: l'id
-    :type name: str
-
-    :param name: le nom du Vlan
+    :param name: le nom de l'ACL
     :type name: str
 
 
     Commandes exécutées::
 
-      CommandVlan(id='80', name='Imprimante')
+      CommandNoACL(name=ACL-Imprimante-IN)
 
-      prompt# interface vlan80
-      prompt# description Imprimante
+      prompt# no ip access-list extended ACL-Imprimante-IN
       prompt#
 
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
 
     def do_run(self):
-        self.switch.execute('vlan', self.id, self.name)
+        self.switch.sendline('no ip access-list extended "{}"'.format(self.name))
         self.switch.expectPrompt()

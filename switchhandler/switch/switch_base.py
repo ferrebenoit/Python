@@ -38,7 +38,6 @@ import logging
 
 from pexpect import pxssh
 import pexpect
-from switchhandler.switch import switchBaseCommands
 
 from switchhandler.switch.switch_exception import CommandNotFoundException,\
     CommandParameterNotFoundException
@@ -246,121 +245,6 @@ class SwitchBase(metaclass=ABCMeta):
         return self.connection.expect(pattern, timeout, searchwindowsize, async)
 
     @abstractmethod
-    def delete_acl(self, name):
-        pass
-
-    @abstractmethod
-    def create_ACL(self, name, acl_entries, acl_replace=None, inverse_src_and_dst=False):
-        pass
-
-    @abstractmethod
-    def ACL(self, name):
-        pass
-
-    def ACL_add_row(self, name, row, acl_replace=None, inverse_src_and_dst=False):
-        if acl_replace is not None:
-            for k in row.keys():
-                if(k in acl_replace):
-                    row[k] = row[k].format(**acl_replace[k])
-
-        # if condition in row['condition']:
-
-        self.ACL_add_entry(name,
-                           row['index'],
-                           row['action'],
-                           row['protocol'],
-                           row['src1'],
-                           row['src2'],
-                           row['src_port_operator'],
-                           row['src_port'],
-                           row['dst1'],
-                           row['dst2'],
-                           row['dst_port_operator'],
-                           row['dst_port'],
-                           row['log'],
-                           inverse_src_and_dst)
-
-    @abstractmethod
-    def ACL_add_entry(self, name, action, protocol, src1, src2, src_port_operator, dst1, dst2, dst_port_operator, dst_port, log, inverse_src_and_dst=False):
-        pass
-
-    @abstractmethod
-    def add_acl_to_interface(self, acl_name, interface_name, inbound=True):
-        pass
-
-    @abstractmethod
-    def add_ospf_router(self, network, networkID):
-        pass
-
-    @abstractmethod
-    def create_vlan(self, ID, name, IP=-1, network=-1, IP_helper=-1):
-        pass
-
-    @abstractmethod
-    def vlan(self, ID, name=None):
-        pass
-
-    @abstractmethod
-    def int_vlan(self, ID, name=None):
-        pass
-
-    @abstractmethod
-    def ip_address(self, IP, network):
-        pass
-
-    @abstractmethod
-    def ip_helper(self, IP):
-        pass
-
-    @abstractmethod
-    def auth_PublicKey(self, username, key, comment, TFTP_IP=''):
-        pass
-
-    @abstractmethod
-    def uploadFileTFTP(self, localFilePath, RemoteFilePath):
-        pass
-
-    @abstractmethod
-    def downloadFileTFTP(self, TFTP_IP, localFilePath, RemoteFilePath):
-        pass
-
-    @abstractmethod
-    def enable(self):
-        pass
-
-    @abstractmethod
-    def conft(self):
-        pass
-
-    @abstractmethod
-    def exit(self):
-        pass
-
-    @abstractmethod
-    def end(self):
-        pass
-
-    @abstractmethod
-    def write(self):
-        pass
-
-    @abstractmethod
-    def save_conf_TFTP(self, TFTP_IP, folder=None, add_timestamp=False):
-        pass
-
-    @abstractmethod
-    def ping(self, ip, repeat=5):
-        pass
-
-    @abstractmethod
-    def find_port_from_mac(self, mac, ip=None):
-        pass
-
-    @abstractmethod
-    def add_tagged_vlan_to_port(self, vlan_id, port, description=None):
-        pass
-
-    @abstractmethod
     def expectPrompt(self):
         self.logInfo('expect : PROMPT')
         if self.dryrun:
@@ -408,7 +292,7 @@ class SwitchBase(metaclass=ABCMeta):
 
     @abstractmethod
     def getSwitchCommands(self):
-        return switchBaseCommands
+        pass
 
     def execute(self, command_name, *args, **kwargs):
         command_class = self.getSwitchCommands().get(command_name, None)

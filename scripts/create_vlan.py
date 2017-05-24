@@ -36,11 +36,14 @@ class PubkeyAuth(SwitchScripter):
                                                   args['vlanid'],
                                                   args['siteid']
                                                   ),
-                           network_id=args['vlancidr'],
-                           ip_helper=args['iphelper']
+                           network_id=args.get('vlancidr', None),
+                           ip_helper=args.get('iphelper', None)
                            )
 
-            if (args['ospfnetwork'] == 'yes') or (args['ospfnetwork'] == 'ospf') or (args['ospfnetwork'] == 'central'):
+            if ((args.get('ospfnetwork', None) == 'yes')
+                    or (args.get('ospfnetwork', None) == 'ospf')
+                    or (args.get('ospfnetwork', None) == 'central')
+                    ):
                 switch.execute('add_ospf_router',
                                network='{}.{}.{}.0'.format(args['vlan1octet'], args['vlanid'], args['siteid']),
                                network_id=args['vlancidr']

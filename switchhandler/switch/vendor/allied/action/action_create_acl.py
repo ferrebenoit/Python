@@ -31,12 +31,13 @@ class ActionCreateACL(ActionBase):
         self.switch.execute('enable')
         self.switch.execute('conft')
 
-        self.switch.execute('delete_acl', name=self.name)
+        self.switch.execute('no_acl', name=self.name)
 
-        self.switch.execute('acl', name=self.name)
+        # self.switch.execute('acl', name=self.name) not supported on all version
 
         for item in self.acl_entries:
-            self.switch.execute('add_acl_row',
+            self.switch.execute('acl_add_row',
+                                name=self.name,
                                 row=item,
                                 acl_replace=self.acl_replace,
                                 inverse_src_and_dst=self.inverse_src_and_dst

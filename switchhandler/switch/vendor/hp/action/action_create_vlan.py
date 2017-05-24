@@ -51,7 +51,7 @@ class ActionCreateVlan(ActionBase):
         self.switch.execute('vlan', id=self.id, name=self.name)
 
         # If IP mask and CIDR are provided add an IP to the vlan
-        if self.IP is not None and self.network_id is not None:
+        if self.ip is not None and self.network_id is not None:
             self.switch.execute(
                 'ip_address',
                 ip=self.ip,

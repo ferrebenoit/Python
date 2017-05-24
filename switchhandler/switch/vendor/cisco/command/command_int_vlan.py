@@ -7,7 +7,7 @@ Created on 9 mai 2017
 from switchhandler.switch.command.command_base import CommandBase
 
 
-class CommandVlan(CommandBase):
+class CommandIntVlan(CommandBase):
     '''Créer/se placer dans la configuration d'une interface Vlan
 
     :param id: l'id
