@@ -48,7 +48,7 @@ class ViewPortFromMac(CommandBase):
         self.switch.expectPrompt()
 
         match = re.search(
-            '^[ ]*([0-9][0-9]*)[ ]*([^ ]*)[ ]*([^ ]*)[ ]*([^ ^\n]*)$', self.before(), re.MULTILINE)
+            '^[ ]*([0-9][0-9]*)[ ]*([^ ]*)[ ]*([^ ]*)[ ]*([^ ^\n]*)$', self.switch.before(), re.MULTILINE)
 
         if match:
             return match.group(4)

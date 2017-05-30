@@ -26,13 +26,12 @@ class PubkeyAuth(SwitchScripter):
                 reader = csv.DictReader(csv_file, delimiter=';')
 
                 for row in reader:
-                    print(
-                        row['IPAddress'], ';',
+                    print('{};{}'.format(
+                        row['ipaddress'],
                         switch.execute('port_from_mac',
-                                       mac=row['ClientId'],
-                                       ip=row['IPAddress']
-                                       )
-                    )
+                                       mac=row['mac'],
+                                       ip=row['ipaddress'])
+                    ))
 
         switch.logout()
 

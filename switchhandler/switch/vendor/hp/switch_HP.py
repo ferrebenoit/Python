@@ -1,9 +1,3 @@
-import re
-
-from pexpect.exceptions import TIMEOUT, EOF
-
-from switchhandler.network.net_tools import convert_to_netmask, convert_to_wildcard,\
-    convert_mac_HP
 from switchhandler.switch.switch_base import SwitchBase, ConfigMode, Exec
 from switchhandler.switch.vendor.hp import switchHPCommands
 

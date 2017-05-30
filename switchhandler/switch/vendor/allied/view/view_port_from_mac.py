@@ -50,7 +50,7 @@ class ViewPortFromMac(CommandBase):
 
         match = re.search(
             '^([0-9][0-9]*)[ ]*([^ ]*)[ ]*([^ ]*)[ ]*([^ ]*)[ ]*([^ ]*)$',
-            self.before(),
+            self.switch.before(),
             re.MULTILINE
         )
 

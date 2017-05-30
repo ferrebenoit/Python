@@ -48,7 +48,7 @@ class ViewPortFromMac(CommandBase):
         self.switch.expectPrompt()
 
         match = re.search(
-            'Located on Port : ([A-Z][0-9]+)', self.before(), re.MULTILINE)
+            'Located on Port : ([A-Z][0-9]+)', self.switch.before(), re.MULTILINE)
 
         if match:
             return match.group(1)

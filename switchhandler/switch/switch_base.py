@@ -285,6 +285,7 @@ class SwitchBase(metaclass=ABCMeta):
         try:
             self.end()
             self.sendline('logout')
+            self.logInfo('Logout')
 
             return True
         except:

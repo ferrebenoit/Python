@@ -5,12 +5,6 @@ Created on 23 nov. 2016
 @author: FERREB
 '''
 
-import re
-
-from pexpect.exceptions import TIMEOUT, EOF
-
-from switchhandler.network.net_tools import convert_to_netmask, \
-    convert_to_wildcard, convert_mac_cisco
 from switchhandler.switch.switch_base import SwitchBase, ConfigMode, Exec
 from switchhandler.switch.vendor.cisco import switchCiscoCommands
 

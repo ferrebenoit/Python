@@ -28,14 +28,14 @@ class AddVlanToPort(SwitchScripter):
                 switch.execute('conft')
                 for row in reader:
                     switch.execute('add_tagged_vlan_to_port',
-                                   args['vlan'],
-                                   row['port'],
-                                   args['description']
+                                   vlan_id=args['vlan'],
+                                   port=row['port'],
+                                   description=args['description']
                                    )
 
                 switch.execute('write')
 
         switch.logout()
 
-pubkey_auth = AddVlanToPort('Configure ssh public key authentication', sys.argv[1:])
+pubkey_auth = AddVlanToPort('Add a taggued vlan to a port', sys.argv[1:])
 pubkey_auth.process()
