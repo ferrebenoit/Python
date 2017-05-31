@@ -8,7 +8,7 @@ class SwitchAllied(SwitchBase):
         super(SwitchAllied, self).__init__(IP, 'allied', site, dryrun)
 
         # prompt rexex
-        self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([>#])'
+        self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([>#])$'
 
     def getExecLevel(self):
         if self.exec == '>':

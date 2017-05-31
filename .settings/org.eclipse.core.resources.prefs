@@ -1,0 +1,10 @@
+eclipse.preferences.version=1
+encoding//docs/conf.py=utf-8
+encoding//scripts/save_switch_conf.py=utf-8
+encoding//switchhandler/network/net_tools.py=utf-8
+encoding//switchhandler/switch/vendor/allied/view/view_save_conf_file.py=utf-8
+encoding//switchhandler/switch/vendor/cisco/switch_cisco.py=utf-8
+encoding//switchhandler/switch/vendor/cisco/view/view_save_conf_file.py=utf-8
+encoding//switchhandler/switch/vendor/hp/__init__.py=utf-8
+encoding//switchhandler/switch/vendor/hp/command/command_end.py=utf-8
+encoding//switchhandler/switch/vendor/hp/view/view_save_conf_file.py=utf-8

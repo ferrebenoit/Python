@@ -22,6 +22,7 @@ from switchhandler.switch.vendor.hp.command.command_write import CommandWrite
 from switchhandler.switch.vendor.hp.view.view_download_file_tftp import ViewDownloadFileTFTP
 from switchhandler.switch.vendor.hp.view.view_ping import ViewPing
 from switchhandler.switch.vendor.hp.view.view_port_from_mac import ViewPortFromMac
+from switchhandler.switch.vendor.hp.view.view_save_conf_file import ViewSaveConfFile
 from switchhandler.switch.vendor.hp.view.view_save_conf_tftp import ViewSaveConfTFTP
 from switchhandler.switch.vendor.hp.view.view_upload_file_tftp import ViewUploadFileTFTP
 
@@ -51,6 +52,7 @@ switchHPCommands = {
     "download_file_tftp": ViewDownloadFileTFTP,
     "ping": ViewPing,
     "port_from_mac": ViewPortFromMac,
+    "save_conf_file": ViewSaveConfFile,
     "save_conf_tftp": ViewSaveConfTFTP,
     "upload_file_tftp": ViewUploadFileTFTP,
 }

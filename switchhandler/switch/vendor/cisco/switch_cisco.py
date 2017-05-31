@@ -15,7 +15,7 @@ class SwitchCisco(SwitchBase):
         super(SwitchCisco, self).__init__(IP, 'cisco', site, dryrun)
 
         # prompt rexex
-        self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([$#])'
+        self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([$#])$'
 
     def getExecLevel(self):
         if self.exec == '$':

@@ -8,7 +8,8 @@ class SwitchHP(SwitchBase):
         super(SwitchHP, self).__init__(IP, 'hp', site, dryrun)
 
         # prompt rexex
-        self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([>#])'
+        self._PROMPT = '(?:tty=(?:ansi|none) )*([A-Za-z0-9\-]*)(\((.*)\))*([>#]) '
+        # self._PROMPT = '(?:tty=(?:ansi|none) )*([A-Za-z0-9\-]*)(\((.*)\))*([>#])'
 
     @property
     def hostname(self):

@@ -1,0 +1,6 @@
+/.gradle/
+*.egg-info
+build
+activate.bat
+__pycache__
+pinned.txt

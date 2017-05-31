@@ -5,7 +5,6 @@ Created on 9 mai 2017
 @author: ferreb
 '''
 import datetime
-import re
 
 from switchhandler.switch.command.command_base import CommandBase
 
@@ -54,11 +53,11 @@ class ViewSaveConfFile(CommandBase):
         return filepath
 
     def sanitize(self, str):
-        #str = re.sub(r'^show running-config$', '', str, flags=re.MULTILINE)
-        #str = re.sub(r'^Building configuration...$', '', str, flags=re.MULTILINE)
-        #str = re.sub(r'^Current configuration :.*$', '', str, flags=re.MULTILINE)
-        #str = re.sub(r'^! Last configuration change at .*$', '', str, flags=re.MULTILINE)
-        #str = re.sub(r'^! NVRAM config last updated at .*$', '', str, flags=re.MULTILINE)
+        # str = re.sub(r'^show running-config$', '', str, flags=re.MULTILINE)
+        # str = re.sub(r'^Building configuration...$', '', str, flags=re.MULTILINE)
+        # str = re.sub(r'^Current configuration :.*$', '', str, flags=re.MULTILINE)
+        # str = re.sub(r'^! Last configuration change at .*$', '', str, flags=re.MULTILINE)
+        # str = re.sub(r'^! NVRAM config last updated at .*$', '', str, flags=re.MULTILINE)
 
         return "\n".join(str.split('\n')[8:])
 
@@ -67,6 +66,7 @@ class ViewSaveConfFile(CommandBase):
 
         self.switch.sendline('terminal length 0')
         self.switch.expectPrompt()
+        print('/' + self.switch.after() + '/')
         self.switch.sendline('show running-config')
         self.switch.expectPrompt()
 

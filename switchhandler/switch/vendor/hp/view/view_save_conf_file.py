@@ -5,6 +5,7 @@ Created on 9 mai 2017
 @author: ferreb
 '''
 import datetime
+import time
 
 from switchhandler.switch.command.command_base import CommandBase
 
@@ -59,19 +60,23 @@ class ViewSaveConfFile(CommandBase):
         # str = re.sub(r'^! Last configuration change at .*$', '', str, flags=re.MULTILINE)
         # str = re.sub(r'^! NVRAM config last updated at .*$', '', str, flags=re.MULTILINE)
 
-        return "\n".join(str.split('\n')[1:])
+        return "\n".join(str.split('\n')[5:])
 
     def do_run(self):
-        self.switch.execute('end')
-        self.switch.execute('enable')
+        # self.switch.execute('conft')
+        #self.switch.sendline('console local-terminal vt100')
+        # self.switch.expectPrompt()
+        #print('/', self.switch.connection.before.decode('UTF-8'), '/')
 
-        self.switch.sendline('terminal length 0')
+        self.switch.execute('end')
+
+        self.switch.sendline('terminal length 1000')
         self.switch.expectPrompt()
         self.switch.sendline('show running-config')
+
         self.switch.expectPrompt()
 
         str = self.sanitize(self.switch.before())
-
         try:
             with open(self._build_filepath(self.folder, self.add_timestamp), 'w') as f:
                 f.write(str)
