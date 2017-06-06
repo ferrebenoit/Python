@@ -6,6 +6,7 @@ Created on 23 nov. 2016
 # ./save_switch_conf.py --IP 172.17.1.37 --login ferreb --vendor cisco --filterby IP
 # ./save_switch_conf.py --csvfile "file.csv" --fieldfilter IP --IP 172.17.1.37 --login ferreb --vendor cisco
 
+from concurrent.futures.thread import ThreadPoolExecutor
 import csv
 import getpass
 import os
@@ -24,7 +25,7 @@ class ArgFromCSV:
 
     """
 
-    def __init__(self, description, args):
+    def __init__(self, description, args, future_function):
 
         self.__needed_args = []
         # create argument parser
@@ -34,12 +35,15 @@ class ArgFromCSV:
         # Parse command line arguments
         self._arguments = self._parse_argv(args)
 
+        self.future_function = future_function
+
     def __remove_none_args(self, param_dict):
         return {k: v for k, v in param_dict.items() if v is not None}
 
     def _define_args(self):
         self._arg_parser.add_argument('--csvfile', help='A csv file holding arguments')
         self._arg_parser.add_argument('--filterby', help='Informations to retreive from field')
+        self._arg_parser.add_argument('--workers', help='Number of threads that will be used', default=5)
 
     def _parse_argv(self, args):
         known, unknown = self._arg_parser.parse_known_args(args)
@@ -78,7 +82,7 @@ class ArgFromCSV:
         return result
 
     def _script_content(self, args):
-        pass
+        self.executor.submit(self.future_function, args)
 
     def _check_args(self, args):
         return self._parse_argv(self.__convert_to_argv(args))
@@ -105,26 +109,33 @@ class ArgFromCSV:
         """
             La fonction à appeler pour exécuter le script
         """
-        if('csvfile' not in self._arguments):
-            self._arguments.update(self.__ask_needed_missing_args(self._arguments))
 
-            self._script_content(self._arguments)
-        elif(not os.path.isfile(self._arguments['csvfile'])):
-            print('CSV File : {} NOT FOUND'.format(self._arguments['csvfile']))
-        elif('filterby' in self._arguments):
-            with open(self._arguments['csvfile']) as csv_file:
-                dict_reader = csv.DictReader(csv_file)
-                filter_by_field_name = self._arguments['filterby']
-                filter_by_field_pattern = self._arguments[filter_by_field_name]
+        with ThreadPoolExecutor(max_workers=self._arguments['workers']) as self.executor:
+            # Script called without csv file
+            if('csvfile' not in self._arguments):
+                self._arguments.update(self.__ask_needed_missing_args(self._arguments))
 
-                for row in dict_reader:
-                    if(filter_by_field_name in row):  # check if parameter passed in filterby is found in csv row
-                        if self._filter_match(filter_by_field_pattern, row[filter_by_field_name]):  # check if meet the condition Use regular expression instead
-                            self._arguments[filter_by_field_name] = row[filter_by_field_name]
-                            self.__execute_with_csv_row(row)
-        else:
-            with open(self._arguments['csvfile']) as csv_file:
-                dict_reader = csv.DictReader(csv_file)
+                self._script_content(self._arguments)
+            # CSV file is not found
+            elif(not os.path.isfile(self._arguments['csvfile'])):
+                print('CSV File : {} NOT FOUND'.format(self._arguments['csvfile']))
+            # CSV file found and filterby argument is provided :
+            # Execute script with csv row that matches the filterby argument
+            elif('filterby' in self._arguments):
+                with open(self._arguments['csvfile']) as csv_file:
+                    dict_reader = csv.DictReader(csv_file)
+                    filter_by_field_name = self._arguments['filterby']
+                    filter_by_field_pattern = self._arguments[filter_by_field_name]
 
-                for row in dict_reader:
-                    self.__execute_with_csv_row(row, dict_reader.line_num == 2)
+                    for row in dict_reader:
+                        if(filter_by_field_name in row):  # check if parameter passed in filterby is found in csv row
+                            if self._filter_match(filter_by_field_pattern, row[filter_by_field_name]):  # check if meet the condition Use regular expression instead
+                                self._arguments[filter_by_field_name] = row[filter_by_field_name]
+                                self.__execute_with_csv_row(row)
+            # CSV file found so execute script for each csv row
+            else:
+                with open(self._arguments['csvfile']) as csv_file:
+                    dict_reader = csv.DictReader(csv_file)
+
+                    for row in dict_reader:
+                        self.__execute_with_csv_row(row, dict_reader.line_num == 2)  # dict_reader.line_num == 2 to check if this is the first iteration

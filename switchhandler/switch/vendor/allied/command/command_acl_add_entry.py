@@ -57,6 +57,10 @@ class CommandACLAddEntry(CommandBase):
         # if protocol is ICMP and not inverse_src_and_dst assign icmp-type 0 to  src_port_operator
         # if protocol is ICMP and inverse_src_and_dst assign icmp-type 8 to  dst_port_operator
 
+        # In allied switch the out acl must be appended to the in acl
+        if self.inverse_src_and_dst:
+            return
+
         # if we ask icmp add icmp type at the end of request
         if (self.protocol.lower() == 'icmp'):
             if self.inverse_src_and_dst:
@@ -74,11 +78,11 @@ class CommandACLAddEntry(CommandBase):
 
         if (self.src1.lower() == 'host'):
             self.src1 = self.src2
-            self.src2 = '0'
+            self.src2 = '32'
 
         if (self.dst1.lower() == 'host'):
             self.dst1 = self.dst2
-            self.dst2 = '0'
+            self.dst2 = '32'
 
         if self.src2 != '':
             self.src2 = '/{}'.format(self.src2)
@@ -86,34 +90,33 @@ class CommandACLAddEntry(CommandBase):
         if self.dst2 != '':
             self.dst2 = '/{}'.format(self.dst2)
 
-        if self.inverse_src_and_dst:
-            self.switch.sendline('access-list extended {} {} {} {}{} {} {} {}{} {} {} {}'.format(
-                self.name,
-                self.action,
-                self.protocol,
-                self.dst1,
-                self.dst2,
-                self.dst_port_operator,
-                self.dst_port,
-                self.src1,
-                self.src2,
-                self.src_port_operator,
-                self.src_port,
-                self.log
-            ))
-        else:
-            self.switch.sendline('access-list extended {} {} {} {}{} {} {} {}{} {} {} {}'.format(
-                self.name,
-                self.action,
-                self.protocol,
-                self.src1,
-                self.src2,
-                self.src_port_operator,
-                self.src_port,
-                self.dst1,
-                self.dst2,
-                self.dst_port_operator,
-                self.dst_port,
-                self.log
-            ))
+        # if self.inverse_src_and_dst:
+            # self.switch.sendline('access-list hardware {} {} {} {}{} {} {} {}{} {} {} {}'.format(
+        self.switch.sendline('{} {} {}{} {} {} {}{} {} {}'.format(
+            self.action,
+            self.protocol,
+            self.dst1,
+            self.dst2,
+            self.dst_port_operator,
+            self.dst_port,
+            self.src1,
+            self.src2,
+            self.src_port_operator,
+            self.src_port
+        ))
+        self.switch.expectPrompt()
+    # else:
+        # self.switch.sendline('access-list hardware {} {} {} {}{} {} {} {}{} {} {} {}'.format(
+        self.switch.sendline('{} {} {}{} {} {} {}{} {} {}'.format(
+            self.action,
+            self.protocol,
+            self.src1,
+            self.src2,
+            self.src_port_operator,
+            self.src_port,
+            self.dst1,
+            self.dst2,
+            self.dst_port_operator,
+            self.dst_port
+        ))
         self.switch.expectPrompt()

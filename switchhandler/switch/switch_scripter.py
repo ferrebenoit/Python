@@ -17,7 +17,7 @@ class SwitchScripter(ArgFromCSV):
     "Class That desactivate an wifi AP"
 
     def __init__(self, description, args):
-        ArgFromCSV.__init__(self, description, args)
+        ArgFromCSV.__init__(self, description, args, self._script_content1)
 
         self._logging_config(self._arguments['loglevel'].upper(), self._arguments['screenlog'] == 'yes', self._arguments['filelog'])
 
@@ -54,7 +54,7 @@ class SwitchScripter(ArgFromCSV):
 
         self._add_mandatory_arg('IP', 'vendor', 'login', 'password')
 
-    def _script_content(self, args):
+    def _script_content1(self, args):
         if(re.compile('cisco', flags=re.IGNORECASE).search(args['vendor'])):
             # if(args['vendor'].lower().contains('cisco')):
             self._script_content_cisco(SwitchCisco(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)

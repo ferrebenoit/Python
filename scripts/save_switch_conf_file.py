@@ -6,6 +6,7 @@ Created oén 23 nov. 2016
 
 @author: FERREB
 '''
+
 import sys
 
 from switchhandler.switch.switch_scripter import SwitchScripter

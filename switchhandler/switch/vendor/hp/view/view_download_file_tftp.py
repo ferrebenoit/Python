@@ -34,12 +34,12 @@ class ViewDownloadFileTFTP(CommandBase):
         try:
             self.switch.sendline(
                 'copy {} tftp {} {}'.format(
-                    self.localFilePath,
-                    self.TFTP_IP,
-                    self.RemoteFilePath
+                    self.local_file_path,
+                    self.tftp_ip,
+                    self.remote_file_path
                 ))
 
-            match = self.switch.connection.expect([self._PROMPT, '00000K Peer unreachable.', 'Invalid input:'])
+            match = self.switch.connection.expect([self.switch.prompt, '00000K Peer unreachable.', 'Invalid input:'])
             if match > 0:
                 print('Sauvegarde echouee ')
                 return False
@@ -53,8 +53,8 @@ class ViewDownloadFileTFTP(CommandBase):
         except EOF:
             print("Sauvegarde echouee a cause d'une deconnexion")
             print(self.switch.connection.before)
-        except Exception:
-            print('exception')
+        except Exception as e:
+            print('exception {}'.format(e))
             # print(e)
             print(self.switch.connection.before)
             print(self.switch.connection.after)

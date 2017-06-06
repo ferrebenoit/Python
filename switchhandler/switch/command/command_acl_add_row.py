@@ -4,6 +4,9 @@ Created on 9 mai 2017
 
 @author: ferreb
 '''
+import json
+import re
+
 from switchhandler.switch.command.command_base import CommandBase
 
 
@@ -38,21 +41,28 @@ class CommandACLAddRow(CommandBase):
                 if(k in self.acl_replace):
                     self.row[k] = self.row[k].format(**self.acl_replace[k])
 
-        # if condition in row['condition']:
+        condition_str = self.row['condition']
+        if condition_str == '':
+            condition_str = '{}'
+        conditions = json.loads(condition_str)
 
-        self.switch.execute('acl_add_entry',
-                            name=self.name,
-                            index=self.row['index'],
-                            action=self.row['action'],
-                            protocol=self.row['protocol'],
-                            src1=self.row['src1'],
-                            src2=self.row['src2'],
-                            src_port_operator=self.row['src_port_operator'],
-                            src_port=self.row['src_port'],
-                            dst1=self.row['dst1'],
-                            dst2=self.row['dst2'],
-                            dst_port_operator=self.row['dst_port_operator'],
-                            dst_port=self.row['dst_port'],
-                            log=self.row['log'],
-                            inverse_src_and_dst=self.inverse_src_and_dst
-                            )
+        for k in self.acl_conditions.keys():
+            if re.search(conditions.get(k, '.*'), self.acl_conditions[k], re.IGNORECASE):
+                # if condition in row['condition']:
+
+                self.switch.execute('acl_add_entry',
+                                    name=self.name,
+                                    index=self.row['index'],
+                                    action=self.row['action'],
+                                    protocol=self.row['protocol'],
+                                    src1=self.row['src1'],
+                                    src2=self.row['src2'],
+                                    src_port_operator=self.row['src_port_operator'],
+                                    src_port=self.row['src_port'],
+                                    dst1=self.row['dst1'],
+                                    dst2=self.row['dst2'],
+                                    dst_port_operator=self.row['dst_port_operator'],
+                                    dst_port=self.row['dst_port'],
+                                    log=self.row['log'],
+                                    inverse_src_and_dst=self.inverse_src_and_dst
+                                    )

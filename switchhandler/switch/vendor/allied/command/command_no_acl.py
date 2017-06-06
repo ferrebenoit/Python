@@ -25,5 +25,5 @@ class CommandNoACL(CommandBase):
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
 
     def do_run(self):
-        self.switch.sendline('no ip access-list extended {}'.format(self.name))
+        self.switch.sendline('no access-list hardware {}'.format(self.name))
         self.switch.expectPrompt()

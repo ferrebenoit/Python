@@ -39,6 +39,7 @@ class ActionCreateACL(ActionBase):
                                 name=self.name,
                                 row=item,
                                 acl_replace=self.acl_replace,
+                                acl_conditions=self.acl_conditions,
                                 inverse_src_and_dst=self.inverse_src_and_dst
                                 )
 

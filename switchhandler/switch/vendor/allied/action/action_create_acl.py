@@ -17,6 +17,9 @@ class ActionCreateACL(ActionBase):
     :param acl_replace: Les variables qui seront remplacées dans acl_entries.
     :type acl_replace: dict
     :default acl_replace: None
+    :param acl_conditions: Les condition pour affecter l'acl au switch 
+    :type acl_conditions: dict
+    :default acl_conditions: None
     :param inverse_src_and_dst:
     :type inverse_src_and_dst: Bool
     :default inverse_src_and_dst: False
@@ -33,13 +36,14 @@ class ActionCreateACL(ActionBase):
 
         self.switch.execute('no_acl', name=self.name)
 
-        # self.switch.execute('acl', name=self.name) not supported on all version
+        self.switch.execute('acl', name=self.name)  # not supported on all version
 
         for item in self.acl_entries:
             self.switch.execute('acl_add_row',
                                 name=self.name,
                                 row=item,
                                 acl_replace=self.acl_replace,
+                                acl_conditions=self.acl_conditions,
                                 inverse_src_and_dst=self.inverse_src_and_dst
                                 )
 

@@ -33,3 +33,19 @@ class CreateAcl(SwitchScripter):
 
 create_acl = CreateAcl('Assign access list to interface', sys.argv[1:])
 create_acl.process()
+
+
+# class CreateAclWorker(BaseWorker):
+#
+#    def __init__(self, **args):
+#        pass
+#
+#    def run(self):
+#        pass
+#
+#
+# class CreateAcl(SwitchScripter):
+#
+#    def __init__(self, description, args, future_funtion):
+#        super().__init__(description, args)
+#

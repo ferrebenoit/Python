@@ -104,6 +104,10 @@ class SwitchBase(metaclass=ABCMeta):
         pass
 
     @property
+    def prompt(self):
+        return self._PROMPT
+
+    @property
     def hostname(self):
         if not self.__hostname:
             return None
@@ -202,6 +206,12 @@ class SwitchBase(metaclass=ABCMeta):
 
     def logInfo(self, message):
         self.logger.info(message)
+
+    def log_critical(self, message):
+        self.logger.critical(message)
+
+    def log_error(self, message):
+        self.logger.error(message)
 
     def sendline(self, s=''):
         if (s == ''):
