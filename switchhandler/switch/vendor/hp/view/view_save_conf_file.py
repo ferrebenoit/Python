@@ -5,7 +5,6 @@ Created on 9 mai 2017
 @author: ferreb
 '''
 import datetime
-import time
 
 from switchhandler.switch.command.command_base import CommandBase
 
@@ -64,9 +63,9 @@ class ViewSaveConfFile(CommandBase):
 
     def do_run(self):
         # self.switch.execute('conft')
-        #self.switch.sendline('console local-terminal vt100')
+        # self.switch.sendline('console local-terminal vt100')
         # self.switch.expectPrompt()
-        #print('/', self.switch.connection.before.decode('UTF-8'), '/')
+        # print('/', self.switch.connection.before.decode('UTF-8'), '/')
 
         self.switch.execute('end')
 
