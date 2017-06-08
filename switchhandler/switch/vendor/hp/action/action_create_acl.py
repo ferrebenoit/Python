@@ -25,6 +25,7 @@ class ActionCreateACL(ActionBase):
     def arg_default(self):
         self.acl_replace = getattr(self, 'acl_replace', None)
         self.inverse_src_and_dst = getattr(self, 'inverse_src_and_dst', False)
+        self.acl_conditions = getattr(self, 'acl_conditions', None)
 
     def do_run(self):
         self.switch.execute('end')

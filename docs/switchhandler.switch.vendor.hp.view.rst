@@ -28,6 +28,14 @@ switchhandler\.switch\.vendor\.hp\.view\.view\_port\_from\_mac module
     :undoc-members:
     :show-inheritance:
 
+switchhandler\.switch\.vendor\.hp\.view\.view\_save\_conf\_file module
+----------------------------------------------------------------------
+
+.. automodule:: switchhandler.switch.vendor.hp.view.view_save_conf_file
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 switchhandler\.switch\.vendor\.hp\.view\.view\_save\_conf\_tftp module
 ----------------------------------------------------------------------
 

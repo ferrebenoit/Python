@@ -17,7 +17,7 @@ class ActionCreateACL(ActionBase):
     :param acl_replace: Les variables qui seront remplacées dans acl_entries.
     :type acl_replace: dict
     :default acl_replace: None
-    :param acl_conditions: Les condition pour affecter l'acl au switch
+    :param acl_conditions: Les condition pour affecter les entrées de l'acl au switch
     :type acl_conditions: dict
     :default acl_conditions: None
     :param inverse_src_and_dst:
@@ -28,6 +28,7 @@ class ActionCreateACL(ActionBase):
     def arg_default(self):
         self.acl_replace = getattr(self, 'acl_replace', None)
         self.inverse_src_and_dst = getattr(self, 'inverse_src_and_dst', False)
+        self.acl_conditions = getattr(self, 'acl_conditions', None)
 
     def do_run(self):
         self.switch.execute('end')

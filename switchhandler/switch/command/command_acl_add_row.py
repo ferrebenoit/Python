@@ -17,9 +17,12 @@ class CommandACLAddRow(CommandBase):
     :type  name: str
     :param row: Les entrées de la ligne d'acl
     :type  row: dict
-    :param acl_replace: les variables de remplacements
+    :param acl_replace: les variables de remplacements ***default : *** None
     :type  acl_replace: dict
     :default acl_replace: None
+    :param acl_conditions: Les condition pour affecter les entrées de l'acl au switch ***default : *** None
+    :type acl_conditions: dict
+    :default acl_conditions: None
     :param inverse_src_and_dst: inverse source et destination
     :type  inverse_src_and_dst: bool
     :default inverse_src_and_dst: False
@@ -34,6 +37,11 @@ class CommandACLAddRow(CommandBase):
 
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
+
+    def arg_default(self):
+        self.acl_replace = getattr(self, 'acl_replace', None)
+        self.inverse_src_and_dst = getattr(self, 'inverse_src_and_dst', False)
+        self.acl_conditions = getattr(self, 'acl_conditions', None)
 
     def do_run(self):
         if self.acl_replace is not None:

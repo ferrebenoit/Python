@@ -24,7 +24,7 @@ class SaveSwitchConf(SwitchScripter):
         else:
             switch.execute(
                 'save_conf_file',
-                folder="switch.git/{}".format(args['site']),
+                folder="switch/{}".format(args['site']),
                 add_timestamp=False)
             #switch.save_conf_TFTP(args['TFTPIP'], folder="DN", add_timestamp=False)
         switch.logout()

@@ -66,7 +66,7 @@ class ViewSaveConfFile(CommandBase):
 
         self.switch.sendline('terminal length 0')
         self.switch.expectPrompt()
-        print('/' + self.switch.after() + '/')
+
         self.switch.sendline('show running-config')
         self.switch.expectPrompt()
 

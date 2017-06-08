@@ -1,6 +1,4 @@
 '''
-.. automodule:: switchhandler.arg_from_csv
-   :members:
 
 Here is something I want to talk about::
 

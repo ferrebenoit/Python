@@ -1,5 +1,6 @@
 eclipse.preferences.version=1
 encoding//docs/conf.py=utf-8
+encoding//scripts/docs/conf.py=utf-8
 encoding//scripts/save_switch_conf.py=utf-8
 encoding//scripts/save_switch_conf_file.py=utf-8
 encoding//switchhandler/network/net_tools.py=utf-8
