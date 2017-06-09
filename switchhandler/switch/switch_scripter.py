@@ -11,13 +11,14 @@ from switchhandler.arg_from_csv import ArgFromCSV
 from switchhandler.switch.vendor.allied.switch_allied import SwitchAllied
 from switchhandler.switch.vendor.cisco.switch_cisco import SwitchCisco
 from switchhandler.switch.vendor.hp.switch_HP import SwitchHP
+from switchhandler.switch.vendor.microsens.switch_microsens import SwitchMicrosens
 
 
 class SwitchScripter(ArgFromCSV):
     "Class That desactivate an wifi AP"
 
     def __init__(self, description, args):
-        ArgFromCSV.__init__(self, description, args, self._script_content1)
+        ArgFromCSV.__init__(self, description, args, self._script_worker)
 
         self._logging_config(self._arguments['loglevel'].upper(), self._arguments['screenlog'] == 'yes', self._arguments['filelog'])
 
@@ -54,7 +55,7 @@ class SwitchScripter(ArgFromCSV):
 
         self._add_mandatory_arg('IP', 'vendor', 'login', 'password')
 
-    def _script_content1(self, args):
+    def _script_worker(self, args):
         if(re.compile('cisco', flags=re.IGNORECASE).search(args['vendor'])):
             # if(args['vendor'].lower().contains('cisco')):
             self._script_content_cisco(SwitchCisco(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
@@ -64,6 +65,9 @@ class SwitchScripter(ArgFromCSV):
         if(re.compile('allied', flags=re.IGNORECASE).search(args['vendor'])):
             # elif(args['vendor'].lower().contains('allied')):
             self._script_content_allied(SwitchAllied(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
+        if(re.compile('allied', flags=re.IGNORECASE).search(args['vendor'])):
+            # elif(args['vendor'].lower().contains('allied')):
+            self._script_content_microsens(SwitchMicrosens(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
 
     def _script_content_cisco(self, switch_cisco, args):
         self._common_actions(switch_cisco, args)
@@ -73,6 +77,9 @@ class SwitchScripter(ArgFromCSV):
 
     def _script_content_allied(self, switch_hp, args):
         self._common_actions(switch_hp, args)
+
+    def _script_content_microsens(self, switch_microsens, args):
+        self._common_actions(switch_microsens, args)
 
     def _common_actions(self, switch, args):
         pass

@@ -8,7 +8,7 @@ class SwitchAllied(SwitchBase):
         super(SwitchAllied, self).__init__(IP, 'allied', site, dryrun)
 
         # prompt rexex
-        self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([>#])$'
+        self._PROMPT = '(?P<hostname>[A-Za-z0-9\-]*)(?P<configModeWithParenthesis>\((?P<configMode>.*)\))*(?P<exec>[>#])$'
 
     def getExecLevel(self):
         if self.exec == '>':
@@ -29,12 +29,23 @@ class SwitchAllied(SwitchBase):
     def expectPrompt(self):
         return super(SwitchAllied, self).expectPrompt()
 
-    def login(self, login, password):
-        if super(SwitchAllied, self).login(login, password):
-            self.expectPrompt()
-            return True
-        else:
-            return False
+    def _ssh_login(self, login, password):
+        self.connect()
+        self.connection._spawn("ssh {}@{} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null".format(login, self.IP))
+        self.connection.expect('password:')
+        self.connection.sendline(password)
+
+        self._loadPromptState()
+
+        self.expectPrompt()
+        self.expectPrompt()  # need duplicate expect pompt
+
+        return True
+
+    # not implemented
+    def _telnet_login(self, login, password):
+        self.logger.info('TELNET not implemented for allied switches')
+        return False
 
     def logout(self):
         return super(SwitchAllied, self).logout()

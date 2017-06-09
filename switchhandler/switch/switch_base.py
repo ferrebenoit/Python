@@ -130,8 +130,10 @@ class SwitchBase(metaclass=ABCMeta):
 
     @property
     def configModeWithParenthesis(self):
-        self.__configModeWithParenthesis = self._loadPromptState()
-        return self.__configModeWithParenthesis
+        if not self.__configModeWithParenthesis:
+            return None
+
+        return self.__configModeWithParenthesis.decode('UTF-8')
 
     @property
     def vendor(self):
@@ -255,40 +257,84 @@ class SwitchBase(metaclass=ABCMeta):
         return self.connection.expect(pattern, timeout, searchwindowsize, async)
 
     @abstractmethod
-    def expectPrompt(self):
+    def expectPrompt(self, other_messages=None):
+        '''retourne 0 si le prompt est matché
+        retourne l'index de la liste other_messages en partant de 1
+        '''
+
         self.logInfo('expect : PROMPT')
         if self.dryrun:
             return
 
-        self.connection.expect(self._PROMPT)
+        expect_list = [self._PROMPT]
+        if (other_messages is not None):
+            expect_list.extend(other_messages)
+
+        match = self.connection.expect(expect_list)
+
         # load swtch state
         self.__hostname, self.__configModeWithParenthesis, self.__configMode, self.__exec = self.connection.match.groups()
+
+        self.__hostname = self.connection.match.groupdict().get('hostname', None)
+        self.__configModeWithParenthesis = self.connection.match.groupdict().get('configModeWithParenthesis', None)
+        self.__configMode = self.connection.match.groupdict().get('configMode', None)
+        self.__exec = self.connection.match.groupdict().get('exec1', None)
 
         self.logger.debug('before {}'.format(self.connection.before))
         self.logger.debug('after {}'.format(self.connection.after))
 
+        return match
+
     @abstractmethod
-    def login(self, login, password):
+    def _ssh_login(self, login, password):
+        pass
+
+    @abstractmethod
+    def _telnet_login(self, login, password):
+        pass
+
+    def try_ssh_login(self, login, password):
         try:
-            if self.dryrun:
-                self.logger.info("Login ok as user {}".format(login))
+            self.logger.info("trying SSH Login")
+
+            if self._ssh_login(login, password):
+                self.logger.info("SSH Login ok as user {}".format(login))
                 return True
-
-            self.connect()
-            if self.connection.login(self.__IP, login, password, auto_prompt_reset=False):
-                self._loadPromptState()
-                result = True
-                self.logger.info("Login ok as user {}".format(login))
             else:
-                result = False
-                self.logger.error("Login error as user {}".format(login))
+                return False
         except:
-            self.logger.critical(self.connection.before)
-            self.logger.critical(self.connection.after)
-            self.logger.error("Connection error")
-            result = False
 
-        return result
+            self.logger.warning("SSH Login failed as user {}".format(login))
+            self.logger.warning(self.connection.before)
+            self.logger.warning(self.connection.after)
+            return False
+
+    def try_telnet_login(self, login, password):
+        try:
+            self.logger.info("trying TELNET Login")
+
+            if self._telnet_login(login, password):
+                self.logger.info("TELNET Login ok as user {}".format(login))
+                return True
+            else:
+                return False
+        except:
+            self.logger.warning("TELNET Login failed")
+            self.logger.warning(self.connection.before)
+            self.logger.warning(self.connection.after)
+            return False
+
+    def login(self, login, password):
+        if self.dryrun:
+            self.logger.info("Login ok as user {}".format(login))
+            return True
+
+        if not self.try_ssh_login(login, password):
+            if not self.try_telnet_login(login, password):
+                self.logger.error("Connection error as user {}".format(login))
+                return False
+
+        return True
 
     @abstractmethod
     def logout(self):

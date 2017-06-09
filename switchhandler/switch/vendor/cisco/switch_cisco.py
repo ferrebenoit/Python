@@ -15,7 +15,7 @@ class SwitchCisco(SwitchBase):
         super(SwitchCisco, self).__init__(IP, 'cisco', site, dryrun)
 
         # prompt rexex
-        self._PROMPT = '([A-Za-z0-9\-]*)(\((.*)\))*([$#])$'
+        self._PROMPT = '(?P<hostname>[A-Za-z0-9\-]*)(?P<configModeWithParenthesis>\((?P<configMode>.*)\))*(?P<exec>[$#])$'
 
     def getExecLevel(self):
         if self.exec == '$':
@@ -37,14 +37,38 @@ class SwitchCisco(SwitchBase):
         elif self.configMode == 'conf-ssh-pubkey-user':
             return ConfigMode.PUBKEY_USER
 
-    def expectPrompt(self):
-        return super(SwitchCisco, self).expectPrompt()
+    def expectPrompt(self, other_messages=None):
+        return super(SwitchCisco, self).expectPrompt(other_messages)
 
-    def login(self, login, password):
-        if super(SwitchCisco, self).login(login, password):
-            return True
-        else:
-            return False
+    def _ssh_login(self, login, password):
+        self.connect()
+        self.connection._spawn("ssh {}@{} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null".format(login, self.IP))
+
+        self.connection.expect('password:')
+
+        self.connection.sendline(password)
+
+        # self._loadPromptState()
+
+        self.expectPrompt()
+
+        return True
+
+    def _telnet_login(self, login, password):
+        self.connect()
+        self.connection._spawn("telnet {}".format(self.IP))
+
+        self.connection.expect('Username:')
+        self.connection.sendline(login)
+
+        self.connection.expect('Password:')
+        self.connection.sendline(password)
+
+        # self._loadPromptState()
+
+        self.expectPrompt()
+
+        return True
 
     def logout(self):
         return super(SwitchCisco, self).logout()

@@ -8,7 +8,7 @@ class SwitchHP(SwitchBase):
         super(SwitchHP, self).__init__(IP, 'hp', site, dryrun)
 
         # prompt rexex
-        self._PROMPT = '(?:tty=(?:ansi|none) )*([A-Za-z0-9\-]*)(\((.*)\))*([>#]) '
+        self._PROMPT = '(?:tty=(?:ansi|none) )*(?P<hostname>[A-Za-z0-9\-]*)(?P<configModeWithParenthesis>\((?P<configMode>.*)\))*(?P<exec>[>#]) '
         # self._PROMPT = '(?:tty=(?:ansi|none) )*([A-Za-z0-9\-]*)(\((.*)\))*([>#])'
 
     @property
@@ -36,32 +36,31 @@ class SwitchHP(SwitchBase):
     def expectPrompt(self):
         return super(SwitchHP, self).expectPrompt()
 
-    def login(self, login, password):
-        try:
-            if self.dryrun:
-                self.logger.info("Login ok as user {}".format(login))
-                return True
+    def _ssh_login(self, login, password):
+        self.connect()
+        self.connection._spawn("ssh {}@{} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null".format(login, self.IP))
+        self.connection.expect('password:')
+        self.connection.sendline(password)
 
-            self.connect()
-            self.connection._spawn("ssh {}@{} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null".format(login, self.IP))
+        self.sendline()
+        self._loadPromptState()
 
-            self.connection.expect('password:')
-            self.connection.sendline(password)
+        self.expectPrompt()
 
-            self.sendline()
-            self._loadPromptState()
+        return True
 
-            self.expectPrompt()
+    def _telnet_login(self, login, password):
+        self.connect()
+        self.connection._spawn("telnet {}".format(self.IP))
+        self.connection.expect('Password:')
+        self.connection.sendline(password)
 
-            self.logger.info("Login ok as user {}".format(login))
-            return True
-        except:
-            self.logger.critical(self.connection.before)
-            self.logger.critical(self.connection.after)
-            self.logger.error("Connection error")
-            return False
+        self.sendline()
+        self._loadPromptState()
 
-        return False
+        self.expectPrompt()
+
+        return True
 
     def logout(self):
         if super(SwitchHP, self).logout():
