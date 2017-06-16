@@ -15,6 +15,7 @@ from switchhandler.switch.vendor.allied.command.command_conft import CommandConf
 from switchhandler.switch.vendor.allied.command.command_enable import CommandEnable
 from switchhandler.switch.vendor.allied.command.command_end import CommandEnd
 from switchhandler.switch.vendor.allied.command.command_exit import CommandExit
+from switchhandler.switch.vendor.allied.command.command_int import CommandInt
 from switchhandler.switch.vendor.allied.command.command_int_vlan import CommandIntVlan
 from switchhandler.switch.vendor.allied.command.command_ip_address import CommandIPAddress
 from switchhandler.switch.vendor.allied.command.command_ip_helper import CommandIPHelper
@@ -45,6 +46,7 @@ switchAlliedCommands = {
     "enable": CommandEnable,
     "end": CommandEnd,
     "exit": CommandExit,
+    "int": CommandInt,
     "int_vlan": CommandIntVlan,
     "ip_address": CommandIPAddress,
     "ip_helper": CommandIPHelper,

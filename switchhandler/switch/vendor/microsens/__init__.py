@@ -1,3 +1,9 @@
+from switchhandler.switch.vendor.microsens.action.action_create_vlan import ActionCreateVlan
+
+from switchhandler.switch.vendor.microsens.command.command_write import CommandWrite
+
 switchMicrosensCommands = {
-    'write': switchhandler.switch.vendor.microsens.command.write.Write,
+    'create_vlan': ActionCreateVlan,
+
+    'write': CommandWrite,
 }

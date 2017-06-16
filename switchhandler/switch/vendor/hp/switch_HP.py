@@ -22,9 +22,9 @@ class SwitchHP(SwitchBase):
         return hostname
 
     def getExecLevel(self):
-        if self.exec == '>':
+        if self.exec_mode == '>':
             return Exec.USER
-        elif self.exec == '#':
+        elif self.exec_mode == '#':
             return Exec.PRIVILEGED
 
     def getConfigMode(self):
@@ -63,11 +63,15 @@ class SwitchHP(SwitchBase):
         return True
 
     def logout(self):
-        if super(SwitchHP, self).logout():
+        try:
+            self.execute('end')
+            self.sendline('logout')
             self.expect('[y/n]?')
             self.send('y')
+
+            self.logInfo('Logout')
             return True
-        else:
+        except:
             return False
 
     def getSwitchCommands(self):

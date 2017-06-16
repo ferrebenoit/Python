@@ -83,6 +83,7 @@ class ArgFromCSV:
 
     def _script_content(self, args):
         self.executor.submit(self.future_function, args)
+        # self.future_function(args)
 
     def _check_args(self, args):
         return self._parse_argv(self.__convert_to_argv(args))
@@ -110,7 +111,7 @@ class ArgFromCSV:
             La fonction à appeler pour exécuter le script
         """
 
-        with ThreadPoolExecutor(max_workers=self._arguments['workers']) as self.executor:
+        with ThreadPoolExecutor(max_workers=int(self._arguments['workers'])) as self.executor:
             # Script called without csv file
             if('csvfile' not in self._arguments):
                 self._arguments.update(self.__ask_needed_missing_args(self._arguments))

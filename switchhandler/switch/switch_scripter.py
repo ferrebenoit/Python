@@ -5,6 +5,8 @@ Created on 23 nov. 2016
 '''
 import logging.handlers
 import re
+import sys
+import traceback
 
 from switchhandler.arg_from_csv import ArgFromCSV
 
@@ -52,31 +54,38 @@ class SwitchScripter(ArgFromCSV):
         self._arg_parser.add_argument('--vendor', '--type', help='the vendor')
         self._arg_parser.add_argument('--switchname', help='the switch name')
         self._arg_parser.add_argument('--site', help='The switch site')
+        self._arg_parser.add_argument('--siteid', help='The switch siteid')
 
         self._add_mandatory_arg('IP', 'vendor', 'login', 'password')
 
     def _script_worker(self, args):
-        if(re.compile('cisco', flags=re.IGNORECASE).search(args['vendor'])):
-            # if(args['vendor'].lower().contains('cisco')):
-            self._script_content_cisco(SwitchCisco(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
-        if(re.compile('hp', flags=re.IGNORECASE).search(args['vendor'])):
-            # elif(args['vendor'].lower().contains('hp')):
-            self._script_content_hp(SwitchHP(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
-        if(re.compile('allied', flags=re.IGNORECASE).search(args['vendor'])):
-            # elif(args['vendor'].lower().contains('allied')):
-            self._script_content_allied(SwitchAllied(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
-        if(re.compile('allied', flags=re.IGNORECASE).search(args['vendor'])):
-            # elif(args['vendor'].lower().contains('allied')):
-            self._script_content_microsens(SwitchMicrosens(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
+        try:
+            if(re.compile('cisco', flags=re.IGNORECASE).search(args['vendor'])):
+                # if(args['vendor'].lower().contains('cisco')):
+                self._script_content_cisco(SwitchCisco(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
+            if(re.compile('hp', flags=re.IGNORECASE).search(args['vendor'])):
+                # elif(args['vendor'].lower().contains('hp')):
+                self._script_content_hp(SwitchHP(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
+            if(re.compile('allied', flags=re.IGNORECASE).search(args['vendor'])):
+                # elif(args['vendor'].lower().contains('allied')):
+                self._script_content_allied(SwitchAllied(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
+            if(re.compile('microsens', flags=re.IGNORECASE).search(args['vendor'])):
+                # elif(args['vendor'].lower().contains('allied')):
+                self._script_content_microsens(SwitchMicrosens(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
+        except Exception:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            # exc_type below is ignored on 3.5 and later
+            traceback.print_exception(exc_type, exc_value, exc_traceback,
+                                      limit=2, file=sys.stdout)
 
     def _script_content_cisco(self, switch_cisco, args):
         self._common_actions(switch_cisco, args)
 
-    def _script_content_hp(self, switch_allied, args):
-        self._common_actions(switch_allied, args)
-
-    def _script_content_allied(self, switch_hp, args):
+    def _script_content_hp(self, switch_hp, args):
         self._common_actions(switch_hp, args)
+
+    def _script_content_allied(self, switch_allied, args):
+        self._common_actions(switch_allied, args)
 
     def _script_content_microsens(self, switch_microsens, args):
         self._common_actions(switch_microsens, args)

@@ -5,6 +5,7 @@ Created on 9 mai 2017
 @author: ferreb
 '''
 import datetime
+import re
 
 from switchhandler.switch.command.command_base import CommandBase
 
@@ -58,6 +59,8 @@ class ViewSaveConfFile(CommandBase):
         # str = re.sub(r'^Current configuration :.*$', '', str, flags=re.MULTILINE)
         # str = re.sub(r'^! Last configuration change at .*$', '', str, flags=re.MULTILINE)
         # str = re.sub(r'^! NVRAM config last updated at .*$', '', str, flags=re.MULTILINE)
+
+        str = re.sub(r'ntp clock-period [0-9]*', '', str, flags=re.MULTILINE)
 
         return "\n".join(str.split('\n')[8:])
 

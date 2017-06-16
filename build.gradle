@@ -66,7 +66,7 @@ remotes {
     host = '172.18.2.31'
     //host = '127.0.0.1'
     user = 'root'
-    password = 'password'
+    password = ''
     //identity = file('id_rsa')
     knownHosts = allowAnyHosts
   }
@@ -77,10 +77,22 @@ task deploysources  {
       ssh.run {
         session(remotes.squidanalyser) {
         	execute 'mkdir -p /opt/cd60/python'
-			put from: 'scripts', into: '/opt/cd60/python', filter: {it.name =~ /.py$/}
-			put from: 'utils', into: '/opt/cd60/python', filter: {it.name =~ /.py$/}
+			put from: 'scripts', into: '/opt/cd60/python', filter: {it.name =~ /\.py$/}
+			//put from: 'utils', into: '/opt/cd60/python', filter: {it.name =~ /.py$/}
 			execute 'chmod 755 /opt/cd60/python/scripts/*' 
 			execute 'dos2unix /opt/cd60/python/scripts/*' 
+      }
+    }
+  }
+}
+
+task deploylibrary {
+	doLast {    
+      ssh.run {
+        session(remotes.squidanalyser) {
+        	execute 'mkdir -p /opt/cd60/python'
+			put from: 'build/distributions/SwitchHandler-1.3.zip', into: '/opt/cd60/'
+			execute 'pip3 install /opt/cd60/SwitchHandler-1.3.zip --upgrade' 
       }
     }
   }

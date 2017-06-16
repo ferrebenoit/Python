@@ -11,9 +11,9 @@ class SwitchAllied(SwitchBase):
         self._PROMPT = '(?P<hostname>[A-Za-z0-9\-]*)(?P<configModeWithParenthesis>\((?P<configMode>.*)\))*(?P<exec>[>#])$'
 
     def getExecLevel(self):
-        if self.exec == '>':
+        if self.exec_mode == '>':
             return Exec.USER
-        elif self.exec == '#':
+        elif self.exec_mode == '#':
             return Exec.PRIVILEGED
 
     def getConfigMode(self):
@@ -32,13 +32,13 @@ class SwitchAllied(SwitchBase):
     def _ssh_login(self, login, password):
         self.connect()
         self.connection._spawn("ssh {}@{} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null".format(login, self.IP))
-        self.connection.expect('password:')
+        self.connection.expect('[Pp]assword:')
         self.connection.sendline(password)
 
-        self._loadPromptState()
+        # self._loadPromptState()
 
         self.expectPrompt()
-        self.expectPrompt()  # need duplicate expect pompt
+        # self.expectPrompt()  # need duplicate expect pompt
 
         return True
 
@@ -48,7 +48,14 @@ class SwitchAllied(SwitchBase):
         return False
 
     def logout(self):
-        return super(SwitchAllied, self).logout()
+        try:
+            self.execute('end')
+            self.sendline('logout')
+            self.logInfo('Logout')
+
+            return True
+        except:
+            return False
 
     def getSwitchCommands(self):
         return switchAlliedCommands

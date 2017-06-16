@@ -3,8 +3,9 @@ Created on 9 mai 2017
 
 @author: ferreb
 '''
+
 from switchhandler.switch.action.action_base import ActionBase
-from switchhandler.switch.vendor.microsens.switch_microsens import convert_vlan_id_to_vlan_filter
+from switchhandler.switch.vendor.microsens.utils import convert_vlan_id_to_vlan_filter
 
 
 class ActionCreateVlan(ActionBase):
@@ -41,13 +42,13 @@ class ActionCreateVlan(ActionBase):
         self.ip_helper = getattr(self, 'ip_helper', None)
 
     def do_run(self):
-        self.switch.execute('set vlan filter {} en'.format(
-            convert_vlan_id_to_vlan_filter(self.vlan_id)))
-        self.switch.execute('set vlan filter {} id {}'.format(
-            convert_vlan_id_to_vlan_filter(self.vlan_id), self.id))
-        self.switch.execute('set vlan filter {} port 5 en'.format(
-            convert_vlan_id_to_vlan_filter(self.vlan_id)))
-        self.switch.execute('set vlan filter {} port manager en'.format(
-            convert_vlan_id_to_vlan_filter(self.vlan_id)))
+        self.switch.sendline('set vlan filter {} en'.format(
+            convert_vlan_id_to_vlan_filter(self.id)))
+        self.switch.sendline('set vlan filter {} id {}'.format(
+            convert_vlan_id_to_vlan_filter(self.id), self.id))
+        self.switch.sendline('set vlan filter {} port 5 en'.format(
+            convert_vlan_id_to_vlan_filter(self.id)))
+        self.switch.sendline('set vlan filter {} port manager en'.format(
+            convert_vlan_id_to_vlan_filter(self.id)))
 
         self.switch.execute('write')

@@ -122,7 +122,7 @@ class SwitchBase(metaclass=ABCMeta):
         return self.__configMode.decode('UTF-8')
 
     @property
-    def exec(self):
+    def exec_mode(self):
         if not self.__exec:
             return None
 
@@ -273,12 +273,10 @@ class SwitchBase(metaclass=ABCMeta):
         match = self.connection.expect(expect_list)
 
         # load swtch state
-        self.__hostname, self.__configModeWithParenthesis, self.__configMode, self.__exec = self.connection.match.groups()
-
         self.__hostname = self.connection.match.groupdict().get('hostname', None)
         self.__configModeWithParenthesis = self.connection.match.groupdict().get('configModeWithParenthesis', None)
         self.__configMode = self.connection.match.groupdict().get('configMode', None)
-        self.__exec = self.connection.match.groupdict().get('exec1', None)
+        self.__exec = self.connection.match.groupdict().get('exec', None)
 
         self.logger.debug('before {}'.format(self.connection.before))
         self.logger.debug('after {}'.format(self.connection.after))
@@ -338,14 +336,7 @@ class SwitchBase(metaclass=ABCMeta):
 
     @abstractmethod
     def logout(self):
-        try:
-            self.end()
-            self.sendline('logout')
-            self.logInfo('Logout')
-
-            return True
-        except:
-            return False
+        pass
 
     @abstractmethod
     def getSwitchCommands(self):
