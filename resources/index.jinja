@@ -1,0 +1,14 @@
+.. Switch automation documentation master file, created by
+   sphinx-quickstart on Mon Apr  3 10:59:16 2017.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Liste des Switchs
+=================
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   {% for site in sites %}{{site}}.rst
+   {% endfor %}

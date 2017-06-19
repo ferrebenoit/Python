@@ -4,6 +4,7 @@ encoding//documentation/script/docs/conf.py=utf-8
 encoding//scripts/save_switch_conf.py=utf-8
 encoding//scripts/save_switch_conf_file.py=utf-8
 encoding//switchhandler/network/net_tools.py=utf-8
+encoding//switchhandler/switch/analyse/doc_generator.py=utf-8
 encoding//switchhandler/switch/command/command_acl_add_row.py=utf-8
 encoding//switchhandler/switch/vendor/allied/__init__.py=utf-8
 encoding//switchhandler/switch/vendor/allied/command/command_acl.py=utf-8
