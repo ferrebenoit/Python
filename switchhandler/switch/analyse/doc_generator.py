@@ -8,11 +8,10 @@ from pathlib import Path
 import re
 
 from jinja2 import Template
-import jinja2
 
 
 # class DocGenerator:
-__REGEX_INTERFACE = "((interface (?P<portspeed>GigabitEthernet|FastEthernet)(?P<portnumber>(([0-9]+)\/)?([0-9]+)\/([0-9]+)))\n((\s*switchport trunk allowed vlan (?P<vlantagged>[0-9]+(,[0-9]+)*)\n)|(\s*switchport access vlan (?P<vlanaccess>[0-9]+)\n)|(?P<mode>\s*switchport mode (?P<trunkingmode>(trunk)|(access))\s*\n)|\s*description (?P<desc>.*)\s*\n|(^$\n)|(^.*(?!!).$\n))*^(!)$)"
+__REGEX_INTERFACE = "((interface (?P<portspeed>GigabitEthernet|FastEthernet)(?P<portnumber>(([0-9]+)\/)?([0-9]+)\/([0-9]+)))\n((\s*switchport trunk allowed vlan (?P<vlantagged>[0-9]+(,[0-9]+)*)\n)|(\s*switchport access vlan (?P<vlanaccess>[0-9]+)\n)|(\s*duplex (?P<duplex>half|full)\n)|(\s*speed (?P<speed>[0-9]+)\n)|(?P<mode>\s*switchport mode (?P<trunkingmode>(trunk)|(access))\s*\n)|\s*description (?P<desc>.*)\s*\n|(^$\n)|(^.*(?!!).$\n))*^(!)$)"
 __REGEX_INFO = "^hostname +(?P<hostname>.*)"
 
 # "((interface (?P<portspeed>GigabitEthernet|FastEthernet)(?P<portnumber>(([0-9]+)\/)?([0-9]+)\/([0-9]+)))\n\
@@ -88,7 +87,7 @@ for site_path in sites_path.iterdir():
                                 'ip': ip,
                                 'interfaces': interfaces
                                 })
-       # print(switchs)
+        print(switchs)
 
         template = Template(template_str)
         # print(template_str)

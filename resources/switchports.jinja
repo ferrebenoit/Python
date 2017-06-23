@@ -1,4 +1,4 @@
-.. Switch automation documentation master file, created by
+.. Switch Switch Port List master file, created by
    sphinx-quickstart on Mon Apr  3 10:59:16 2017.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
@@ -16,9 +16,13 @@ Switch {{ switch.hostname }} ({{ switch.ip }})
    * - Port Name 
      - Description
      - Trunking Mode 
-     - Vlan{% for interface in switch.interfaces %}
+     - Vlan
+     - Speed
+     - Duplex{% for interface in switch.interfaces %}
    * - {{ interface.portspeed+interface.portnumber }}
      - {{ interface.desc }}
      - {{ interface.trunkingmode }}
-     - {{ interface.vlanaccess }}{% endfor %}
+     - {% if interface.vlanaccess == 'None' %}{{ interface.vlanaccess }} {% else %} {{ interface.vlantagged }} {% endif %}
+     - {{ interface.speed }}
+     - {{ interface.duplex }}{% endfor %}
 {% endfor %}

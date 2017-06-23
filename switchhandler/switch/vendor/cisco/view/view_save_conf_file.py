@@ -54,15 +54,16 @@ class ViewSaveConfFile(CommandBase):
         return filepath
 
     def sanitize(self, str):
-        # str = re.sub(r'^show running-config$', '', str, flags=re.MULTILINE)
-        # str = re.sub(r'^Building configuration...$', '', str, flags=re.MULTILINE)
-        # str = re.sub(r'^Current configuration :.*$', '', str, flags=re.MULTILINE)
-        # str = re.sub(r'^! Last configuration change at .*$', '', str, flags=re.MULTILINE)
-        # str = re.sub(r'^! NVRAM config last updated at .*$', '', str, flags=re.MULTILINE)
+        str = re.sub(r'show running-config\s*\n', '', str, flags=re.MULTILINE)
+        str = re.sub(r'Building configuration...\s*\n', '', str, flags=re.MULTILINE)
+        str = re.sub(r'Current configuration .*\s*\n', '', str, flags=re.MULTILINE)
+        str = re.sub(r'! Last configuration change at .*\s*\n', '', str, flags=re.MULTILINE)
+        str = re.sub(r'! NVRAM config last updated at .*\s*\n', '', str, flags=re.MULTILINE)
+        str = re.sub(r'! No configuration change since last restart\s*\n', '', str, flags=re.MULTILINE)
 
-        str = re.sub(r'ntp clock-period [0-9]*', '', str, flags=re.MULTILINE)
+        str = re.sub(r'ntp clock-period [0-9]*\s*\n', '', str, flags=re.MULTILINE)
 
-        return "\n".join(str.split('\n')[8:])
+        return str
 
     def do_run(self):
         self.switch.execute('end')

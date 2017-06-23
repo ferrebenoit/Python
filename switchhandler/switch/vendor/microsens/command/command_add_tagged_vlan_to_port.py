@@ -23,11 +23,9 @@ class CommandAddTaggedVlanToPort(CommandBase):
 
     Commandes exécutées::
 
-      CommandAddTaggedVlanToPort(vlan_id=80, port=port1.1.8, description="Imprimante")
+      CommandAddTaggedVlanToPort(vlan_id=80, port=1)
 
-      prompt# int port1.1.8
-      prompt# description Imprimante
-      prompt# 'switchport trunk allowed vlan add 80
+      prompt# iset vlan filter 7 port 1 en
       prompt#
 
     '''

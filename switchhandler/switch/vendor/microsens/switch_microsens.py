@@ -51,7 +51,7 @@ class SwitchMicrosens(SwitchBase):
         self.connection.expect('Password:')
         self.connection.sendline('{}\r\n'.format(password))
 
-        self.sendline()
+        # self.sendline()
         self.expectPrompt()
 
         return True
