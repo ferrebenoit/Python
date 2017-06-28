@@ -55,8 +55,16 @@ class SwitchScripter(ArgFromCSV):
         self._arg_parser.add_argument('--switchname', help='the switch name')
         self._arg_parser.add_argument('--site', help='The switch site')
         self._arg_parser.add_argument('--siteid', help='The switch siteid')
+        self._arg_parser.add_argument('--auth', help='The authentication method', choices=['password', 'key'], default='password')
 
         self._add_mandatory_arg('IP', 'vendor', 'login', 'password')
+
+    def process(self):
+
+        if self._arguments['auth'] == 'key':
+            self._arguments['password'] = None
+
+        return super(SwitchScripter, self).process()
 
     def _script_worker(self, args):
         try:

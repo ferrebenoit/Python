@@ -26,12 +26,17 @@ class SaveSwitchConf(SwitchScripter):
             switch.log_error('BACKUP FAILED')
             print('impossible de se connecter')
         else:
-            switch.execute(
+            result = switch.execute(
                 'save_conf_file',
                 folder="{}/{}".format(args['path'], args['site']),
                 add_timestamp=False)
             #switch.save_conf_TFTP(args['TFTPIP'], folder="DN", add_timestamp=False)
+
             switch.logout()
+
+            if not result:
+                switch.log_error('BACKUP FAILED')
+
 
 save_conf_File = SaveSwitchConf('Save the running config', sys.argv[1:])
 save_conf_File.process()

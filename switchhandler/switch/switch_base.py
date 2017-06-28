@@ -215,6 +215,9 @@ class SwitchBase(metaclass=ABCMeta):
     def log_error(self, message):
         self.logger.error(message)
 
+    def log_warning(self, message):
+        self.logger.warning(message)
+
     def sendline(self, s=''):
         if (s == ''):
             self.logInfo("send : \\r\\n")

@@ -44,13 +44,10 @@ class SwitchCisco(SwitchBase):
         self.connect()
         self.connection._spawn("ssh {}@{} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null".format(login, self.IP))
 
-        self.connection.expect('[Pp]assword:')
-
-        self.connection.sendline(password)
-
-        # self._loadPromptState()
-
-        self.expectPrompt()
+        # Password is found send password
+        if self.expectPrompt(['[Pp]assword:']) == 1:
+            self.connection.sendline(password)
+            self.expectPrompt()
 
         return True
 

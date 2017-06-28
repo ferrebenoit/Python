@@ -39,26 +39,32 @@ class SwitchHP(SwitchBase):
     def _ssh_login(self, login, password):
         self.connect()
         self.connection._spawn("ssh {}@{} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null".format(login, self.IP))
-        self.connection.expect('password:')
-        self.connection.sendline(password)
+
+        if password is not None:
+            self.connection.expect('password:')
+            self.connection.sendline(password)
+            self.expectPrompt()
 
         self.sendline()
-        self._loadPromptState()
-
         self.expectPrompt()
+
+        self._loadPromptState()
 
         return True
 
     def _telnet_login(self, login, password):
         self.connect()
         self.connection._spawn("telnet {}".format(self.IP))
-        self.connection.expect('Password:')
-        self.connection.sendline(password)
+        if self.connection.expect(['Password:', 'Press any key to continue']) == 0:
+            self.connection.sendline(password)
+            self.expectPrompt()
+        else:
+            self.connection.sendline()
+            self.connection.expect('Password:')
+            self.connection.sendline(password)
+            self.expectPrompt()
 
-        self.sendline()
         self._loadPromptState()
-
-        self.expectPrompt()
 
         return True
 

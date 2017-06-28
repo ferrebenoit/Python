@@ -32,12 +32,12 @@ class SwitchAllied(SwitchBase):
     def _ssh_login(self, login, password):
         self.connect()
         self.connection._spawn("ssh {}@{} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null".format(login, self.IP))
-        self.connection.expect('[Pp]assword:')
-        self.connection.sendline(password)
 
-        # self._loadPromptState()
+        # Password is found send password
+        if self.expectPrompt(['[Pp]assword:']) == 1:
+            self.connection.sendline(password)
+            self.expectPrompt()
 
-        self.expectPrompt()
         # self.expectPrompt()  # need duplicate expect pompt
 
         return True

@@ -53,7 +53,7 @@ class ViewSaveConfFile(CommandBase):
         return filepath
 
     def sanitize(self, str):
-        return "\n".join(str.split('\n')[5:])
+        return "\n".join(str.split('\n')[5:-1])
 
     def do_run(self):
         # self.switch.execute('conft')
@@ -71,6 +71,7 @@ class ViewSaveConfFile(CommandBase):
 
         str = self.sanitize(self.switch.before())
         if len(str) == 0:
+            self.switch.log_warning('Sauvegarde 0 octet')
             return False
 
         try:
