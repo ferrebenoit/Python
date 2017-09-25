@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-from _sqlite3 import Row
 import csv
 import os
 import sys

@@ -26,15 +26,15 @@ class SwitchAllied(SwitchBase):
         elif self.configMode == 'config-vlan':  # vlan database
             return ConfigMode.VLAN
 
-    def expectPrompt(self):
-        return super(SwitchAllied, self).expectPrompt()
+    def expectPrompt(self, other_messages=None):
+        return super(SwitchAllied, self).expectPrompt(other_messages)
 
     def _ssh_login(self, login, password):
         self.connect()
         self.connection._spawn("ssh {}@{} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null".format(login, self.IP))
 
         # Password is found send password
-        if self.expectPrompt(['[Pp]assword:']) == 1:
+        if self.expectPrompt(other_messages=['[Pp]assword:']) == 1:
             self.connection.sendline(password)
             self.expectPrompt()
 

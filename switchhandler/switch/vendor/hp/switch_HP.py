@@ -33,8 +33,8 @@ class SwitchHP(SwitchBase):
         elif self.configMode == 'config':
             return ConfigMode.TERMINAL
 
-    def expectPrompt(self):
-        return super(SwitchHP, self).expectPrompt()
+    def expectPrompt(self, other_messages=None):
+        return super(SwitchHP, self).expectPrompt(other_messages)
 
     def _ssh_login(self, login, password):
         self.connect()
@@ -43,10 +43,11 @@ class SwitchHP(SwitchBase):
         if password is not None:
             self.connection.expect('password:')
             self.connection.sendline(password)
-            self.expectPrompt()
 
-        self.sendline()
-        self.expectPrompt()
+            if self.expectPrompt(other_messages=["Press any key to continue"]) == 1:
+                self.logInfo("got message: Press any key to continue")
+                self.sendline()
+                self.expectPrompt()
 
         self._loadPromptState()
 

@@ -82,6 +82,7 @@ class ArgFromCSV:
         return result
 
     def _script_content(self, args):
+        # change here to support thread or disable it for debug
         self.executor.submit(self.future_function, args)
         # self.future_function(args)
 
