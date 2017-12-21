@@ -41,13 +41,14 @@ class SwitchHP(SwitchBase):
         self.connection._spawn("ssh {}@{} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null".format(login, self.IP))
 
         if password is not None:
-            self.connection.expect('password:')
+            self.connection.expect('[Pp]assword:')
             self.connection.sendline(password)
+            self.logInfo('Password Sent')
 
-            if self.expectPrompt(other_messages=["Press any key to continue"]) == 1:
-                self.logInfo("got message: Press any key to continue")
-                self.sendline()
-                self.expectPrompt()
+        if self.expectPrompt(other_messages=["Press any key to continue"]) == 1:
+            self.logInfo("got message: Press any key to continue")
+            self.sendline()
+            self.expectPrompt()
 
         self._loadPromptState()
 

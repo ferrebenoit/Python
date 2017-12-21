@@ -47,6 +47,7 @@ class SwitchCisco(SwitchBase):
         # Password is found send password
         if self.expectPrompt(other_messages=['[Pp]assword:']) == 1:
             self.connection.sendline(password)
+            self.logInfo('Password Sent')
             self.expectPrompt()
 
         return True

@@ -4,10 +4,9 @@ Created on 12 juin 2017
 
 @author: ferreb
 '''
-from pathlib import Path
 import re
 
-from jinja2 import Template
+# from jinja2 import Template
 
 vlan_table = {
     '1': '1',

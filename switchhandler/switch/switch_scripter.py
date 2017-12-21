@@ -50,7 +50,7 @@ class SwitchScripter(ArgFromCSV):
 
         self._arg_parser.add_argument('--ip', help='Switch IP address')
         self._arg_parser.add_argument('--login', help='login')
-        self._arg_parser.add_argument('--password', help='password')
+        self._arg_parser.add_argument('--password', help='For authenticating with pivate key enter a fake password like "keyauth"')
         self._arg_parser.add_argument('--vendor', '--type', help='the vendor')
         self._arg_parser.add_argument('--switchname', help='the switch name')
         self._arg_parser.add_argument('--site', help='The switch site')

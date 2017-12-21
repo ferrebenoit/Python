@@ -33,6 +33,9 @@ class PubkeyAuth(SwitchScripter):
                         row['ipaddress'], port
                     ))
 
+                    # tester si le port n'est pas un lien vers un autre switch
+                    # if not switch.execute('port_is_trunk', port) :
+
                     if port not in result_dict:
                         result_dict[port] = [row['ipaddress']]
                     else:

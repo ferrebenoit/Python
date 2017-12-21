@@ -5,7 +5,7 @@ Created on 9 mai 2017
 @author: ferreb
 '''
 import datetime
-import re
+import os
 
 from switchhandler.switch.command.command_base import CommandBase
 from switchhandler.switch.vendor.microsens.utils import parse_vlan
@@ -36,14 +36,20 @@ class ViewSaveConfFile(CommandBase):
         self.folder = getattr(self, 'folder', None)
         self.add_timestamp = getattr(self, 'add_timestamp', False)
 
-    def _build_filepath(self, folder, conf_type, add_timestamp):
-        filepath = "Microsens/{}/export/{}".format(
+    def _build_folderpath(self, folder, conf_type):
+        folderpath = "Microsens/{}/export/".format(
             self.switch.IP,
+        )
+        if folder:
+            folderpath = "{}/{}".format(folder, folderpath)
+
+        return folderpath
+
+    def _build_filepath(self, folder, conf_type, add_timestamp):
+        filepath = "{}{}".format(
+            self._build_folderpath(folder, conf_type),
             conf_type
         )
-
-        if folder:
-            filepath = "{}/{}".format(folder, filepath)
 
         if add_timestamp:
             filepath = "{}_{:%Y%m%d-%H%M%S}".format(
@@ -65,7 +71,12 @@ class ViewSaveConfFile(CommandBase):
 
         str = self.sanitize(self.switch.before())
         try:
-            with open(self._build_filepath(self.folder, conf_type, self.add_timestamp), 'w') as f:
+            directory = self._build_folderpath(self.folder, conf_type)
+            file = self._build_filepath(self.folder, conf_type, self.add_timestamp)
+
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+            with open(file, 'w') as f:
                 f.write(str)
 
             self.switch.logger.info('Backup {} complete'.format(conf_type))
