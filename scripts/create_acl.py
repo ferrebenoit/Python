@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 from _csv import reader
-from asyncio.tasks import sleep
 import csv
 import os
 import sys
 
-from switchhandler.switch.switch_scripter import SwitchScripter
+from switchhandler.script.switch_scripter import SwitchScripter
 
 
 class CreateAcl(SwitchScripter):

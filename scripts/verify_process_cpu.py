@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-import os
 import sys
 
-from switchhandler.switch.switch_scripter import SwitchScripter
+from switchhandler.script.switch_scripter import SwitchScripter
 
 
 class PubkeyAuth(SwitchScripter):

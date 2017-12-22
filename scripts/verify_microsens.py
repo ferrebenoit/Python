@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
-import os
-import re
 import sys
 
-from switchhandler.switch.switch_scripter import SwitchScripter
+from switchhandler.script.switch_scripter import SwitchScripter
 
 
 class VerifyImprimante(SwitchScripter):

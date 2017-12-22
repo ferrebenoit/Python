@@ -9,7 +9,8 @@ buildscript {
 /////////////////Pygradle section/////////////////////////////////////////////
 // to generate skel of documentation : sphinx-apidoc -o docs switchhandler -f
 plugins {
-    id "com.linkedin.python-sdist" version "0.4.9"
+	id "com.linkedin.python-sdist" version "0.6.16"
+    //id "com.linkedin.python-sdist" version "0.4.9"
     //id "com.linkedin.python" version "0.4.9"
 }
 
