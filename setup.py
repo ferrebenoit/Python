@@ -131,7 +131,7 @@ class GradleDistribution(Distribution, object):
             # introduce a version conflict issue.
             for req in reqs:
                 if req:
-                    name, version = req.split('==')
+                    name, _ = req.split('==')
                     if name and name.lower() not in blacklisted:
                         yield name
         except IOError:

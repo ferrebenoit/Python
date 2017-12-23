@@ -53,17 +53,17 @@ class ViewSaveConfFile(CommandBase):
 
         return filepath
 
-    def sanitize(self, str):
-        str = re.sub(r'show running-config\s*\n', '', str, flags=re.MULTILINE)
-        str = re.sub(r'Building configuration...\s*\n', '', str, flags=re.MULTILINE)
-        str = re.sub(r'Current configuration .*\s*\n', '', str, flags=re.MULTILINE)
-        str = re.sub(r'! Last configuration change at .*\s*\n', '', str, flags=re.MULTILINE)
-        str = re.sub(r'! NVRAM config last updated at .*\s*\n', '', str, flags=re.MULTILINE)
-        str = re.sub(r'! No configuration change since last restart\s*\n', '', str, flags=re.MULTILINE)
+    def sanitize(self, confStr):
+        confStr = re.sub(r'show running-config\s*\n', '', confStr, flags=re.MULTILINE)
+        confStr = re.sub(r'Building configuration...\s*\n', '', confStr, flags=re.MULTILINE)
+        confStr = re.sub(r'Current configuration .*\s*\n', '', confStr, flags=re.MULTILINE)
+        confStr = re.sub(r'! Last configuration change at .*\s*\n', '', confStr, flags=re.MULTILINE)
+        confStr = re.sub(r'! NVRAM config last updated at .*\s*\n', '', confStr, flags=re.MULTILINE)
+        confStr = re.sub(r'! No configuration change since last restart\s*\n', '', confStr, flags=re.MULTILINE)
 
-        str = re.sub(r'ntp clock-period [0-9]*\s*\n', '', str, flags=re.MULTILINE)
+        confStr = re.sub(r'ntp clock-period [0-9]*\s*\n', '', confStr, flags=re.MULTILINE)
 
-        return str
+        return confStr
 
     def do_run(self):
         self.switch.execute('end')
@@ -74,10 +74,10 @@ class ViewSaveConfFile(CommandBase):
         self.switch.sendline('show running-config')
         self.switch.expectPrompt()
 
-        str = self.sanitize(self.switch.before())
+        confStr = self.sanitize(self.switch.before())
         try:
             with open(self._build_filepath(self.folder, self.add_timestamp), 'w') as f:
-                f.write(str)
+                f.write(confStr)
 
             self.switch.logger.info('Backup complete')
             return True

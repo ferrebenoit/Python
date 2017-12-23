@@ -59,8 +59,8 @@ class ViewSaveConfFile(CommandBase):
 
         return filepath
 
-    def sanitize(self, str):
-        return "\n".join(str.split('\n')[1:-1])
+    def sanitize(self, confStr):
+        return "\n".join(confStr.split('\n')[1:-1])
 
     def analyse_conf(self, conf_type, rege):
         pass
@@ -69,7 +69,7 @@ class ViewSaveConfFile(CommandBase):
         self.switch.sendline(command)
         self.switch.expectPrompt()
 
-        str = self.sanitize(self.switch.before())
+        confStr = self.sanitize(self.switch.before())
         try:
             directory = self._build_folderpath(self.folder, conf_type)
             file = self._build_filepath(self.folder, conf_type, self.add_timestamp)
@@ -77,10 +77,10 @@ class ViewSaveConfFile(CommandBase):
             if not os.path.exists(directory):
                 os.makedirs(directory)
             with open(file, 'w') as f:
-                f.write(str)
+                f.write(confStr)
 
             self.switch.logger.info('Backup {} complete'.format(conf_type))
-            return str
+            return confStr
         except FileNotFoundError as e:
             self.switch.logger.error('Backup {} error {}'.format(conf_type, e))
             return None

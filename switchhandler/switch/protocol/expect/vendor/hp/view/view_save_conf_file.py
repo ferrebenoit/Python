@@ -52,8 +52,8 @@ class ViewSaveConfFile(CommandBase):
 
         return filepath
 
-    def sanitize(self, str):
-        return "\n".join(str.split('\n')[5:-1])
+    def sanitize(self, confStr):
+        return "\n".join(confStr.split('\n')[5:-1])
 
     def do_run(self):
         # self.switch.execute('conft')
@@ -69,14 +69,14 @@ class ViewSaveConfFile(CommandBase):
 
         self.switch.expectPrompt()
 
-        str = self.sanitize(self.switch.before())
-        if len(str) == 0:
+        confStr = self.sanitize(self.switch.before())
+        if len(confStr) == 0:
             self.switch.log_warning('Sauvegarde 0 octet')
             return False
 
         try:
             with open(self._build_filepath(self.folder, self.add_timestamp), 'w') as f:
-                f.write(str)
+                f.write(confStr)
 
             self.switch.logger.info('Backup complete')
             return True

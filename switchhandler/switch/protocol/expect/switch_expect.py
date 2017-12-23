@@ -34,7 +34,6 @@ from abc import abstractmethod
 from builtins import AttributeError
 import datetime
 from enum import Enum
-import logging
 
 from pexpect import pxssh
 import pexpect
@@ -62,19 +61,9 @@ class ConfigMode(Enum):
 class SwitchExpect(SwitchBase):
 
     def __init__(self, IP, vendor, site=None, dryrun=False):
+        super(SwitchExpect, self).__init__('expect', IP, vendor, site, dryrun)
+        
 
-        # Create logger
-        if site:
-            self.logger = logging.getLogger('switch.{}.{}.{}'.format(vendor, site, IP))
-        else:
-            self.logger = logging.getLogger('switch.{}.{}'.format(vendor, IP))
-
-        self.logger.addHandler(logging.NullHandler())
-
-        self.__IP = IP
-        self.__site = site
-        self.__dryrun = dryrun
-        self.__vendor = vendor
 
         self.__hostname = None
         self.__configModeWithParenthesis = None
@@ -137,21 +126,6 @@ class SwitchExpect(SwitchBase):
 
         return self.__configModeWithParenthesis.decode('UTF-8')
 
-    @property
-    def vendor(self):
-        return self.__vendor
-
-    @property
-    def IP(self):
-        return self.__IP
-
-    @property
-    def site(self):
-        return self.__site
-
-    @property
-    def connection(self):
-        return self.__connection
 
     @property
     def params(self):
@@ -160,14 +134,6 @@ class SwitchExpect(SwitchBase):
     @params.setter
     def params(self, val):
         self.__params = val
-
-    @property
-    def dryrun(self):
-        return self.__dryrun
-
-    @dryrun.setter
-    def dryrun(self, val):
-        self.__dryrun = val
 
     def before(self):
         return self.connection.before.decode('UTF-8')
@@ -207,18 +173,6 @@ class SwitchExpect(SwitchBase):
             filepath = "{}_{:%Y%m%d-%H%M%S}".format(filepath, datetime.datetime.today())
 
         return filepath
-
-    def logInfo(self, message):
-        self.logger.info(message)
-
-    def log_critical(self, message):
-        self.logger.critical(message)
-
-    def log_error(self, message):
-        self.logger.error(message)
-
-    def log_warning(self, message):
-        self.logger.warning(message)
 
     def sendline(self, s=''):
         if (s == ''):
@@ -326,7 +280,7 @@ class SwitchExpect(SwitchBase):
             self.logger.warning(self.connection.before)
             self.logger.warning(self.connection.after)
             return False
-
+        
     def login(self, login, password):
         if self.dryrun:
             self.logger.info("Login ok as user {}".format(login))

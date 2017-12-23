@@ -52,14 +52,14 @@ class ViewSaveConfFile(CommandBase):
 
         return filepath
 
-    def sanitize(self, str):
+    def sanitize(self, confStr):
         # str = re.sub(r'^show running-config$', '', str, flags=re.MULTILINE)
         # str = re.sub(r'^Building configuration...$', '', str, flags=re.MULTILINE)
         # str = re.sub(r'^Current configuration :.*$', '', str, flags=re.MULTILINE)
         # str = re.sub(r'^! Last configuration change at .*$', '', str, flags=re.MULTILINE)
         # str = re.sub(r'^! NVRAM config last updated at .*$', '', str, flags=re.MULTILINE)
 
-        return "\n".join(str.split('\n')[1:])
+        return "\n".join(confStr.split('\n')[1:])
 
     def do_run(self):
         self.switch.execute('end')
@@ -70,11 +70,11 @@ class ViewSaveConfFile(CommandBase):
         self.switch.sendline('show running-config')
         self.switch.expectPrompt()
 
-        str = self.sanitize(self.switch.before())
+        confStr = self.sanitize(self.switch.before())
 
         try:
             with open(self._build_filepath(self.folder, self.add_timestamp), 'w') as f:
-                f.write(str)
+                f.write(confStr)
 
             self.switch.logger.info('Backup complete')
             return True
