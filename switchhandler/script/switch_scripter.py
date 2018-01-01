@@ -14,6 +14,7 @@ from switchhandler.switch.protocol.expect.vendor.allied.switch_allied import Swi
 from switchhandler.switch.protocol.expect.vendor.cisco.switch_cisco import SwitchCisco
 from switchhandler.switch.protocol.expect.vendor.hp.switch_HP import SwitchHP
 from switchhandler.switch.protocol.expect.vendor.microsens.switch_microsens import SwitchMicrosens
+from switchhandler.switch.protocol.snmp.vendor.cisco.switch_snmp_cisco import SwitchSnmpCisco
 
 
 class SwitchScripter(ArgFromCSV):
@@ -52,6 +53,7 @@ class SwitchScripter(ArgFromCSV):
         self._arg_parser.add_argument('--login', help='login')
         self._arg_parser.add_argument('--password', help='For authenticating with pivate key enter a fake password like "keyauth"')
         self._arg_parser.add_argument('--vendor', '--type', help='the vendor')
+        self._arg_parser.add_argument('--protocol', help='query protocol', choices=['expect', 'snmp'], default='expect')
         self._arg_parser.add_argument('--switchname', help='the switch name')
         self._arg_parser.add_argument('--site', help='The switch site')
         self._arg_parser.add_argument('--siteid', help='The switch siteid')
@@ -68,18 +70,23 @@ class SwitchScripter(ArgFromCSV):
 
     def _script_worker(self, args):
         try:
-            if(re.compile('cisco', flags=re.IGNORECASE).search(args['vendor'])):
-                # if(args['vendor'].lower().contains('cisco')):
-                self._script_content_cisco(SwitchCisco(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
-            if(re.compile('hp', flags=re.IGNORECASE).search(args['vendor'])):
-                # elif(args['vendor'].lower().contains('hp')):
-                self._script_content_hp(SwitchHP(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
-            if(re.compile('allied', flags=re.IGNORECASE).search(args['vendor'])):
-                # elif(args['vendor'].lower().contains('allied')):
-                self._script_content_allied(SwitchAllied(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
-            if(re.compile('microsens', flags=re.IGNORECASE).search(args['vendor'])):
-                # elif(args['vendor'].lower().contains('allied')):
-                self._script_content_microsens(SwitchMicrosens(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
+            if(re.compile('expect', flags=re.IGNORECASE).search(args['protocol'])):
+                if(re.compile('cisco', flags=re.IGNORECASE).search(args['vendor'])):
+                    # if(args['vendor'].lower().contains('cisco')):
+                    self._script_content_cisco(SwitchCisco(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
+                if(re.compile('hp', flags=re.IGNORECASE).search(args['vendor'])):
+                    # elif(args['vendor'].lower().contains('hp')):
+                    self._script_content_hp(SwitchHP(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
+                if(re.compile('allied', flags=re.IGNORECASE).search(args['vendor'])):
+                    # elif(args['vendor'].lower().contains('allied')):
+                    self._script_content_allied(SwitchAllied(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
+                if(re.compile('microsens', flags=re.IGNORECASE).search(args['vendor'])):
+                    # elif(args['vendor'].lower().contains('allied')):
+                    self._script_content_microsens(SwitchMicrosens(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
+            elif(re.compile('snmp', flags=re.IGNORECASE).search(args['protocol'])):
+                if(re.compile('cisco', flags=re.IGNORECASE).search(args['vendor'])):
+                    # if(args['vendor'].lower().contains('cisco')):
+                    self._script_content_cisco(SwitchSnmpCisco(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
         except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             # exc_type below is ignored on 3.5 and later
@@ -97,6 +104,9 @@ class SwitchScripter(ArgFromCSV):
 
     def _script_content_microsens(self, switch_microsens, args):
         self._common_actions(switch_microsens, args)
+
+    def _script_content_snmp_cisco(self, switch_snmp_cisco, args):
+        self._common_actions(switch_snmp_cisco, args)
 
     def _common_actions(self, switch, args):
         pass

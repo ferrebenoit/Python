@@ -14,6 +14,8 @@ plugins {
     //id "com.linkedin.python" version "0.4.9"
 }
 
+def localRepo = "repo"
+
 repositories {
     pyGradlePyPi()
 
@@ -30,7 +32,7 @@ repositories {
 	// java -jar C:\Users\ferreb\Downloads\pivy-importer-0.4.9-all.jar --repo C:\LOGICIEL\pypi ptyprocess:0.5.1
     ivy {
     name 'pypi-local'   //optional, but nice
-    url 'c:/LOGICIEL/pypi'
+    url "bin/"+localRepo
     layout "pattern", {
       ivy "[organisation]/[module]/[revision]/[module]-[revision].ivy"
       artifact "[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"
@@ -40,8 +42,9 @@ repositories {
 }
 
 dependencies {
-    python 'pypi:pexpect:4.2.1'
-    python 'pypi:ptyprocess:0.5.1'
+    python 'pypi:pexpect:4.3.1'
+    python 'pypi:ptyprocess:0.5.2'
+    //python 'pypi:pysnmp:4.4.3'
     //python 'pypi:packaging:16.8'
     //python 'pypi:appdirs:1.4.3'
     //test 'pypi:mock:1.3.0'
@@ -50,7 +53,10 @@ dependencies {
 python {
 	srcDir = project.file('switchhandler').path
 
-    //forceVersion('pypi', 'setuptools', '35.0.2')
+    //forceVersion('pypi', 'wheel', '0.30.0')
+    //forceVersion('pypi', 'setuptools', '38.2.4')
+    //forceVersion('pypi', 'pip', '9.0.1')
+    //forceVersion('pypi', 'babel', '2.5.1')
 }
 
 version = '1.3'
@@ -137,4 +143,13 @@ task builddoc (type:Exec){
     }
 
 }
-  
+ 
+task createlocalrepo (type:Exec){
+	doFirst { 
+		workingDir 'bin/'
+		commandLine 'cmd', '/c', 'IF not exist '+localRepo+' (mkdir '+localRepo+')'
+//		commandLine "java.exe", "-jar", "pivy-importer-0.6.9-all.jar", "--repo", localRepo, "setuptools:38.2.4", "pip:9.0.1", "pysnmp:4.4.3", "pexpect:4.3.1", "ptyprocess:0.5.2", "--force", "babel:1.0" 
+		commandLine "java.exe", "-jar", "pivy-importer-0.6.9-all.jar", "--repo", localRepo, "pysnmp:4.4.3", "pexpect:4.3.1", "ptyprocess:0.5.2", "--force", "babel:1.0" 
+    }
+        
+}

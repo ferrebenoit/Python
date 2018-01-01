@@ -6,17 +6,17 @@ Created on 22 déc. 2017
 from abc import ABCMeta, abstractmethod
 import logging
 
+
 class SwitchBase(metaclass=ABCMeta):
     '''
     classdocs
     '''
 
-
     def __init__(self, protocol, IP, vendor, site=None, dryrun=False):
         '''
         Constructor
         '''
-            # Create logger
+        # Create logger
         if site:
             self.logger = logging.getLogger('switch.{}.{}.{}.{}'.format(protocol, vendor, site, IP))
         else:
@@ -24,7 +24,6 @@ class SwitchBase(metaclass=ABCMeta):
 
         self.logger.addHandler(logging.NullHandler())
 
-    
         self.__IP = IP
         self.__site = site
         self.__dryrun = dryrun
@@ -54,7 +53,6 @@ class SwitchBase(metaclass=ABCMeta):
     def dryrun(self, val):
         self.__dryrun = val
 
-       
     def logInfo(self, message):
         self.logger.info(message)
 
@@ -73,4 +71,12 @@ class SwitchBase(metaclass=ABCMeta):
 
     @abstractmethod
     def login(self, login, password):
+        pass
+
+    @abstractmethod
+    def logout(self):
+        pass
+
+    @abstractmethod
+    def getSwitchCommands(self):
         pass

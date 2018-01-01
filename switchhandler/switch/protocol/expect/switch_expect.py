@@ -62,8 +62,6 @@ class SwitchExpect(SwitchBase):
 
     def __init__(self, IP, vendor, site=None, dryrun=False):
         super(SwitchExpect, self).__init__('expect', IP, vendor, site, dryrun)
-        
-
 
         self.__hostname = None
         self.__configModeWithParenthesis = None
@@ -125,7 +123,6 @@ class SwitchExpect(SwitchBase):
             return None
 
         return self.__configModeWithParenthesis.decode('UTF-8')
-
 
     @property
     def params(self):
@@ -280,7 +277,7 @@ class SwitchExpect(SwitchBase):
             self.logger.warning(self.connection.before)
             self.logger.warning(self.connection.after)
             return False
-        
+
     def login(self, login, password):
         if self.dryrun:
             self.logger.info("Login ok as user {}".format(login))
@@ -292,14 +289,6 @@ class SwitchExpect(SwitchBase):
                 return False
 
         return True
-
-    @abstractmethod
-    def logout(self):
-        pass
-
-    @abstractmethod
-    def getSwitchCommands(self):
-        pass
 
     def execute(self, command_name, *args, **kwargs):
         command_class = self.getSwitchCommands().get(command_name, None)
