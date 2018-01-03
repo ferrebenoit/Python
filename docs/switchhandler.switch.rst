@@ -6,11 +6,8 @@ Subpackages
 
 .. toctree::
 
-    switchhandler.switch.action
-    switchhandler.switch.analyse
-    switchhandler.switch.command
-    switchhandler.switch.vendor
-    switchhandler.switch.view
+    switchhandler.switch.executable
+    switchhandler.switch.protocol
 
 Submodules
 ----------
@@ -27,14 +24,6 @@ switchhandler\.switch\.switch\_exception module
 -----------------------------------------------
 
 .. automodule:: switchhandler.switch.switch_exception
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-switchhandler\.switch\.switch\_scripter module
-----------------------------------------------
-
-.. automodule:: switchhandler.switch.switch_scripter
     :members:
     :undoc-members:
     :show-inheritance:
