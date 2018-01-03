@@ -10,7 +10,7 @@ from switchhandler.switch.protocol.snmp.vendor.generic import switchSnmpGenericC
 class SwitchSnmpGeneric(SwitchSnmp):
     
     def __init__(self, IP, site=None, dryrun=False):
-        super(SwitchSnmpGeneric, self).__init__(IP, 'cisco', site, dryrun)
+        super(SwitchSnmpGeneric, self).__init__(IP, 'generic', site, dryrun)
 
     def getSwitchCommands(self):
         return switchSnmpGenericCommands
