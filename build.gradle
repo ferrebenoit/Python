@@ -7,6 +7,7 @@ buildscript {
   }
 }
 /////////////////Pygradle section/////////////////////////////////////////////
+// pip install sphinx
 // to generate skel of documentation : sphinx-apidoc -o docs switchhandler -f
 plugins {
 	id "com.linkedin.python-sdist" version "0.6.16"
