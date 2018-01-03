@@ -5,7 +5,8 @@ Created on 23 déc. 2017
 '''
 
 from switchhandler.switch.switch_base import SwitchBase
-from pysnmp.hlapi import ObjectIdentity, SnmpEngine
+# from pysnmp.hlapi import ObjectIdentity, SnmpEngine
+
 
 class SwitchSnmp(SwitchBase):
     '''
@@ -17,8 +18,6 @@ class SwitchSnmp(SwitchBase):
         Constructor
         '''
         super(SwitchSnmp, self).__init__('snmp', IP, vendor, site, dryrun)
-        
-        
 
     def connect(self):
         pass

@@ -5,11 +5,11 @@ Created on 23 déc. 2017
 '''
 from switchhandler.switch.executable.view.view_base import ViewBase
 
+
 class ViewSysdescr(ViewBase):
     '''
     classdocs
     '''
-
 
     def __init__(self, params):
         '''

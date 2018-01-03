@@ -18,9 +18,11 @@ class SwitchBase(metaclass=ABCMeta):
         '''
         # Create logger
         if site:
-            self.logger = logging.getLogger('switch.{}.{}.{}.{}'.format(protocol, vendor, site, IP))
+            self.logger = logging.getLogger(
+                'switch.{}.{}.{}.{}'.format(protocol, vendor, site, IP))
         else:
-            self.logger = logging.getLogger('switch.{}.{}.{}'.format(protocol, vendor, IP))
+            self.logger = logging.getLogger(
+                'switch.{}.{}.{}'.format(protocol, vendor, IP))
 
         self.logger.addHandler(logging.NullHandler())
 
