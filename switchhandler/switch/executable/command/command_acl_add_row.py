@@ -49,7 +49,7 @@ class CommandACLAddRow(CommandBase):
                 if(k in self.acl_replace):
                     self.row[k] = self.row[k].format(**self.acl_replace[k])
 
-        condition_str = self.row['condition']
+        condition_str = self.row.get('condition', '')
         if condition_str == '':
             condition_str = '{}'
         conditions = json.loads(condition_str)

@@ -68,12 +68,13 @@ class AddVlanToPort(SwitchScripter):
         if not switch.login(args['login'], args['password']):
             print('impossible de se connecter')
         else:
+            switch.execute('enable')
+            switch.execute('conft')
+
             if ('portcsv' in args) and ('vlan' in args):
                 with open(args['portcsv']) as csv_file:
                     reader = csv.DictReader(csv_file, delimiter=';')
 
-                    switch.execute('enable')
-                    switch.execute('conft')
                     for row in reader:
                         switch.execute('add_tagged_vlan_to_port',
                                        vlan_id=args['vlan'],
@@ -81,16 +82,20 @@ class AddVlanToPort(SwitchScripter):
                                        description=args['description']
                                        )
 
-                    switch.execute('write')
+                switch.execute('write')
             elif ('port' in args) and ('vlan' in args):
                 switch.execute('add_tagged_vlan_to_port',
                                vlan_id=args['vlan'],
                                port=args['port'],
                                description=args['description']
                                )
+
+                switch.execute('write')
+
             else:
                 switch.log_error("Mauvaise combinaison d'option")
             switch.logout()
+
 
 if __name__ == '__main__':
     pubkey_auth = AddVlanToPort('Add a taggued vlan to a port', sys.argv[1:])

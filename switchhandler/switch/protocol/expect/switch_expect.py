@@ -79,7 +79,8 @@ class SwitchExpect(SwitchBase):
                                             "UserKnownHostsFile": "/dev/null"})
             self.__connection.delaybeforesend = 0.25
             self.__connection.PROMPT = self._PROMPT
-        except:
+        except Exception as e:
+            self.log_error('Connection failed with exception ' + e)
             return False
 
         return True
@@ -95,6 +96,10 @@ class SwitchExpect(SwitchBase):
     @property
     def prompt(self):
         return self._PROMPT
+
+    @property
+    def connection(self):
+        return self.__connection
 
     @property
     def hostname(self):
@@ -256,7 +261,7 @@ class SwitchExpect(SwitchBase):
                 return True
             else:
                 return False
-        except:
+        except Exception:
 
             self.logger.warning("SSH Login failed as user {}".format(login))
             self.logger.warning(self.connection.before)
@@ -272,7 +277,7 @@ class SwitchExpect(SwitchBase):
                 return True
             else:
                 return False
-        except:
+        except Exception:
             self.logger.warning("TELNET Login failed")
             self.logger.warning(self.connection.before)
             self.logger.warning(self.connection.after)

@@ -131,11 +131,12 @@ class GradleDistribution(Distribution, object):
             # introduce a version conflict issue.
             for req in reqs:
                 if req:
-                    name, _ = req.split('==')
+                    name, version = req.split('==')
                     if name and name.lower() not in blacklisted:
                         yield name
         except IOError:
             raise StopIteration
+
 
 setup(
     distclass=GradleDistribution,

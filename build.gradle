@@ -100,8 +100,10 @@ task deploylibrary {
       ssh.run {
         session(remotes.squidanalyser) {
         	execute 'mkdir -p /opt/cd60/python'
-			put from: 'build/distributions/SwitchHandler-1.3.zip', into: '/opt/cd60/'
-			execute 'pip3 install /opt/cd60/SwitchHandler-1.3.zip --upgrade' 
+			//put from: 'build/distributions/SwitchHandler-1.3.zip', into: '/opt/cd60/'
+			//execute 'pip3 install /opt/cd60/SwitchHandler-1.3.zip --upgrade' 
+			put from: 'build/distributions/SwitchHandler-1.3.tar.gz', into: '/opt/cd60/'
+			execute 'pip3 install /opt/cd60/SwitchHandler-1.3.tar.gz --upgrade' 
       }
     }
   }

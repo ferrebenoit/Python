@@ -32,7 +32,7 @@ class PubkeyAuth(SwitchScripter):
                                            ip=row['ipaddress'])
                         ))
             elif ('findip' in args) and ('findmac' in args):
-                print('{};{}'.format(
+                switch.log_error('{};{}'.format(
                     args['findip'],
                     switch.execute('port_from_mac',
                                    mac=args['findmac'],
@@ -42,6 +42,7 @@ class PubkeyAuth(SwitchScripter):
                 switch.log_error("Mauvaise combinaison d'option")
 
             switch.logout()
+
 
 pubkey_auth = PubkeyAuth('Configure ssh public key authentication', sys.argv[1:])
 pubkey_auth.process()

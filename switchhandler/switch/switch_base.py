@@ -1,5 +1,5 @@
 '''
-Created on 22 déc. 2017
+Created on 22 dÃ©c. 2017
 
 @author: ferre
 '''
@@ -42,10 +42,6 @@ class SwitchBase(metaclass=ABCMeta):
     @property
     def site(self):
         return self.__site
-
-    @property
-    def connection(self):
-        return self.__connection
 
     @property
     def dryrun(self):

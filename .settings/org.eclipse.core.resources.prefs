@@ -76,3 +76,5 @@ encoding//switchhandler/switch/protocol/expect/vendor/microsens/command/command_
 encoding//switchhandler/switch/protocol/expect/vendor/microsens/command/command_write.py=utf-8
 encoding//switchhandler/switch/protocol/expect/vendor/microsens/utils.py=utf-8
 encoding//switchhandler/switch/protocol/expect/vendor/microsens/view/view_save_conf_file.py=utf-8
+encoding//switchhandler/switch/protocol/snmp/vendor/cisco/view/view_sysdescr.py=utf8
+encoding//switchhandler/switch/switch_base.py=utf8

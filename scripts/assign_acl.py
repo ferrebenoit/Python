@@ -10,7 +10,7 @@ class CreateAcl(SwitchScripter):
         super()._define_args()
         self._arg_parser.add_argument('--aclname', help='The acl Name')
         self._arg_parser.add_argument('--intname', help='the interface')
-        self._arg_parser.add_argument('--inbound', help='the interface', choices=['yes', 'no'], default='yes')
+        #self._arg_parser.add_argument('--inbound', help='the interface', choices=['yes', 'no'], default='yes')
 
         self._add_mandatory_arg('aclname', 'intname', 'inbound')
 
@@ -30,6 +30,7 @@ class CreateAcl(SwitchScripter):
                            )
 
             switch.logout()
+
 
 create_acl = CreateAcl('Assign access list to interface', sys.argv[1:])
 create_acl.process()

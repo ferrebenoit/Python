@@ -13,7 +13,7 @@ class CreateAcl(SwitchScripter):
         super()._define_args()
         self._arg_parser.add_argument('--aclname', help='The acl Name')
         self._arg_parser.add_argument('--vlanid', help='the vlan id')
-        self._arg_parser.add_argument('--siteid', help='the site id')
+        #self._arg_parser.add_argument('--siteid', help='the site id')
         self._arg_parser.add_argument('--secondaryserver', help='the secondary server')
         self._arg_parser.add_argument('--csvaclentries', help='The csv file that holds the contents')
 
@@ -71,7 +71,7 @@ class CreateAcl(SwitchScripter):
 
             with open(args['csvaclentries']) as csv_file:
                 reader = csv.DictReader(csv_file, delimiter=';')
-                #switch.create_ACL(args['aclname'] + acl_suffix, reader, ['wyse={}'.format(args['wyse'])], aclreplace, inverse_src_and_dst)
+                # switch.create_ACL(args['aclname'] + acl_suffix, reader, ['wyse={}'.format(args['wyse'])], aclreplace, inverse_src_and_dst)
                 switch.execute('create_acl',
                                name=args['aclname'] + acl_suffix,
                                acl_entries=reader,
@@ -81,6 +81,7 @@ class CreateAcl(SwitchScripter):
                                )
 
             switch.logout()
+
 
 create_acl = CreateAcl('Add access list', sys.argv[1:])
 create_acl.process()
