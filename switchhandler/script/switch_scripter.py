@@ -10,11 +10,11 @@ import traceback
 
 from switchhandler.script.arg_from_csv import ArgFromCSV
 
-from switchhandler.switch.protocol.expect.vendor.allied.switch_allied import SwitchAllied
-from switchhandler.switch.protocol.expect.vendor.cisco.switch_cisco import SwitchCisco
-from switchhandler.switch.protocol.expect.vendor.hp.switch_HP import SwitchHP
-from switchhandler.switch.protocol.expect.vendor.microsens.switch_microsens import SwitchMicrosens
-from switchhandler.switch.protocol.snmp.vendor.cisco.switch_snmp_cisco import SwitchSnmpCisco
+from switchhandler.device.protocol.expect.switch.vendor.allied.switch_allied import SwitchAllied
+from switchhandler.device.protocol.expect.switch.vendor.cisco.switch_cisco import SwitchCisco
+from switchhandler.device.protocol.expect.switch.vendor.hp.switch_HP import SwitchHP
+from switchhandler.device.protocol.expect.switch.vendor.microsens.switch_microsens import SwitchMicrosens
+from switchhandler.device.protocol.snmp.switch.vendor.cisco.switch_snmp_cisco import SwitchSnmpCisco
 
 
 class SwitchScripter(ArgFromCSV):

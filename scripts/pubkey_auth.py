@@ -12,7 +12,7 @@ class PubkeyAuth(SwitchScripter):
         self._arg_parser.add_argument('--key', help='The key')
         self._arg_parser.add_argument('--keypath', help='The key')
         self._arg_parser.add_argument('--keyuser', help='the username for key auth')
-        self._arg_parser.add_argument('--keycomment', help='the username for key auth')
+        self._arg_parser.add_argument('--keycomment', help='the comment for the key')
         self._arg_parser.add_argument('--TFTPIP', help='The TFTP IP', default='192.168.7.20')
 
         self._add_mandatory_arg('keyhash', 'key', 'keypath', 'keyuser', 'keycomment')
