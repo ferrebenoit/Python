@@ -8,7 +8,7 @@ import re
 
 
 def convert_to_cidr(value):
-    """Cette fonction convertie un wildcard ou un netmask en CIDR ::
+    """Cette fonction convertie un wildcard ou un netmask en CIDR master::
 
         >> convert_to_cidr(255.255.255.0)
         24
