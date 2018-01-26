@@ -6,16 +6,15 @@ Created on 9 mai 2017
 '''
 import re
 
-from switchhandler.utils.net_tools import convert_mac_cisco
-
 from switchhandler.device.executable.command.command_base import CommandBase
+from switchhandler.utils.net_tools import convert_mac_cisco
 
 
 class ViewPortFromMac(CommandBase):
     '''visualiser le port à l'quel une mac est associé
 
     :param mac: la mac à trouver
-    :type name: str
+    :type mac: str
 
     :param ip: L'ip à pringuer pour l'apprentissage de la mac
     :type ip: str
@@ -32,8 +31,13 @@ class ViewPortFromMac(CommandBase):
 
     '''
 
+    def define_argument(self):
+        self.add_argument(name='mac', required=True)
+        self.add_argument(name='ip', default=None)
+
     def arg_default(self):
-        self.ip = getattr(self, 'ip', None)
+        # self.ip = getattr(self, 'ip', None)
+        pass
 
     def do_run(self):
         self.switch.execute('end')

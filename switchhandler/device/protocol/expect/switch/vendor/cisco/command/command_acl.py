@@ -22,6 +22,9 @@ class CommandACL(CommandBase):
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
 
+    def define_argument(self):
+        self.add_argument(name='name', required=True)
+
     def do_run(self):
         self.switch.sendline('ip access-list extended {}'.format(self.name))
         self.switch.expectPrompt()

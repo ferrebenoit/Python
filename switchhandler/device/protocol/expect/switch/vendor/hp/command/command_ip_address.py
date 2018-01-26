@@ -4,9 +4,8 @@ Created on 9 mai 2017
 
 @author: ferreb
 '''
-from switchhandler.utils.net_tools import convert_to_netmask
-
 from switchhandler.device.executable.command.command_base import CommandBase
+from switchhandler.utils.net_tools import convert_to_netmask
 
 
 class CommandIPAddress(CommandBase):
@@ -28,6 +27,10 @@ class CommandIPAddress(CommandBase):
 
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
+
+    def define_argument(self):
+        self.add_argument(name='ip', required=True)
+        self.add_argument(name='network_id', required=True)
 
     def do_run(self):
         self.switch.sendline('ip address {} {}'.format(

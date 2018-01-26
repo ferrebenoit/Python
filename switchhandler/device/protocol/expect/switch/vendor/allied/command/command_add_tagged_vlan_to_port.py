@@ -31,6 +31,10 @@ class CommandAddTaggedVlanToPort(CommandBase):
 
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
+    def define_argument(self):
+        self.add_argument(name='vlan_id', required=True)
+        self.add_argument(name='port', required=True)
+        self.add_argument(name='description', required=True)
 
     def do_run(self):
         self.switch.sendline('int {}'.format(self.port))

@@ -25,6 +25,9 @@ class CommandIPHelper(CommandBase):
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
 
+    def define_argument(self):
+        self.add_argument(name='ip', required=True)
+
     def do_run(self):
         self.switch.sendline('ip helper-address {}'.format(self.ip))
         self.switch.expectPrompt()

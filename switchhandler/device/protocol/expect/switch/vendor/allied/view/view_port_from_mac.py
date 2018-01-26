@@ -6,9 +6,8 @@ Created on 9 mai 2017
 '''
 import re
 
-from switchhandler.utils.net_tools import convert_mac_allied
-
 from switchhandler.device.executable.command.command_base import CommandBase
+from switchhandler.utils.net_tools import convert_mac_allied
 
 
 class ViewPortFromMac(CommandBase):
@@ -32,8 +31,13 @@ class ViewPortFromMac(CommandBase):
 
     '''
 
+    def define_argument(self):
+        self.add_argument(name='mac', required=True)
+        self.add_argument(name='ip', default=None)
+
     def arg_default(self):
-        self.ip = getattr(self, 'ip', None)
+        # self.ip = getattr(self, 'ip', None)
+        pass
 
     def do_run(self):
         self.switch.execute('end')

@@ -3,10 +3,16 @@ Created on 19 janv. 2018
 
 @author: ferre
 '''
-from switchhandler.device.device import Device
-from pexpect import pxssh
-import pexpect
 from abc import abstractmethod
+
+try:  # to permit tests on windows platform
+    from pexpect import pxssh
+except ImportError:
+    pass
+
+import pexpect
+
+from switchhandler.device.device import Device
 
 
 class DeviceExpect(Device):
@@ -21,6 +27,7 @@ class DeviceExpect(Device):
         super(DeviceExpect, self).__init__(
             device, 'expect', IP, vendor, site, dryrun)
 
+        self._connection = None
         self.__hostname = None
         self._PROMPT = None
 
@@ -120,10 +127,10 @@ class DeviceExpect(Device):
         retourne l'index de la liste other_messages en partant de 1
         '''
 
-        self.logInfo('expect : PROMPT')
         if self.dryrun:
             return
 
+        self.connection.PROMPT
         expect_list = [self._PROMPT]
         if (other_messages is not None):
             expect_list.extend(other_messages)
@@ -166,7 +173,7 @@ class DeviceExpect(Device):
                 return True
             else:
                 return False
-        except Exception as e:
+        except Exception:
             self.logger.warning("TELNET Login failed")
             self.logger.warning(self.connection.before)
             self.logger.warning(self.connection.after)

@@ -31,9 +31,14 @@ class ViewSaveConfFile(CommandBase):
 
     '''
 
+    def define_argument(self):
+        self.add_argument(name='folder', default=None)
+        self.add_argument(name='add_timestamp', default=False)
+
     def arg_default(self):
-        self.folder = getattr(self, 'folder', None)
-        self.add_timestamp = getattr(self, 'add_timestamp', False)
+        # self.folder = getattr(self, 'folder', None)
+        # self.add_timestamp = getattr(self, 'add_timestamp', False)
+        pass
 
     def _build_filepath(self, folder, add_timestamp):
         filepath = "{}_{}_{}".format(

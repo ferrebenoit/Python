@@ -33,8 +33,14 @@ class ActionAddACLToInterface(ActionBase):
 
     '''
 
+    def define_argument(self):
+        self.add_argument(name='acl_name', required=True)
+        self.add_argument(name='interface_name', required=True)
+        self.add_argument(name='inbound', default=True)
+
     def arg_default(self):
-        self.inbound = getattr(self, 'inbound', True)
+        # self.inbound = getattr(self, 'inbound', True)
+        pass
 
     def do_run(self):
         self.switch.execute('end')

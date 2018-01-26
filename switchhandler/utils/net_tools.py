@@ -38,7 +38,7 @@ def convert_to_netmask(value):
 def convert_to_wildcard(value):
     try:
         return ip_network('0.0.0.0/{}'.format(value)).hostmask.compressed
-    except:
+    except Exception:
         return ''
 
 

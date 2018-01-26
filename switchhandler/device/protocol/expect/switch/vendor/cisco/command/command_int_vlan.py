@@ -11,7 +11,7 @@ class CommandIntVlan(CommandBase):
     '''Créer/se placer dans la configuration d'une interface Vlan
 
     :param id: l'id
-    :type name: str
+    :type id: str
 
     :param name: le nom du Vlan
     :type name: str
@@ -28,9 +28,16 @@ class CommandIntVlan(CommandBase):
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
 
+    def define_argument(self):
+        self.add_argument(name='id', required=True)
+        self.add_argument(name='name', default='')
+
     def do_run(self):
         self.switch.sendline('interface vlan{}'.format(self.id))
         self.switch.expectPrompt()
 
-        self.switch.sendline('description {}'.format(self.name))
-        self.switch.expectPrompt()
+        if self.name != '':
+            self.switch.sendline('description {}'.format(self.name))
+            self.switch.expectPrompt()
+
+        return True

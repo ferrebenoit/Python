@@ -28,9 +28,14 @@ class CommandInt(CommandBase):
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
 
+    def define_argument(self):
+        self.add_argument(name='interface', required=True)
+        self.add_argument(name='description', default='')
+
     def do_run(self):
         self.switch.sendline('interface {}'.format(self.interface))
         self.switch.expectPrompt()
 
-        self.switch.sendline('description {}'.format(self.description))
-        self.switch.expectPrompt()
+        if self.description != '':
+            self.switch.sendline('description {}'.format(self.description))
+            self.switch.expectPrompt()

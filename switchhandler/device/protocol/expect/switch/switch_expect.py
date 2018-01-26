@@ -116,11 +116,12 @@ class SwitchExpect(DeviceExpect):
     def expectPrompt(self, other_messages=None):
         match = super(SwitchExpect, self).expectPrompt(other_messages)
 
-        # load swtch state
-        self._hostname = self.connection.match.groupdict().get('hostname', None)
-        self.__configModeWithParenthesis = self.connection.match.groupdict().get(
-            'configModeWithParenthesis', None)
-        self.__configMode = self.connection.match.groupdict().get('configMode', None)
-        self.__exec = self.connection.match.groupdict().get('exec', None)
+        if not self.dryrun:
+            # load swtch state
+            self._hostname = self.connection.match.groupdict().get('hostname', None)
+            self.__configModeWithParenthesis = self.connection.match.groupdict().get(
+                'configModeWithParenthesis', None)
+            self.__configMode = self.connection.match.groupdict().get('configMode', None)
+            self.__exec = self.connection.match.groupdict().get('exec', None)
 
         return match

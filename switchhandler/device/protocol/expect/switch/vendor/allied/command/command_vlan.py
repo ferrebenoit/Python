@@ -27,10 +27,14 @@ class CommandVlan(CommandBase):
 
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
+    def define_argument(self):
+        self.add_argument(name='id', required=True)
+        self.add_argument(name='name', default='')
 
     def do_run(self):
         self.switch.sendline('vlan database')
         self.switch.expectPrompt()
 
-        self.switch.sendline('vlan {} name {}'.format(self.id, self.name))
-        self.switch.expectPrompt()
+        if self.name != '':
+            self.switch.sendline('vlan {} name {}'.format(self.id, self.name))
+            self.switch.expectPrompt()

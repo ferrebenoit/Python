@@ -4,9 +4,8 @@ Created on 9 mai 2017
 
 @author: ferreb
 '''
-from switchhandler.utils.net_tools import convert_to_wildcard
-
 from switchhandler.device.executable.action.action_base import ActionBase
+from switchhandler.utils.net_tools import convert_to_wildcard
 
 
 class ActionAddOSPFRouter(ActionBase):
@@ -26,6 +25,10 @@ class ActionAddOSPFRouter(ActionBase):
       prompt#
 
     '''
+
+    def define_argument(self):
+        self.add_argument(name='network', required=True)
+        self.add_argument(name='network_id', required=True)
 
     def do_run(self):
         self.switch.execute('end')

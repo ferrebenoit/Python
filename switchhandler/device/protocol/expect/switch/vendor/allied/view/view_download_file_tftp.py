@@ -29,6 +29,11 @@ class ViewDownloadFileTFTP(CommandBase):
 
     '''
 
+    def define_argument(self):
+        self.add_argument(name='tftp_ip', required=True)
+        self.add_argument(name='local_file_path', required=True)
+        self.add_argument(name='remote_file_path', required=True)
+
     def do_run(self):
         try:
             self.switch.sendline(

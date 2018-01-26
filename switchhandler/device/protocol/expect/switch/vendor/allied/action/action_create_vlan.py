@@ -34,10 +34,18 @@ class ActionCreateVlan(ActionBase):
       prompt#
     '''
 
+    def define_argument(self):
+        self.add_argument(name='name', required=True)
+        self.add_argument(name='acl_entries', required=True)
+        self.add_argument(name='ip', default=None)
+        self.add_argument(name='network_id', default=None)
+        self.add_argument(name='ip_helper', default=None)
+
     def arg_default(self):
-        self.ip = getattr(self, 'ip', None)
-        self.network_id = getattr(self, 'network_id', None)
-        self.ip_helper = getattr(self, 'ip_helper', None)
+        # self.ip = getattr(self, 'ip', None)
+        # self.network_id = getattr(self, 'network_id', None)
+        # self.ip_helper = getattr(self, 'ip_helper', None)
+        pass
 
     def do_run(self):
         self.switch.execute('end')

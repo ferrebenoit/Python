@@ -32,9 +32,15 @@ class ViewSaveConfTFTP(CommandBase):
 
     '''
 
+    def define_argument(self):
+        self.add_argument(name='tftp_ip', required=True)
+        self.add_argument(name='folder', required=True, default=None)
+        self.add_argument(name='add_timestamp', required=True, default=False)
+
     def arg_default(self):
-        self.folder = getattr(self, 'folder', None)
-        self.add_timestamp = getattr(self, 'add_timestamp', False)
+        # self.folder = getattr(self, 'folder', None)
+        # self.add_timestamp = getattr(self, 'add_timestamp', False)
+        pass
 
     def _build_tftp_filepath(self, folder, add_timestamp):
         filepath = "{}_{}_{}".format(self.switch.IP, self.switch.hostname, self.switch.vendor)

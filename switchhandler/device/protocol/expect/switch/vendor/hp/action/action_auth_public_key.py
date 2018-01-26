@@ -27,11 +27,18 @@ class ActionAuthPublicKey(ActionBase):
       prompt#
     '''
 
+    def define_argument(self):
+        self.add_argument(name='username', required=True)
+        self.add_argument(name='key', required=True)
+        self.add_argument(name='comment', required=True)
+        self.add_argument(name='tftp_ip', default=None)
+
     def arg_default(self):
-        self.tftp_ip = getattr(self, 'tftp_ip', None)
+        # self.tftp_ip = getattr(self, 'tftp_ip', None)
+        pass
 
     def do_run(self):
-        self.switch.end()
+        self.switch.execute('end')
 
         self.switch.sendline('copy tftp pub-key-file {} {} manager append'.format(
             self.tftp_ip,

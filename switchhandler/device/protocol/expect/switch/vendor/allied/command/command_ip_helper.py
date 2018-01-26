@@ -10,8 +10,8 @@ from switchhandler.device.executable.command.command_base import CommandBase
 class CommandIPHelper(CommandBase):
     '''configurer un ip helper
 
-    :param iP: l'adresse de l'ip helper à configurer
-    :type name: str
+    :param ip: l'adresse de l'ip helper à configurer
+    :type ip: str
 
 
 
@@ -24,6 +24,9 @@ class CommandIPHelper(CommandBase):
 
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
+
+    def define_argument(self):
+        self.add_argument(name='ip', required=True)
 
     def do_run(self):
         self.switch.sendline('ip dhcp-relay server-address {}'.format(self.ip))

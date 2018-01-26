@@ -17,6 +17,8 @@ class CommandEnd(CommandBase):
       prompt# end
       prompt#
     '''
+    def define_argument(self):
+        pass
 
     def do_run(self):
         if not self.switch.getConfigMode() == ConfigMode.GLOBAL:
