@@ -4,4 +4,5 @@ encoding//docs/conf.py=utf-8
 encoding//documentation/script/docs/conf.py=utf-8
 encoding//scripts/save_switch_conf.py=utf-8
 encoding//scripts/save_switch_conf_file.py=utf-8
+encoding//switchhandler/device/protocol/expect/switch/vendor/cisco/switch_cisco.py=utf-8
 encoding//switchhandler/utils/net_tools.py=utf-8

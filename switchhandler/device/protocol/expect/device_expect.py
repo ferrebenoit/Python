@@ -43,7 +43,8 @@ class DeviceExpect(Device):
                 "UserKnownHostsFile": "/dev/null"})
             self._connection.delaybeforesend = 0.25
             self._connection.PROMPT = self._PROMPT
-        except:
+        except Exception as e:
+            self.log_error('Connection failed with exception ' + e)
             return False
 
         return True
@@ -148,7 +149,8 @@ class DeviceExpect(Device):
                 return True
             else:
                 return False
-        except:
+        except Exception as e:
+            self.log_error('Connection failed with exception ' + e)
 
             self.logger.warning("SSH Login failed as user {}".format(login))
             self.logger.warning(self.connection.before)
@@ -164,7 +166,7 @@ class DeviceExpect(Device):
                 return True
             else:
                 return False
-        except:
+        except Exception as e:
             self.logger.warning("TELNET Login failed")
             self.logger.warning(self.connection.before)
             self.logger.warning(self.connection.after)

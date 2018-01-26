@@ -24,14 +24,14 @@ def convert_to_cidr(value):
 
     try:
         return ip_network('0.0.0.0/{}'.format(value)).prefixlen
-    except:
+    except Exception:
         return ''
 
 
 def convert_to_netmask(value):
     try:
         return ip_network('0.0.0.0/{}'.format(value)).netmask.compressed
-    except:
+    except Exception:
         return ''
 
 

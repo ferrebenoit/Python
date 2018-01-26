@@ -1,5 +1,7 @@
 from switchhandler.device.protocol.expect.switch.switch_expect import SwitchExpect, ConfigMode, Exec
 from switchhandler.device.protocol.expect.switch.vendor.hp import switchHPCommands
+from switchhandler.device.device_exception import CommandNotFoundException,\
+    CommandParameterNotFoundException
 
 
 class SwitchHP(SwitchExpect):
@@ -79,7 +81,14 @@ class SwitchHP(SwitchExpect):
 
             self.logInfo('Logout')
             return True
-        except:
+        except CommandNotFoundException as e:
+            self.log_error('raised CommandNotFoundException ' + e)
+            return False
+        except CommandParameterNotFoundException as e:
+            self.log_error('raised CommandParameterNotFoundException ' + e)
+            return False
+        except Exception as e:
+            self.log_error('raised unattended exception ' + e)
             return False
 
     def getCommands(self):
