@@ -8,10 +8,34 @@ from switchhandler.device.executable.command.command_base import CommandBase
 
 
 class ViewProcessCPU(CommandBase):
+<<<<<<< HEAD
     '''Voir les processus
 
 
     '''
+=======
+    '''Créer/se placer dans la configuration d'un Vlan
+
+    :param ip: l'ip a pinger
+    :type name: str
+
+    :param repeat: Le nombre de ping
+    :type repeat: int
+    :default repeat: 5
+
+
+    Commandes exécutées::
+
+      ViewPing(ip='127.0.0.1', repeat=3)
+
+      prompt# ping 127.0.0.1 repeat 3
+      prompt#
+
+    '''
+
+    def arg_default(self):
+        pass
+>>>>>>> refs/remotes/origin/master
 
     def do_run(self):
         self.switch.sendline('terminal length 0')

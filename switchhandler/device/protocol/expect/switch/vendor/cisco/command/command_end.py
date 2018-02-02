@@ -17,8 +17,11 @@ class CommandEnd(CommandBase):
       prompt# end
       prompt#
     '''
+<<<<<<< HEAD
     def define_argument(self):
         pass
+=======
+>>>>>>> refs/remotes/origin/master
 
     def do_run(self):
         if not self.switch.getConfigMode() == ConfigMode.GLOBAL:

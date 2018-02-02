@@ -33,6 +33,7 @@ class ActionAddACLToInterface(ActionBase):
 
     '''
 
+<<<<<<< HEAD
     def define_argument(self):
         self.add_argument(name='acl_name', required=True)
         self.add_argument(name='interface_name', required=True)
@@ -41,6 +42,10 @@ class ActionAddACLToInterface(ActionBase):
     def arg_default(self):
         # self.inbound = getattr(self, 'inbound', True)
         pass
+=======
+    def arg_default(self):
+        self.inbound = getattr(self, 'inbound', True)
+>>>>>>> refs/remotes/origin/master
 
     def do_run(self):
         self.switch.execute('end')

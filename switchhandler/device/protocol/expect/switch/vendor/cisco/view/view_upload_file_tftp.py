@@ -27,11 +27,14 @@ class ViewUploadFileTFTP(CommandBase):
 
     '''
 
+<<<<<<< HEAD
     def define_argument(self):
         self.add_argument(name='tftp_ip', required=True)
         self.add_argument(name='local_file_path', required=True)
         self.add_argument(name='remote_file_path', required=True)
 
+=======
+>>>>>>> refs/remotes/origin/master
     def do_run(self):
         self.switch.sendline(
             'copy tftp://{}/{} flash:/{}'.format(self.tftp_ip, self.local_file_path, self.remote_file_path))

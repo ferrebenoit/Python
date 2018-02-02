@@ -18,6 +18,7 @@ class CommandWrite(CommandBase):
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
 
+<<<<<<< HEAD
     def define_argument(self):
         pass
 
@@ -26,3 +27,9 @@ class CommandWrite(CommandBase):
         self.switch.sendline('write')
         self.switch.expectPrompt()
         return True
+=======
+    def do_run(self):
+        self.switch.execute('end')
+        self.switch.sendline('write')
+        self.switch.expectPrompt()
+>>>>>>> refs/remotes/origin/master

@@ -17,8 +17,11 @@ class CommandWrite(CommandBase):
       prompt#
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
+<<<<<<< HEAD
     def define_argument(self):
         pass
+=======
+>>>>>>> refs/remotes/origin/master
 
     def do_run(self):
         self.switch.sendline('write memory')

@@ -28,10 +28,13 @@ class CommandIntVlan(CommandBase):
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
 
+<<<<<<< HEAD
     def define_argument(self):
         self.add_argument(name='id', required=True)
         self.add_argument(name='name', default='')
 
+=======
+>>>>>>> refs/remotes/origin/master
     def do_run(self):
         self.switch.execute('vlan', self.id, self.name)
         self.switch.expectPrompt()

@@ -38,6 +38,7 @@ class ActionCreateVlan(ActionBase):
       prompt#
     '''
 
+<<<<<<< HEAD
     def define_argument(self):
         self.add_argument(name='name', required=True)
         self.add_argument(name='acl_entries', required=True)
@@ -58,6 +59,20 @@ class ActionCreateVlan(ActionBase):
         self.switch.execute('vlan', id=self.id, name=self.name)
 
         self.switch.execute('exit')
+=======
+    def arg_default(self):
+        self.ip = getattr(self, 'ip', None)
+        self.network_id = getattr(self, 'network_id', None)
+        self.ip_helper = getattr(self, 'ip_helper', None)
+
+    def do_run(self):
+        self.switch.execute('end')
+        self.switch.execute('conft')
+
+        self.switch.execute('vlan', id=self.id, name=self.name)
+
+        self.switch.exit()
+>>>>>>> refs/remotes/origin/master
 
         # If IP mask and CIDR are provided add an IP to the vlan
         if self.ip is not None and self.network_id is not None:

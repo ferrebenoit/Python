@@ -27,6 +27,7 @@ class CommandVlan(CommandBase):
 
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
+<<<<<<< HEAD
     def define_argument(self):
         self.add_argument(name='id', required=True)
         self.add_argument(name='name', default='')
@@ -38,3 +39,12 @@ class CommandVlan(CommandBase):
         if self.name != '':
             self.switch.sendline('vlan {} name {}'.format(self.id, self.name))
             self.switch.expectPrompt()
+=======
+
+    def do_run(self):
+        self.switch.sendline('vlan database')
+        self.switch.expectPrompt()
+
+        self.switch.sendline('vlan {} name {}'.format(self.id, self.name))
+        self.switch.expectPrompt()
+>>>>>>> refs/remotes/origin/master

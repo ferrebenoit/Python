@@ -27,6 +27,7 @@ class ViewPing(CommandBase):
 
     '''
 
+<<<<<<< HEAD
     def define_argument(self):
         self.add_argument(name='ip', required=True)
         self.add_argument(name='repeat', default=5)
@@ -34,6 +35,10 @@ class ViewPing(CommandBase):
     def arg_default(self):
         # self.repeat = getattr(self, 'repeat', 5)
         pass
+=======
+    def arg_default(self):
+        self.repeat = getattr(self, 'repeat', 5)
+>>>>>>> refs/remotes/origin/master
 
     def do_run(self):
         self.switch.sendline('ping {} repetitions {}'.format(self.ip, self.repeat))

@@ -28,9 +28,12 @@ class CommandIPAddress(CommandBase):
 
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
+<<<<<<< HEAD
     def define_argument(self):
         self.add_argument(name='ip', required=True)
         self.add_argument(name='network_id', required=True)
+=======
+>>>>>>> refs/remotes/origin/master
 
     def do_run(self):
         self.switch.sendline('ip address {}/{}'.format(self.ip, convert_to_cidr(self.network_id)))

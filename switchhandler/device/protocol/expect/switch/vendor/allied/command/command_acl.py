@@ -21,8 +21,11 @@ class CommandACL(CommandBase):
 
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
+<<<<<<< HEAD
     def define_argument(self):
         self.add_argument(name='name', required=True)
+=======
+>>>>>>> refs/remotes/origin/master
 
     def do_run(self):
         self.switch.sendline('access-list hardware {}'.format(self.name))

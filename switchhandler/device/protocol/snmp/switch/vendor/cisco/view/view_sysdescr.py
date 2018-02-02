@@ -1,5 +1,9 @@
 '''
+<<<<<<< HEAD
 Created on 23 dï¿½c. 2017
+=======
+Created on 23 déc. 2017
+>>>>>>> refs/remotes/origin/master
 
 @author: ferre
 '''

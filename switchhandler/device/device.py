@@ -1,4 +1,5 @@
 '''
+<<<<<<< HEAD
 Created on 22 dï¿½c. 2017
 
 @author: ferre
@@ -6,6 +7,14 @@ Created on 22 dï¿½c. 2017
 from abc import ABCMeta, abstractmethod
 import logging
 
+=======
+Created on 22 déc. 2017
+
+@author: ferre
+'''
+from abc import ABCMeta, abstractmethod
+import logging
+>>>>>>> refs/remotes/origin/master
 from switchhandler.device.device_exception import CommandNotFoundException,\
     CommandParameterNotFoundException
 

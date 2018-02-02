@@ -28,6 +28,7 @@ class CommandInt(CommandBase):
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
 
+<<<<<<< HEAD
     def define_argument(self):
         self.add_argument(name='interface', required=True)
         self.add_argument(name='description', default='')
@@ -39,3 +40,11 @@ class CommandInt(CommandBase):
         if self.description != '':
             self.switch.sendline('description {}'.format(self.description))
             self.switch.expectPrompt()
+=======
+    def do_run(self):
+        self.switch.sendline('interface {}'.format(self.interface))
+        self.switch.expectPrompt()
+
+        self.switch.sendline('description {}'.format(self.description))
+        self.switch.expectPrompt()
+>>>>>>> refs/remotes/origin/master

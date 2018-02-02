@@ -29,11 +29,14 @@ class ViewDownloadFileTFTP(CommandBase):
 
     '''
 
+<<<<<<< HEAD
     def define_argument(self):
         self.add_argument(name='tftp_ip', required=True)
         self.add_argument(name='local_file_path', required=True)
         self.add_argument(name='remote_file_path', required=True)
 
+=======
+>>>>>>> refs/remotes/origin/master
     def do_run(self):
         # copy running-config tftp://192.168.0.1/
         try:

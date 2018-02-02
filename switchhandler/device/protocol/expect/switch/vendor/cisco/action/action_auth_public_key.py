@@ -27,6 +27,7 @@ class ActionAuthPublicKey(ActionBase):
       prompt#
     '''
 
+<<<<<<< HEAD
     def define_argument(self):
         self.add_argument(name='username', required=True)
         self.add_argument(name='key', required=True)
@@ -36,6 +37,10 @@ class ActionAuthPublicKey(ActionBase):
     def arg_default(self):
         # self.tftp_ip = getattr(self, 'tftp_ip', None)
         pass
+=======
+    def arg_default(self):
+        self.tftp_ip = getattr(self, 'tftp_ip', None)
+>>>>>>> refs/remotes/origin/master
 
     def do_run(self):
         self.switch.execute('end')

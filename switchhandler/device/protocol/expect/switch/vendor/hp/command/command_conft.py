@@ -14,8 +14,11 @@ class CommandConft(CommandBase):
     prompt# configure terminal
     prompt#
     '''
+<<<<<<< HEAD
     def define_argument(self):
         pass
+=======
+>>>>>>> refs/remotes/origin/master
 
     def do_run(self):
         self.switch.sendline('configure terminal')

@@ -31,6 +31,7 @@ class ViewSaveConfFile(CommandBase):
 
     '''
 
+<<<<<<< HEAD
     def define_argument(self):
         self.add_argument(name='folder', default=None)
         self.add_argument(name='add_timestamp', default=False)
@@ -39,6 +40,11 @@ class ViewSaveConfFile(CommandBase):
         # self.folder = getattr(self, 'folder', None)
         # self.add_timestamp = getattr(self, 'add_timestamp', False)
         pass
+=======
+    def arg_default(self):
+        self.folder = getattr(self, 'folder', None)
+        self.add_timestamp = getattr(self, 'add_timestamp', False)
+>>>>>>> refs/remotes/origin/master
 
     def _build_filepath(self, folder, add_timestamp):
         filepath = "{}_{}_{}".format(

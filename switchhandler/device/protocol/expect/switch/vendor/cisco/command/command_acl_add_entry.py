@@ -4,6 +4,7 @@ Created on 9 mai 2017
 
 @author: ferreb
 '''
+<<<<<<< HEAD
 from switchhandler.device.executable.command.command_base import CommandBase
 from switchhandler.utils.net_tools import convert_to_wildcard
 
@@ -67,6 +68,56 @@ class CommandACLAddEntry(CommandBase):
     def arg_default(self):
         # self.inverse_src_and_dst = getattr(self, 'inverse_src_and_dst', False)
         pass
+=======
+from switchhandler.utils.net_tools import convert_to_wildcard
+
+from switchhandler.device.executable.command.command_base import CommandBase
+
+
+class CommandACLAddEntry(CommandBase):
+    '''Ajoute une liegne dans l'acl courante
+
+    :param index: L'index de la ligne d'ACL
+    :type  index: int
+    :param action: Permit ou Deny
+    :type  action: str
+    :param protocol: TCP, UDP, IP et ICMP
+    :type  protocol: str
+    :param src1: partie source de l'acl host ou Subnet
+    :type  src1: str
+    :param src2: partie source de l'acl IP ou masque
+    :type  src2: str
+    :param src_port_operator: operateur eq ...
+    :type  src_port_operator: str
+    :param src_port: Port source sur lequel s'applique la ligne d'acl
+    :type  src_port: str
+    :param dst1: partie destination de l'acl host ou Subnet
+    :type  dst1: str
+    :param dst2: partie destination de l'acl IP ou masque
+    :type  dst2: str
+    :param dst_port_operator: operateur eq ...
+    :type  dst_port_operator: str
+    :param dst_port: Port source sur lequel s'applique la ligne d'acl
+    :type  dst_port: str
+    :param log: mettre la valeur log dans cette variable pour que le switch
+                logue les accés
+    :type  log: str
+    :param inverse_src_and_dst: Par défaut ajoute une entrée d'ACL en Input mettre cette valeur à True pour faire une ACL en Output
+    :type  inverse_src_and_dst: bool
+
+    :default :type  inverse_src_and_dst: False
+
+
+    Commandes exécutée::
+
+      prompt#
+      prompt#
+
+    '''
+
+    def arg_default(self):
+        self.inverse_src_and_dst = getattr(self, 'inverse_src_and_dst', False)
+>>>>>>> refs/remotes/origin/master
 
     def do_run(self):
                 # if protocol is ICMP and not inverse_src_and_dst assign echo_reply to  src_port_operator

@@ -5,6 +5,7 @@ Created on 9 mai 2017
 '''
 
 from abc import ABCMeta, abstractmethod
+<<<<<<< HEAD
 from switchhandler.device.device_exception import CommandParameterNotFoundException
 
 
@@ -65,6 +66,35 @@ class CommandBase(metaclass=ABCMeta):
     @abstractmethod
     def define_argument(self):
         pass
+=======
+
+
+class CommandBase(metaclass=ABCMeta):
+    '''
+    classdocs
+    '''
+
+    def __init__(self, switch, *args, **kwargs):
+        '''
+        Constructor
+        '''
+
+        if kwargs:
+            for key, value in kwargs.items():
+                setattr(self, key, value)
+                self.kwargs = kwargs
+
+        self.switch = switch
+
+        # Assign default to args
+        self.arg_default
+
+    def arg_default(self):
+        pass
+
+    def run(self):
+        return self.do_run()
+>>>>>>> refs/remotes/origin/master
 
     @abstractmethod
     def do_run(self):

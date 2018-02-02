@@ -22,6 +22,7 @@ class ActionCreateACL(ActionBase):
     :default inverse_src_and_dst: False
     '''
 
+<<<<<<< HEAD
     def define_argument(self):
         self.add_argument(name='name', required=True)
         self.add_argument(name='acl_entries', required=True)
@@ -34,6 +35,12 @@ class ActionCreateACL(ActionBase):
         # self.inverse_src_and_dst = getattr(self, 'inverse_src_and_dst', False)
         # self.acl_conditions = getattr(self, 'acl_conditions', None)
         pass
+=======
+    def arg_default(self):
+        self.acl_replace = getattr(self, 'acl_replace', None)
+        self.inverse_src_and_dst = getattr(self, 'inverse_src_and_dst', False)
+        self.acl_conditions = getattr(self, 'acl_conditions', None)
+>>>>>>> refs/remotes/origin/master
 
     def do_run(self):
         self.switch.execute('end')

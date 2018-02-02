@@ -36,6 +36,7 @@ class ActionCreateVlan(ActionBase):
       prompt#
     '''
 
+<<<<<<< HEAD
     def define_argument(self):
         self.add_argument(name='name', required=True)
         self.add_argument(name='acl_entries', required=True)
@@ -48,6 +49,12 @@ class ActionCreateVlan(ActionBase):
         # self.network_id = getattr(self, 'network_id', None)
         # self.ip_helper = getattr(self, 'ip_helper', None)
         pass
+=======
+    def arg_default(self):
+        self.ip = getattr(self, 'ip', None)
+        self.network_id = getattr(self, 'network_id', None)
+        self.ip_helper = getattr(self, 'ip_helper', None)
+>>>>>>> refs/remotes/origin/master
 
     def do_run(self):
         self.switch.sendline('set vlan filter {} en'.format(
