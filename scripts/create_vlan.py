@@ -9,12 +9,15 @@ class PubkeyAuth(SwitchScripter):
     def _define_args(self):
         super()._define_args()
         self._arg_parser.add_argument('--vlanname', help='The Vlan Name')
-        self._arg_parser.add_argument('--vlan1octet', help='The Vlan first ID', default=10)
+        self._arg_parser.add_argument(
+            '--vlan1octet', help='The Vlan first ID', default=10)
         self._arg_parser.add_argument('--vlanid', help='The Vlan ID')
-        self._arg_parser.add_argument('--siteid', help='The Site ID')
-        self._arg_parser.add_argument('--vlancidr', help='The interface vlan CIDR', default=None)
-        self._arg_parser.add_argument('--iphelper', help='DHCP IP helper', default=None)
-        self._arg_parser.add_argument('--ospfnetwork', help='if ospf must be configured')
+        self._arg_parser.add_argument(
+            '--vlancidr', help='The interface vlan CIDR', default=None)
+        self._arg_parser.add_argument(
+            '--iphelper', help='DHCP IP helper', default=None)
+        self._arg_parser.add_argument(
+            '--ospfnetwork', help='if ospf must be configured')
 
 
 #        self._arg_parser.add_argument('--VlanIP', help='The interface vlan IP',  default=-1)
@@ -39,16 +42,17 @@ class PubkeyAuth(SwitchScripter):
                            ip_helper=args.get('iphelper', None)
                            )
 
-            if ((args.get('ospfnetwork', None) == 'yes')
-                    or (args.get('ospfnetwork', None) == 'ospf')
-                    or (args.get('ospfnetwork', None) == 'central')
-                    ):
+            if ((args.get('ospfnetwork', None) == 'yes') or
+                    (args.get('ospfnetwork', None) == 'ospf') or
+                    (args.get('ospfnetwork', None) == 'central')):
                 switch.execute('add_ospf_router',
-                               network='{}.{}.{}.0'.format(args['vlan1octet'], args['vlanid'], args['siteid']),
+                               network='{}.{}.{}.0'.format(
+                                   args['vlan1octet'], args['vlanid'], args['siteid']),
                                network_id=args['vlancidr']
                                )
 
         switch.logout()
+
 
 pubkey_auth = PubkeyAuth('Create a vlan with ip address', sys.argv[1:])
 pubkey_auth.process()
