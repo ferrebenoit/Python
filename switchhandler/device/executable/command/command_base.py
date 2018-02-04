@@ -43,8 +43,6 @@ class CommandBase(metaclass=ABCMeta):
         :type name: str
         :param required: Argument est-il requis
         :type required: bool
-        :param type: type de largument
-        :type type: bool
         :param default: la valeur par d�faut
         :type default: str
 
@@ -55,7 +53,8 @@ class CommandBase(metaclass=ABCMeta):
             # if argument is required
             if kwargs.get('required', False):
                 # raise error
-                raise CommandParameterNotFoundException('Parameter {} must be set for command {}'.format(kwargs['name'], self.__class__.__name__))
+                raise CommandParameterNotFoundException(
+                    'Parameter {} must be set for command {}'.format(kwargs['name'], self.__class__.__name__))
             # if default is provided
             elif 'default' in kwargs:
                 # assign default
