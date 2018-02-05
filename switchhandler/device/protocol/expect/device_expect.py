@@ -127,6 +127,7 @@ class DeviceExpect(Device):
         retourne l'index de la liste other_messages en partant de 1
         '''
 
+        self.logInfo('expect : PROMPT')
         if self.dryrun:
             return
 
