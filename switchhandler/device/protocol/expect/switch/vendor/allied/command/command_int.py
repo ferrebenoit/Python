@@ -33,9 +33,9 @@ class CommandInt(CommandBase):
         self.add_argument(name='description', default='')
 
     def do_run(self):
-        self.switch.sendline('interface {}'.format(self.interface))
-        self.switch.expectPrompt()
+        self.switch.send_line('interface {}'.format(self.interface))
+        self.switch.expect_prompt()
 
         if self.description != '':
-            self.switch.sendline('description {}'.format(self.description))
-            self.switch.expectPrompt()
+            self.switch.send_line('description {}'.format(self.description))
+            self.switch.expect_prompt()

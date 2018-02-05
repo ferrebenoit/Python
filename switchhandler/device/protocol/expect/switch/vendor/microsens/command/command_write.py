@@ -18,5 +18,5 @@ class CommandWrite(CommandBase):
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
 
     def do_run(self):
-        self.switch.sendline('save settings')
-        self.switch.expectPrompt()
+        self.switch.send_line('save settings')
+        self.switch.expect_prompt()

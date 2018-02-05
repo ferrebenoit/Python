@@ -14,9 +14,10 @@ class CommandEnd(CommandBase):
     prompt# end
     prompt#
     '''
+
     def define_argument(self):
         pass
 
     def do_run(self):
-        self.switch.sendline('end')
-        self.switch.expectPrompt()
+        self.switch.send_line('end')
+        self.switch.expect_prompt()

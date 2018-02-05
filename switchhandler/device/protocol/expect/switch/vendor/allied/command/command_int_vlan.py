@@ -33,9 +33,9 @@ class CommandIntVlan(CommandBase):
         self.add_argument(name='name', default='')
 
     def do_run(self):
-        self.switch.sendline('interface vlan{}'.format(self.id))
-        self.switch.expectPrompt()
+        self.switch.send_line('interface vlan{}'.format(self.id))
+        self.switch.expect_prompt()
 
         if self.name != '':
-            self.switch.sendline('description {}'.format(self.name))
-            self.switch.expectPrompt()
+            self.switch.send_line('description {}'.format(self.name))
+            self.switch.expect_prompt()

@@ -1,5 +1,5 @@
 '''
-Created on 4 févr. 2018
+Created on 4 fÃ©vr. 2018
 
 @author: ferre
 '''
@@ -10,9 +10,8 @@ class FactVlan(FactBase):
     '''
     classdocs
     switch.vlans().get(80).ips()
-                          .name
-                          .iphelper
-                          .
+    switch.vlans().get(80).name
+    switch.vlans().get(80).iphelper
     '''
 
     def __init__(self, params):

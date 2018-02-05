@@ -50,13 +50,13 @@ class ActionCreateVlan(ActionBase):
         pass
 
     def do_run(self):
-        self.switch.sendline('set vlan filter {} en'.format(
+        self.switch.send_line('set vlan filter {} en'.format(
             convert_vlan_id_to_vlan_filter(self.id)))
-        self.switch.sendline('set vlan filter {} id {}'.format(
+        self.switch.send_line('set vlan filter {} id {}'.format(
             convert_vlan_id_to_vlan_filter(self.id), self.id))
-        self.switch.sendline('set vlan filter {} port 5 en'.format(
+        self.switch.send_line('set vlan filter {} port 5 en'.format(
             convert_vlan_id_to_vlan_filter(self.id)))
-        self.switch.sendline('set vlan filter {} port manager en'.format(
+        self.switch.send_line('set vlan filter {} port manager en'.format(
             convert_vlan_id_to_vlan_filter(self.id)))
 
         self.switch.execute('write')

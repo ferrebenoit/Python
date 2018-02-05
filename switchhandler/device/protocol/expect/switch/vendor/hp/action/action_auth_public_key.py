@@ -28,10 +28,10 @@ class ActionAuthPublicKey(ActionBase):
     '''
 
     def define_argument(self):
-        self.add_argument(name='username', required=True)
-        self.add_argument(name='key', required=True)
-        self.add_argument(name='comment', required=True)
-        self.add_argument(name='tftp_ip', default=None)
+        # operator is neverused so ignore keyuser in this commad
+        # self.add_argument(name='keyuser', required=True)
+        self.add_argument(name='keypath', required=True)
+        self.add_argument(name='tftpip', required=True)
 
     def arg_default(self):
         # self.tftp_ip = getattr(self, 'tftp_ip', None)
@@ -40,16 +40,16 @@ class ActionAuthPublicKey(ActionBase):
     def do_run(self):
         self.switch.execute('end')
 
-        self.switch.sendline('copy tftp pub-key-file {} {} manager append'.format(
-            self.tftp_ip,
-            self.key
+        self.switch.send_line('copy tftp pub-key-file {} {} manager append'.format(
+            self.tftpip,
+            self.keypath
         ))
-        self.switch.expectPrompt()
+        self.switch.expect_prompt()
 
-        self.execute('conft')
+        self.switch.execute('conft')
 
-        self.switch.sendline('aaa authentication ssh login public-key')
-        self.switch.expectPrompt()
+        self.switch.send_line('aaa authentication ssh login public-key')
+        self.switch.expect_prompt()
 
         self.switch.execute('write')
         return True

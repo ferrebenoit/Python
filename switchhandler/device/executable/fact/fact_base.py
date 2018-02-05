@@ -1,5 +1,5 @@
 '''
-Created on 4 févr. 2018
+Created on 4 fÃ©vr. 2018
 
 @author: ferre
 '''

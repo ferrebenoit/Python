@@ -46,13 +46,13 @@ class ActionAddACLToInterface(ActionBase):
         self.switch.execute('end')
         self.switch.execute('conft')
 
-        self.switch.sendline('interface {}'.format(self.interface_name))
-        self.switch.expectPrompt()
+        self.switch.send_line('interface {}'.format(self.interface_name))
+        self.switch.expect_prompt()
 
         if self.inbound:
-            self.switch.sendline('ip access-group {} in'.format(self.acl_name))
+            self.switch.send_line('ip access-group {} in'.format(self.acl_name))
         else:
-            self.switch.sendline('ip access-group {} out'.format(self.acl_name))
-        self.switch.expectPrompt()
+            self.switch.sendl_ine('ip access-group {} out'.format(self.acl_name))
+        self.switch.expect_prompt()
 
         self.switch.execute('write')

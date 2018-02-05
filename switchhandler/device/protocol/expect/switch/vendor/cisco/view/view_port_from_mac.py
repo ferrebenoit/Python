@@ -46,10 +46,10 @@ class ViewPortFromMac(CommandBase):
 
         if self.ip is not None:
             self.switch.execute('ping', ip=self.ip, repeat=3)
-            self.switch.expectPrompt()
+            self.switch.expect_prompt()
 
-        self.switch.sendline("show mac address-table | include {}".format(self.mac))
-        self.switch.expectPrompt()
+        self.switch.send_line("show mac address-table | include {}".format(self.mac))
+        self.switch.expect_prompt()
 
         match = re.search(
             '^[ ]*([0-9][0-9]*)[ ]*([^ ]*)[ ]*([^ ]*)[ ]*([^ ^\n]*)$', self.switch.before(), re.MULTILINE)

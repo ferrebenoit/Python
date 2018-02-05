@@ -1,7 +1,7 @@
-from switchhandler.device.protocol.expect.switch.switch_expect import SwitchExpect, ConfigMode, Exec
-from switchhandler.device.protocol.expect.switch.vendor.hp import switchHPCommands
 from switchhandler.device.device_exception import CommandNotFoundException,\
     CommandParameterNotFoundException
+from switchhandler.device.protocol.expect.switch.switch_expect import SwitchExpect, ConfigMode, Exec
+from switchhandler.device.protocol.expect.switch.vendor.hp import switchHPCommands
 
 
 class SwitchHP(SwitchExpect):
@@ -35,8 +35,8 @@ class SwitchHP(SwitchExpect):
         elif self.configMode == 'config':
             return ConfigMode.TERMINAL
 
-    def expectPrompt(self, other_messages=None):
-        return super(SwitchHP, self).expectPrompt(other_messages)
+    def expect_prompt(self, other_messages=None):
+        return super(SwitchHP, self).expect_prompt(other_messages)
 
     def _ssh_login(self, login, password):
         self.connect()
@@ -45,12 +45,12 @@ class SwitchHP(SwitchExpect):
         if password is not None:
             self.connection.expect('[Pp]assword:')
             self.connection.sendline(password)
-            self.logInfo('Password Sent')
+            self.log_info('Password Sent')
 
-        if self.expectPrompt(other_messages=["Press any key to continue"]) == 1:
-            self.logInfo("got message: Press any key to continue")
-            self.sendline()
-            self.expectPrompt()
+        if self.expect_prompt(other_messages=["Press any key to continue"]) == 1:
+            self.log_info("got message: Press any key to continue")
+            self.send_line()
+            self.expect_prompt()
 
         self._loadPromptState()
 
@@ -61,12 +61,12 @@ class SwitchHP(SwitchExpect):
         self.connection._spawn("telnet {}".format(self.IP))
         if self.connection.expect(['Password:', 'Press any key to continue']) == 0:
             self.connection.sendline(password)
-            self.expectPrompt()
+            self.expect_prompt()
         else:
             self.connection.sendline()
             self.connection.expect('Password:')
             self.connection.sendline(password)
-            self.expectPrompt()
+            self.expect_prompt()
 
         self._loadPromptState()
 
@@ -75,11 +75,11 @@ class SwitchHP(SwitchExpect):
     def logout(self):
         try:
             self.execute('end')
-            self.sendline('logout')
+            self.send_line('logout')
             self.expect('[y/n]?')
             self.send('y')
 
-            self.logInfo('Logout')
+            self.log_info('Logout')
             return True
         except CommandNotFoundException as e:
             self.log_error('raised CommandNotFoundException ' + e)

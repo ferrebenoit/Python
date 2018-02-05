@@ -32,9 +32,9 @@ class CommandVlan(CommandBase):
         self.add_argument(name='name', default='')
 
     def do_run(self):
-        self.switch.sendline('vlan database')
-        self.switch.expectPrompt()
+        self.switch.send_line('vlan database')
+        self.switch.expect_prompt()
 
         if self.name != '':
-            self.switch.sendline('vlan {} name {}'.format(self.id, self.name))
-            self.switch.expectPrompt()
+            self.switch.send_line('vlan {} name {}'.format(self.id, self.name))
+            self.switch.expect_prompt()

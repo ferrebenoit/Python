@@ -28,5 +28,5 @@ class CommandNoACL(CommandBase):
         self.add_argument(name='name', required=True)
 
     def do_run(self):
-        self.switch.sendline('no access-list hardware {}'.format(self.name))
-        self.switch.expectPrompt()
+        self.switch.send_line('no access-list hardware {}'.format(self.name))
+        self.switch.expect_prompt()

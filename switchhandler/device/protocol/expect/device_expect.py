@@ -62,40 +62,40 @@ class DeviceExpect(Device):
     def after(self):
         return self.connection.after.decode('UTF-8')
 
-    def sendline(self, s=''):
+    def send_line(self, s=''):
         if (s == ''):
-            self.logInfo("send : \\r\\n")
+            self.log_info("send : \\r\\n")
         else:
-            self.logInfo("send : {}".format(s))
+            self.log_info("send : {}".format(s))
 
         if not self.dryrun:
             self.connection.sendline(s)
 
     def send(self, s):
-        self.logInfo("send : {}".format(s))
+        self.log_info("send : {}".format(s))
 
         if not self.dryrun:
             self.connection.send(s)
 
-    def sendcontrol(self, char):
-        self.logInfo('send : CNTRL/{}'.format(char))
+    def send_control(self, char):
+        self.log_info('send : CNTRL/{}'.format(char))
 
         if not self.dryrun:
             self.connection.sendcontrol(char)
 
-    def sendintr(self):
-        self.logInfo('send : interrupt')
+    def send_intr(self):
+        self.log_info('send : interrupt')
 
         if not self.dryrun:
             self.connection.sendintr()
 
-    def sendeof(self):
-        self.logInfo('send : eof')
+    def send_eof(self):
+        self.log_info('send : eof')
 
         if not self.dryrun:
             self.connection.sendeof()
 
-    def safeExpect(self, pattern, timeout=-1, searchwindowsize=-1, async=False):
+    def safe_expect(self, pattern, timeout=-1, searchwindowsize=-1, async=False):
         ''' utility method that add pexpect.EOF, pexpect.TIMEOUT to pattern to avoid exceptions
         '''
         localPattern = [pexpect.EOF, pexpect.TIMEOUT]
@@ -114,7 +114,7 @@ class DeviceExpect(Device):
                 return match - 2  # return the original index
 
     def expect(self, pattern, timeout=-1, searchwindowsize=-1, async=False):
-        self.logInfo('expect : {}'.format(pattern))
+        self.log_info('expect : {}'.format(pattern))
 
         if self.dryrun:
             return 0
@@ -122,12 +122,12 @@ class DeviceExpect(Device):
         return self.connection.expect(pattern, timeout, searchwindowsize, async)
 
     @abstractmethod
-    def expectPrompt(self, other_messages=None):
+    def expect_prompt(self, other_messages=None):
         '''retourne 0 si le prompt est matché
         retourne l'index de la liste other_messages en partant de 1
         '''
 
-        self.logInfo('expect : PROMPT')
+        self.log_info('expect : PROMPT')
         if self.dryrun:
             return
 
@@ -153,16 +153,17 @@ class DeviceExpect(Device):
             self.logger.info("trying SSH Login")
 
             if self._ssh_login(login, password):
-                self.logger.info("SSH Login ok as user {}".format(login))
+                self.log_info("SSH Login ok as user {}".format(login))
                 return True
             else:
+                self.log_warning("SSH Login failed as user {}".format(login))
                 return False
-        except Exception as e:
-            self.log_error('Connection failed with exception ' + e)
+        except Exception:
+            self.log_error('Connection failed with exception')
 
-            self.logger.warning("SSH Login failed as user {}".format(login))
-            self.logger.warning(self.connection.before)
-            self.logger.warning(self.connection.after)
+            self.log_warning("SSH Login failed as user {}".format(login))
+            self.log_debug(self.connection.before)
+            self.log_debug(self.connection.after)
             return False
 
     def try_telnet_login(self, login, password):
@@ -173,16 +174,18 @@ class DeviceExpect(Device):
                 self.logger.info("TELNET Login ok as user {}".format(login))
                 return True
             else:
+                self.log_warning("TELNET Login failed as user {}".format(login))
                 return False
         except Exception:
-            self.logger.warning("TELNET Login failed")
-            self.logger.warning(self.connection.before)
-            self.logger.warning(self.connection.after)
+            self.log_error('Connection failed with exception')
+            self.log_warning("TELNET Login failed as user {}".format(login))
+            self.log_debug(self.connection.before)
+            self.log_debug(self.connection.after)
             return False
 
     def login(self, login, password):
         if self.dryrun:
-            self.logger.info("Login ok as user {}".format(login))
+            self.log_info("Login ok as user {}".format(login))
             return True
 
         if not self.try_ssh_login(login, password):

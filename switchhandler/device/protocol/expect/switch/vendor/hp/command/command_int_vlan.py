@@ -34,4 +34,4 @@ class CommandIntVlan(CommandBase):
 
     def do_run(self):
         self.switch.execute('vlan', self.id, self.name)
-        self.switch.expectPrompt()
+        self.switch.expect_prompt()

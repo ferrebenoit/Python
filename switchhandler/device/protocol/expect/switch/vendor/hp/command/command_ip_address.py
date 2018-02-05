@@ -33,8 +33,8 @@ class CommandIPAddress(CommandBase):
         self.add_argument(name='network_id', required=True)
 
     def do_run(self):
-        self.switch.sendline('ip address {} {}'.format(
+        self.switch.send_line('ip address {} {}'.format(
             self.ip,
             convert_to_netmask(self.network_id)
         ))
-        self.switch.expectPrompt()
+        self.switch.expect_prompt()

@@ -60,7 +60,7 @@ class Device(metaclass=ABCMeta):
     def dryrun(self, val):
         self.__dryrun = val
 
-    def logInfo(self, message):
+    def log_info(self, message):
         self.logger.info(message)
 
     def log_critical(self, message):
@@ -71,6 +71,9 @@ class Device(metaclass=ABCMeta):
 
     def log_warning(self, message):
         self.logger.warning(message)
+
+    def log_debug(self, message):
+        self.logger.debug(message)
 
     @abstractmethod
     def connect(self):

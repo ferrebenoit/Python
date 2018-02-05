@@ -36,7 +36,7 @@ class ViewDownloadFileTFTP(CommandBase):
 
     def do_run(self):
         try:
-            self.switch.sendline(
+            self.switch.send_line(
                 'copy {} tftp://{}/{}'.format(
                     self.local_file_path,
                     self.tftp_ip,
@@ -49,7 +49,7 @@ class ViewDownloadFileTFTP(CommandBase):
             elif match == 0:
                 return True
 
-            self.switch.expectPrompt()
+            self.switch.expect_prompt()
         except TIMEOUT:
             print("Sauvegarde echouee a cause d'un timeout")
             print(self.switch.connection.before)

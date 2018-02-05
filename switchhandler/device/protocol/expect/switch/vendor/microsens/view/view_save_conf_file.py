@@ -71,8 +71,8 @@ class ViewSaveConfFile(CommandBase):
         pass
 
     def backup_conf(self, conf_type, command):
-        self.switch.sendline(command)
-        self.switch.expectPrompt()
+        self.switch.send_line(command)
+        self.switch.expect_prompt()
 
         confStr = self.sanitize(self.switch.before())
         try:
@@ -81,6 +81,7 @@ class ViewSaveConfFile(CommandBase):
 
             if not os.path.exists(directory):
                 os.makedirs(directory)
+
             with open(file, 'w') as f:
                 f.write(confStr)
 

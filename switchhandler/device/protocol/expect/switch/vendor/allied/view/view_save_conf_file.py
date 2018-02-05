@@ -5,6 +5,7 @@ Created on 9 mai 2017
 @author: ferreb
 '''
 import datetime
+import os
 
 from switchhandler.device.executable.command.command_base import CommandBase
 
@@ -70,14 +71,17 @@ class ViewSaveConfFile(CommandBase):
         self.switch.execute('end')
         self.switch.execute('enable')
 
-        self.switch.sendline('terminal length 0')
-        self.switch.expectPrompt()
-        self.switch.sendline('show running-config')
-        self.switch.expectPrompt()
+        self.switch.send_line('terminal length 0')
+        self.switch.expect_prompt()
+        self.switch.send_line('show running-config')
+        self.switch.expect_prompt()
 
         confStr = self.sanitize(self.switch.before())
 
         try:
+            if not os.path.exists(self.folder):
+                os.makedirs(self.folder)
+
             with open(self._build_filepath(self.folder, self.add_timestamp), 'w') as f:
                 f.write(confStr)
 

@@ -20,9 +20,10 @@ class CommandExit(CommandBase):
 
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
+
     def define_argument(self):
         pass
 
     def do_run(self):
-        self.switch.sendline('exit')
-        self.switch.expectPrompt()
+        self.switch.send_line('exit')
+        self.switch.expect_prompt()

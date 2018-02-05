@@ -15,9 +15,10 @@ class CommandConft(CommandBase):
       prompt# configure terminal
       prompt#
     '''
+
     def define_argument(self):
         pass
 
     def do_run(self):
-        self.switch.sendline('configure terminal')
-        self.switch.expectPrompt()
+        self.switch.send_line('configure terminal')
+        self.switch.expect_prompt()

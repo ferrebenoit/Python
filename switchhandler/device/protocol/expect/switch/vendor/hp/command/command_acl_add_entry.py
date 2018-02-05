@@ -80,7 +80,7 @@ class CommandACLAddEntry(CommandBase):
             self.dst2 = convert_to_wildcard(self.dst2)
 
         if self.inverse_src_and_dst:
-            self.switch.sendline('{} {} {} {} {} {} {} {} {} {}'.format(
+            self.switch.send_line('{} {} {} {} {} {} {} {} {} {}'.format(
                 self.action,
                 self.protocol,
                 self.dst1,
@@ -93,7 +93,7 @@ class CommandACLAddEntry(CommandBase):
                 self.src_port
             ))
         else:
-            self.switch.sendline('{} {} {} {} {} {} {} {} {} {}'.format(
+            self.switch.send_line('{} {} {} {} {} {} {} {} {} {}'.format(
                 self.action,
                 self.protocol,
                 self.src1,
@@ -105,4 +105,4 @@ class CommandACLAddEntry(CommandBase):
                 self.dst_port_operator,
                 self.dst_port
             ))
-        self.switch.expectPrompt()
+        self.switch.expect_prompt()

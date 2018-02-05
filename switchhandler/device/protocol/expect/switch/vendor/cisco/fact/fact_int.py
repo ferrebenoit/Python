@@ -1,5 +1,5 @@
 '''
-Created on 4 févr. 2018
+Created on 4 fÃ©vr. 2018
 
 @author: ferre
 '''
@@ -14,8 +14,8 @@ class FactInt(FactBase):
     counters
     status (connected, notconnect, error disabled)
     switch.ints().get('fa0/1').vlans()
-                              .speed
-                              .status
+    switch.ints().get('fa0/1').speed
+    switch.ints().get('fa0/1').status
 
     '''
 

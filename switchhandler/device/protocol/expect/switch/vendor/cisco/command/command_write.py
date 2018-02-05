@@ -23,6 +23,6 @@ class CommandWrite(CommandBase):
 
     def do_run(self):
         self.switch.execute('end')
-        self.switch.sendline('write')
-        self.switch.expectPrompt()
+        self.switch.send_line('write')
+        self.switch.expect_prompt()
         return True

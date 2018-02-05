@@ -33,10 +33,10 @@ class ViewUploadFileTFTP(CommandBase):
         self.add_argument(name='remote_file_path', required=True)
 
     def do_run(self):
-        self.switch.sendline(
-            'copy tftp://{} flash:/{}'.format(
+        self.switch.send_line(
+            'copy tftp://{}{} flash:/{}'.format(
                 self.tftp_ip,
-                self.local_file_path,
-                self.remote_file_path
+                self.remote_file_path,
+                self.local_file_path
             ))
-        self.switch.expectPrompt()
+        self.switch.expect_prompt()
