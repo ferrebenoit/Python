@@ -14,9 +14,9 @@ class ViewProcessCPU(CommandBase):
     '''
 
     def do_run(self):
-        self.switch.sendline('terminal length 0')
-        self.switch.expectPrompt()
+        self.switch.send_line('terminal length 0')
+        self.switch.expect_prompt()
 
-        self.switch.sendline('show processes cpu sorted')
-        self.switch.expectPrompt()
+        self.switch.send_line('show processes cpu sorted')
+        self.switch.expect_prompt()
         self.switch.log_warning(self.switch.before())

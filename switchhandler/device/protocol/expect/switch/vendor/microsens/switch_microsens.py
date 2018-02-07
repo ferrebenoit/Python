@@ -27,14 +27,14 @@ class SwitchMicrosens(SwitchExpect):
     def getConfigMode(self):
         ConfigMode.GLOBAL
 
-    def expectPrompt(self):
-        return super(SwitchMicrosens, self).expectPrompt()
+    def expect_prompt(self):
+        return super(SwitchMicrosens, self).expect_prompt()
 
-    def sendline(self, s=''):
+    def send_line(self, s=''):
         if (s == ''):
-            self.logInfo("send : \\r\\n")
+            self.log_info("send : \\r\\n")
         else:
-            self.logInfo("send : {}".format(s))
+            self.log_info("send : {}".format(s))
 
         if not self.dryrun:
             self.connection.send(s + '\r\n')
@@ -49,18 +49,18 @@ class SwitchMicrosens(SwitchExpect):
 
         # in telnet microsens switch expect only password
         self.connection.expect('Password:')
-        self.connection.sendline('{}\r\n'.format(password))
+        self.connection.send_line('{}\r\n'.format(password))
 
-        # self.sendline()
-        self.expectPrompt()
+        # self.send_line()
+        self.expect_prompt()
 
         return True
 
     def logout(self):
         try:
             self.execute('end')
-            self.sendline('logout')
-            self.logInfo('Logout')
+            self.send_line('logout')
+            self.log_info('Logout')
 
             return True
         except CommandNotFoundException as e:

@@ -46,10 +46,10 @@ class ViewPortFromMac(CommandBase):
 
         if self.ip is not None:
             self.switch.execute('ping', ip=self.ip, repeat=3)
-            self.switch.expectPrompt()
+            self.switch.expect_prompt()
 
-        self.switch.sendline("show mac-address {}".format(self.mac))
-        self.switch.expectPrompt()
+        self.switch.send_line("show mac-address {}".format(self.mac))
+        self.switch.expect_prompt()
 
         match = re.search(
             'Located on Port : ([A-Z][0-9]+)', self.switch.before(), re.MULTILINE)

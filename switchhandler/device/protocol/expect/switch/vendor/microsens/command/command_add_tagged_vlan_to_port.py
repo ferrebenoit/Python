@@ -36,9 +36,9 @@ class CommandAddTaggedVlanToPort(CommandBase):
         self.add_argument(name='description', required=True)
 
     def do_run(self):
-        self.switch.sendline(
+        self.switch.send_line(
             'set vlan filter {} port {} en'.format(
                 convert_vlan_id_to_vlan_filter(self.vlan_id), self.port
             )
         )
-        self.switch.expectPrompt()
+        self.switch.expect_prompt()

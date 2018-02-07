@@ -37,12 +37,12 @@ class CommandAddTaggedVlanToPort(CommandBase):
         self.add_argument(name='description', required=True)
 
     def do_run(self):
-        self.switch.sendline('int {}'.format(self.port))
-        self.switch.expectPrompt()
+        self.switch.send_line('int {}'.format(self.port))
+        self.switch.expect_prompt()
 
         if self.description is not None:
-            self.switch.sendline('description {}'.format(self.description))
-            self.switch.expectPrompt()
+            self.switch.send_line('description {}'.format(self.description))
+            self.switch.expect_prompt()
 
-        self.switch.sendline('switchport trunk allowed vlan add {}'.format(self.vlan_id))
-        self.switch.expectPrompt()
+        self.switch.send_line('switchport trunk allowed vlan add {}'.format(self.vlan_id))
+        self.switch.expect_prompt()

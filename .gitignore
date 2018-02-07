@@ -5,3 +5,4 @@ activate.bat
 __pycache__
 pinned.txt
 repo
+docs/*.rst

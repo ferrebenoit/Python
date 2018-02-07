@@ -28,10 +28,9 @@ class ActionAuthPublicKey(ActionBase):
     '''
 
     def define_argument(self):
-        self.add_argument(name='username', required=True)
-        self.add_argument(name='key', required=True)
-        self.add_argument(name='comment', required=True)
-        self.add_argument(name='tftp_ip', default=None)
+        self.add_argument(name='keyuser', required=True)
+        self.add_argument(name='keypath', required=True)
+        self.add_argument(name='tftpip', required=True)
 
     def arg_default(self):
         # self.tftp_ip = getattr(self, 'tftp_ip', None)
@@ -40,14 +39,32 @@ class ActionAuthPublicKey(ActionBase):
     def do_run(self):
         self.switch.execute('end')
         self.switch.execute('enable')
+
+        self.switch.execute('upload_file_tftp',
+                            local_file_path='pub_key.tmp',
+                            tftp_ip=self.tftpip,
+                            remote_file_path=self.keypath)
+
         self.switch.execute('conft')
 
-        self.switch.sendline('crypto key pubkey-chain userkey {}'.format(self.username))
-        self.switch.connection.expect('Type CNTL/D to finish:')
-        self.switch.sendline(self.key)
-        self.switch.sendcontrol('d')
+        self.switch.send_line(
+            'crypto key pubkey-chain userkey {} pub_key.tmp'.format(self.keyuser))
+        self.switch.expect_prompt()
 
-        self.switch.expectPrompt()
+        self.switch.execute('end')
 
-        self.switch.execute('write')
+        self.switch.send_line('del force pub_key.tmp')
+        self.switch.expect_prompt()
+        # self.switch.execute('end')
+        # self.switch.execute('enable')
+        # self.switch.execute('conft')
+
+        # self.switch.send_line('crypto key pubkey-chain userkey {}'.format(self.keyuser))
+        # self.switch.expect('Type CNTL/D to finish:')
+        # self.switch.send_line(self.key)
+        # self.switch.sendcontrol('d')
+
+        # self.switch.expect_prompt()
+
+        # self.switch.execute('write')
         return True

@@ -22,5 +22,5 @@ class CommandEnd(CommandBase):
 
     def do_run(self):
         if not self.switch.getConfigMode() == ConfigMode.GLOBAL:
-            self.switch.sendline('end')
-            self.switch.expectPrompt()
+            self.switch.send_line('end')
+            self.switch.expect_prompt()

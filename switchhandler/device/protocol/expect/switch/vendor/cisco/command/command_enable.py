@@ -24,5 +24,5 @@ class CommandEnable(CommandBase):
         pass
 
     def do_run(self):
-        self.switch.sendline('enable')
-        self.switch.expectPrompt()
+        self.switch.send_line('enable')
+        self.switch.expect_prompt()

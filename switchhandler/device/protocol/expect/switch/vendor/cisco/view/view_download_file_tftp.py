@@ -36,12 +36,12 @@ class ViewDownloadFileTFTP(CommandBase):
 
     def do_run(self):
         try:
-            self.switch.sendline(
+            self.switch.send_line(
                 'copy {} tftp://{}/{}'.format(self.local_file_path, self.tftp_ip, self.remote_file_path))
 
             # host confirmation
             self.switch.expect('Address or name of remote host \[.*\]\?')
-            self.switch.sendline()
+            self.switch.send_line()
 
             # check if host is correct and filename confirmation
             match = self.switch.expect(
@@ -50,7 +50,7 @@ class ViewDownloadFileTFTP(CommandBase):
                 print('Hote inconnu')
                 return False
 
-            self.switch.sendline()
+            self.switch.send_line()
 
             # check if all good
             match = self.switch.expect(
@@ -64,7 +64,7 @@ class ViewDownloadFileTFTP(CommandBase):
                 return False
 
             # Consume prompt response
-            self.switch.expectPrompt()
+            self.switch.expect_prompt()
         except TIMEOUT:
             print("Sauvegarde echouee a cause d'un timeout")
             print(self.switch.connection.before)

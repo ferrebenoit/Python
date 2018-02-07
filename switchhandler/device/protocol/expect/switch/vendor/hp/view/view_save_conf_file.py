@@ -5,6 +5,7 @@ Created on 9 mai 2017
 @author: ferreb
 '''
 import datetime
+import os
 
 from switchhandler.device.executable.command.command_base import CommandBase
 
@@ -63,16 +64,16 @@ class ViewSaveConfFile(CommandBase):
     def do_run(self):
         # self.switch.execute('conft')
         # self.switch.sendline('console local-terminal vt100')
-        # self.switch.expectPrompt()
+        # self.switch.expect_prompt()
         # print('/', self.switch.connection.before.decode('UTF-8'), '/')
 
         self.switch.execute('end')
 
-        self.switch.sendline('terminal length 1000')
-        self.switch.expectPrompt()
-        self.switch.sendline('show running-config')
+        self.switch.send_line('terminal length 1000')
+        self.switch.expect_prompt()
+        self.switch.send_line('show running-config')
 
-        self.switch.expectPrompt()
+        self.switch.expect_prompt()
 
         confStr = self.sanitize(self.switch.before())
         if len(confStr) == 0:
@@ -80,6 +81,9 @@ class ViewSaveConfFile(CommandBase):
             return False
 
         try:
+            if not os.path.exists(self.folder):
+                os.makedirs(self.folder)
+
             with open(self._build_filepath(self.folder, self.add_timestamp), 'w') as f:
                 f.write(confStr)
 

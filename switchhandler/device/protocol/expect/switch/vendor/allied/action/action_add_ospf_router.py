@@ -35,13 +35,13 @@ class ActionAddOSPFRouter(ActionBase):
         self.switch.execute('enable')
         self.switch.execute('conft')
 
-        self.switch.sendline('router ospf 1')
-        self.switch.expectPrompt()
+        self.switch.send_line('router ospf 1')
+        self.switch.expect_prompt()
 
-        self.switch.sendline('network {}/{} area 0'.format(
+        self.switch.send_line('network {}/{} area 0'.format(
             self.network,
             convert_to_cidr(self.network_id)
         ))
-        self.switch.expectPrompt()
+        self.switch.expect_prompt()
 
         self.switch.execute('write')

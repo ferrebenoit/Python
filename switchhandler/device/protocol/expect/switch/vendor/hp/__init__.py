@@ -5,6 +5,7 @@
 from switchhandler.device.executable.command.command_acl_add_row import CommandACLAddRow
 from switchhandler.device.protocol.expect.switch.vendor.hp.action.action_auth_public_key import ActionAuthPublicKey
 from switchhandler.device.protocol.expect.switch.vendor.hp.action.action_create_acl import ActionCreateACL
+from switchhandler.device.protocol.expect.switch.vendor.hp.action.action_create_read_username import ActionCreateReadUsername
 from switchhandler.device.protocol.expect.switch.vendor.hp.action.action_create_vlan import ActionCreateVlan
 from switchhandler.device.protocol.expect.switch.vendor.hp.command.command_acl import CommandACL
 from switchhandler.device.protocol.expect.switch.vendor.hp.command.command_acl_add_entry import CommandACLAddEntry
@@ -17,6 +18,7 @@ from switchhandler.device.protocol.expect.switch.vendor.hp.command.command_int_v
 from switchhandler.device.protocol.expect.switch.vendor.hp.command.command_ip_address import CommandIPAddress
 from switchhandler.device.protocol.expect.switch.vendor.hp.command.command_ip_helper import CommandIPHelper
 from switchhandler.device.protocol.expect.switch.vendor.hp.command.command_no_acl import CommandNoACL
+from switchhandler.device.protocol.expect.switch.vendor.hp.command.command_username import CommandUsername
 from switchhandler.device.protocol.expect.switch.vendor.hp.command.command_vlan import CommandVlan
 from switchhandler.device.protocol.expect.switch.vendor.hp.command.command_write import CommandWrite
 from switchhandler.device.protocol.expect.switch.vendor.hp.view.view_download_file_tftp import ViewDownloadFileTFTP
@@ -33,6 +35,7 @@ switchHPCommands = {
 
     "auth_public_key": ActionAuthPublicKey,
     "create_acl": ActionCreateACL,
+    "create_read_username": ActionCreateReadUsername,
     "create_vlan": ActionCreateVlan,
 
     "acl": CommandACL,
@@ -46,6 +49,7 @@ switchHPCommands = {
     "ip_address": CommandIPAddress,
     "ip_helper": CommandIPHelper,
     "no_acl": CommandNoACL,
+    "command_username": CommandUsername,
     "vlan": CommandVlan,
     "write": CommandWrite,
 

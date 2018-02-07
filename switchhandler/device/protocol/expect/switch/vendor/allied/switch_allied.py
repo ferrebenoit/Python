@@ -1,7 +1,7 @@
-from switchhandler.device.protocol.expect.switch.switch_expect import SwitchExpect, ConfigMode, Exec
-from switchhandler.device.protocol.expect.switch.vendor.allied import switchAlliedCommands
 from switchhandler.device.device_exception import CommandNotFoundException,\
     CommandParameterNotFoundException
+from switchhandler.device.protocol.expect.switch.switch_expect import SwitchExpect, ConfigMode, Exec
+from switchhandler.device.protocol.expect.switch.vendor.allied import switchAlliedCommands
 
 
 class SwitchAllied(SwitchExpect):
@@ -28,20 +28,20 @@ class SwitchAllied(SwitchExpect):
         elif self.configMode == 'config-vlan':  # vlan database
             return ConfigMode.VLAN
 
-    def expectPrompt(self, other_messages=None):
-        return super(SwitchAllied, self).expectPrompt(other_messages)
+    def expect_prompt(self, other_messages=None):
+        return super(SwitchAllied, self).expect_prompt(other_messages)
 
     def _ssh_login(self, login, password):
         self.connect()
         self.connection._spawn("ssh {}@{} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null".format(login, self.IP))
 
         # Password is found send password
-        if self.expectPrompt(other_messages=['[Pp]assword:']) == 1:
+        if self.expect_prompt(other_messages=['[Pp]assword:']) == 1:
             self.connection.sendline(password)
-            self.logInfo('Password Sent')
-            self.expectPrompt()
+            self.log_info('Password Sent')
+            self.expect_prompt()
 
-        # self.expectPrompt()  # need duplicate expect pompt
+        # self.expect_prompt()  # need duplicate expect pompt
 
         return True
 
@@ -53,8 +53,8 @@ class SwitchAllied(SwitchExpect):
     def logout(self):
         try:
             self.execute('end')
-            self.sendline('logout')
-            self.logInfo('Logout')
+            self.send_line('logout')
+            self.log_info('Logout')
 
             return True
         except CommandNotFoundException as e:

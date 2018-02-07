@@ -25,5 +25,5 @@ class CommandACL(CommandBase):
         self.add_argument(name='name', required=True)
 
     def do_run(self):
-        self.switch.sendline('access-list hardware {}'.format(self.name))
-        self.switch.expectPrompt()
+        self.switch.send_line('access-list hardware {}'.format(self.name))
+        self.switch.expect_prompt()

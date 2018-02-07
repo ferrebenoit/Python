@@ -28,10 +28,9 @@ class ActionAuthPublicKey(ActionBase):
     '''
 
     def define_argument(self):
-        self.add_argument(name='username', required=True)
-        self.add_argument(name='key', required=True)
-        self.add_argument(name='comment', required=True)
-        self.add_argument(name='tftp_ip', default=None)
+        self.add_argument(name='keyuser', required=True)
+        self.add_argument(name='keyhash', required=True)
+        self.add_argument(name='keycomment', required=True)
 
     def arg_default(self):
         # self.tftp_ip = getattr(self, 'tftp_ip', None)
@@ -41,14 +40,15 @@ class ActionAuthPublicKey(ActionBase):
         self.switch.execute('end')
         self.switch.execute('conft')
 
-        self.switch.sendline('ip ssh pubkey-chain')
-        self.switch.expectPrompt()
+        self.switch.send_line('ip ssh pubkey-chain')
+        self.switch.expect_prompt()
 
-        self.switch.sendline('username {}'.format(self.username))
-        self.switch.expectPrompt()
+        self.switch.send_line('username {}'.format(self.keyuser))
+        self.switch.expect_prompt()
 
-        self.switch.sendline('key-hash ssh-rsa {} {}'.format(self.key, self.comment))
-        self.switch.expectPrompt()
+        # use key-string store only the key hash
+        self.switch.send_line('key-hash ssh-rsa {} {}'.format(self.keyhash, self.keycomment))
+        self.switch.expect_prompt()
 
         self.switch.execute('write')
         return True

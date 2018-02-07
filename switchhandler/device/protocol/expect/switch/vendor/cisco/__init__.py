@@ -3,11 +3,11 @@
 
 '''
 from switchhandler.device.executable.command.command_acl_add_row import CommandACLAddRow
-
 from switchhandler.device.protocol.expect.switch.vendor.cisco.action.action_add_acl_to_interface import ActionAddACLToInterface
 from switchhandler.device.protocol.expect.switch.vendor.cisco.action.action_add_ospf_router import ActionAddOSPFRouter
 from switchhandler.device.protocol.expect.switch.vendor.cisco.action.action_auth_public_key import ActionAuthPublicKey
 from switchhandler.device.protocol.expect.switch.vendor.cisco.action.action_create_acl import ActionCreateACL
+from switchhandler.device.protocol.expect.switch.vendor.cisco.action.action_create_read_username import ActionCreateReadUsername
 from switchhandler.device.protocol.expect.switch.vendor.cisco.action.action_create_vlan import ActionCreateVlan
 from switchhandler.device.protocol.expect.switch.vendor.cisco.command.command_acl import CommandACL
 from switchhandler.device.protocol.expect.switch.vendor.cisco.command.command_acl_add_entry import CommandACLAddEntry
@@ -19,6 +19,7 @@ from switchhandler.device.protocol.expect.switch.vendor.cisco.command.command_in
 from switchhandler.device.protocol.expect.switch.vendor.cisco.command.command_ip_address import CommandIPAddress
 from switchhandler.device.protocol.expect.switch.vendor.cisco.command.command_ip_helper import CommandIPHelper
 from switchhandler.device.protocol.expect.switch.vendor.cisco.command.command_no_acl import CommandNoACL
+from switchhandler.device.protocol.expect.switch.vendor.cisco.command.command_username import CommandUsername
 from switchhandler.device.protocol.expect.switch.vendor.cisco.command.command_vlan import CommandVlan
 from switchhandler.device.protocol.expect.switch.vendor.cisco.command.command_write import CommandWrite
 from switchhandler.device.protocol.expect.switch.vendor.cisco.view.view_download_file_tftp import ViewDownloadFileTFTP
@@ -37,6 +38,7 @@ switchCiscoCommands = {
     "add_ospf_router": ActionAddOSPFRouter,
     "auth_public_key": ActionAuthPublicKey,
     "create_acl": ActionCreateACL,
+    "create_read_username": ActionCreateReadUsername,
     "create_vlan": ActionCreateVlan,
 
     "acl": CommandACL,
@@ -49,6 +51,7 @@ switchCiscoCommands = {
     "ip_address": CommandIPAddress,
     "ip_helper": CommandIPHelper,
     "no_acl": CommandNoACL,
+    "username": CommandUsername,
     "vlan": CommandVlan,
     "write": CommandWrite,
 

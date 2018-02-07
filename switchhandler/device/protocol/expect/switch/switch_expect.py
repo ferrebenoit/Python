@@ -98,8 +98,8 @@ class SwitchExpect(DeviceExpect):
         self.__params = val
 
     def _loadPromptState(self):
-        self.sendline()
-        self.expectPrompt()
+        self.send_line()
+        self.expect_prompt()
 
     def _build_tftp_filepath(self, folder, add_timestamp):
         filepath = "{}_{}_{}".format(self.IP, self.hostname, self.vendor)
@@ -113,8 +113,8 @@ class SwitchExpect(DeviceExpect):
 
         return filepath
 
-    def expectPrompt(self, other_messages=None):
-        match = super(SwitchExpect, self).expectPrompt(other_messages)
+    def expect_prompt(self, other_messages=None):
+        match = super(SwitchExpect, self).expect_prompt(other_messages)
 
         if not self.dryrun:
             # load swtch state

@@ -36,4 +36,4 @@ class ViewPing(CommandBase):
         pass
 
     def do_run(self):
-        self.switch.sendline('ping {} repetitions {}'.format(self.ip, self.repeat))
+        self.switch.send_line('ping {} repetitions {}'.format(self.ip, self.repeat))

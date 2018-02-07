@@ -140,6 +140,14 @@ task deployall  {
 	}
 }
 
+task buildDocSkel (type:Exec){
+	doFirst { 
+		//workingDir 'docs/'
+		commandLine 'sphinx-apidoc', '-o', 'docs', 'switchhandler', '-f'
+    }
+
+}
+
 task builddoc (type:Exec){
 	doFirst { 
 		workingDir 'documentation/'

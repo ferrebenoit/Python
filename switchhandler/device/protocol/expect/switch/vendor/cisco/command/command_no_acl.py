@@ -27,5 +27,5 @@ class CommandNoACL(CommandBase):
         self.add_argument(name='name', required=True)
 
     def do_run(self):
-        self.switch.sendline('no ip access-list extended {}'.format(self.name))
-        self.switch.expectPrompt()
+        self.switch.send_line('no ip access-list extended {}'.format(self.name))
+        self.switch.expect_prompt()

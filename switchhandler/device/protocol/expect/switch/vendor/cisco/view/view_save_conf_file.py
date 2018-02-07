@@ -5,6 +5,7 @@ Created on 9 mai 2017
 @author: ferreb
 '''
 import datetime
+import os
 import re
 
 from switchhandler.device.executable.command.command_base import CommandBase
@@ -59,7 +60,7 @@ class ViewSaveConfFile(CommandBase):
         return filepath
 
     def sanitize(self, confStr):
-        confStr = re.sub(r'show running-config\s*\n', '', confStr, flags=re.MULTILINE)
+        confStr = re.sub(r'show running-config.*\s*\n', '', confStr, flags=re.MULTILINE)
         confStr = re.sub(r'Building configuration...\s*\n', '', confStr, flags=re.MULTILINE)
         confStr = re.sub(r'Current configuration .*\s*\n', '', confStr, flags=re.MULTILINE)
         confStr = re.sub(r'! Last configuration change at .*\s*\n', '', confStr, flags=re.MULTILINE)
@@ -73,14 +74,17 @@ class ViewSaveConfFile(CommandBase):
     def do_run(self):
         self.switch.execute('end')
 
-        self.switch.sendline('terminal length 0')
-        self.switch.expectPrompt()
+        self.switch.send_line('terminal length 0')
+        self.switch.expect_prompt()
 
-        self.switch.sendline('show running-config')
-        self.switch.expectPrompt()
+        self.switch.send_line('show running-config view full')
+        self.switch.expect_prompt()
 
         confStr = self.sanitize(self.switch.before())
         try:
+            if not os.path.exists(self.folder):
+                os.makedirs(self.folder)
+
             with open(self._build_filepath(self.folder, self.add_timestamp), 'w') as f:
                 f.write(confStr)
 

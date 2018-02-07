@@ -107,7 +107,7 @@ class CommandACLAddEntry(CommandBase):
 
         # if self.inverse_src_and_dst:
             # self.switch.sendline('access-list hardware {} {} {} {}{} {} {} {}{} {} {} {}'.format(
-        self.switch.sendline('{} {} {}{} {} {} {}{} {} {}'.format(
+        self.switch.send_line('{} {} {}{} {} {} {}{} {} {}'.format(
             self.action,
             self.protocol,
             self.dst1,
@@ -119,10 +119,10 @@ class CommandACLAddEntry(CommandBase):
             self.src_port_operator,
             self.src_port
         ))
-        self.switch.expectPrompt()
+        self.switch.expect_prompt()
     # else:
         # self.switch.sendline('access-list hardware {} {} {} {}{} {} {} {}{} {} {} {}'.format(
-        self.switch.sendline('{} {} {}{} {} {} {}{} {} {}'.format(
+        self.switch.send_line('{} {} {}{} {} {} {}{} {} {}'.format(
             self.action,
             self.protocol,
             self.src1,
@@ -134,4 +134,4 @@ class CommandACLAddEntry(CommandBase):
             self.dst_port_operator,
             self.dst_port
         ))
-        self.switch.expectPrompt()
+        self.switch.expect_prompt()
