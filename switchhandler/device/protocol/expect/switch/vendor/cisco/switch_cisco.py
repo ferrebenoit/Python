@@ -8,13 +8,16 @@ Created on 23 nov. 2016
 from switchhandler.device.device_exception import CommandNotFoundException,\
     CommandParameterNotFoundException
 from switchhandler.device.protocol.expect.switch.switch_expect import SwitchExpect, ConfigMode, Exec
-from switchhandler.device.protocol.expect.switch.vendor.cisco import switchCiscoCommands
+from switchhandler.device.protocol.expect.switch.vendor.cisco import CATEGORY_CISCO
+from switchhandler.utils.decorator.class_register import registered_class_scan,\
+    get_registered_classes
 
 
+@registered_class_scan(BasePackage='switchhandler.device.protocol.expect.switch.vendor.cisco')
 class SwitchCisco(SwitchExpect):
 
     def __init__(self, IP, site=None, dryrun=False):
-        super(SwitchCisco, self).__init__(IP, 'cisco', site, dryrun)
+        super().__init__(IP, 'cisco', site, dryrun)
 
         # prompt rexex
         self._PROMPT = '(?P<hostname>[A-Za-z0-9\-]*)(?P<configModeWithParenthesis>\((?P<configMode>.*)\))*(?P<exec>[$#])$'
@@ -40,7 +43,7 @@ class SwitchCisco(SwitchExpect):
             return ConfigMode.PUBKEY_USER
 
     def expect_prompt(self, other_messages=None):
-        return super(SwitchCisco, self).expect_prompt(other_messages)
+        return super().expect_prompt(other_messages)
 
     def _ssh_login(self, login, password):
         self.connect()
@@ -88,4 +91,4 @@ class SwitchCisco(SwitchExpect):
             return False
 
     def getCommands(self):
-        return switchCiscoCommands
+        return get_registered_classes(CATEGORY_CISCO)

@@ -8,13 +8,12 @@ import re
 import sys
 import traceback
 
-from switchhandler.script.arg_from_csv import ArgFromCSV
-
 from switchhandler.device.protocol.expect.switch.vendor.allied.switch_allied import SwitchAllied
 from switchhandler.device.protocol.expect.switch.vendor.cisco.switch_cisco import SwitchCisco
 from switchhandler.device.protocol.expect.switch.vendor.hp.switch_HP import SwitchHP
 from switchhandler.device.protocol.expect.switch.vendor.microsens.switch_microsens import SwitchMicrosens
 from switchhandler.device.protocol.snmp.switch.vendor.cisco.switch_snmp_cisco import SwitchSnmpCisco
+from switchhandler.script.arg_from_csv import ArgFromCSV
 
 
 class SwitchScripter(ArgFromCSV):
@@ -66,7 +65,7 @@ class SwitchScripter(ArgFromCSV):
         if self._arguments['auth'] == 'key':
             self._arguments['password'] = None
 
-        return super(SwitchScripter, self).process()
+        return super().process()
 
     def _script_worker(self, args):
         try:

@@ -17,7 +17,7 @@ class SwitchSnmp(DeviceSnmp):
         '''
         Constructor
         '''
-        super(SwitchSnmp, self).__init__('switch', IP, vendor, site, dryrun)
+        super().__init__('switch', IP, vendor, site, dryrun)
 
     def connect(self):
         pass

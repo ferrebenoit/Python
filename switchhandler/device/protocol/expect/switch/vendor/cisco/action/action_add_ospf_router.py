@@ -5,9 +5,12 @@ Created on 9 mai 2017
 @author: ferreb
 '''
 from switchhandler.device.executable.action.action_base import ActionBase
+from switchhandler.device.protocol.expect.switch.vendor.cisco import CATEGORY_CISCO
+from switchhandler.utils.decorator.class_register import registered_class
 from switchhandler.utils.net_tools import convert_to_wildcard
 
 
+@registered_class(category=CATEGORY_CISCO, registered_name="add_ospf_router")
 class ActionAddOSPFRouter(ActionBase):
     '''Ajouter un route ospf
 

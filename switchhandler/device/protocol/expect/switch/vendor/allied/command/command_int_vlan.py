@@ -5,8 +5,11 @@ Created on 9 mai 2017
 @author: ferreb
 '''
 from switchhandler.device.executable.command.command_base import CommandBase
+from switchhandler.device.protocol.expect.switch.vendor.allied import CATEGORY_ALLIED
+from switchhandler.utils.decorator.class_register import registered_class
 
 
+@registered_class(category=CATEGORY_ALLIED, registered_name="int_vlan")
 class CommandIntVlan(CommandBase):
     '''Créer/se placer dans la configuration d'une interface Vlan
 
@@ -39,3 +42,5 @@ class CommandIntVlan(CommandBase):
         if self.name != '':
             self.switch.send_line('description {}'.format(self.name))
             self.switch.expect_prompt()
+
+        return True

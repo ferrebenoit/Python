@@ -34,6 +34,7 @@ from abc import abstractmethod
 import datetime
 from enum import Enum
 
+from switchhandler.device.device_exception import CommandSyntaxErrorException
 from switchhandler.device.protocol.expect.device_expect import DeviceExpect
 
 
@@ -54,7 +55,7 @@ class ConfigMode(Enum):
 class SwitchExpect(DeviceExpect):
 
     def __init__(self, IP, vendor, site=None, dryrun=False):
-        super(SwitchExpect, self).__init__('switch', IP, vendor, site, dryrun)
+        super().__init__('switch', IP, vendor, site, dryrun)
 
         self.__configModeWithParenthesis = None
         self.__configMode = None
@@ -114,7 +115,7 @@ class SwitchExpect(DeviceExpect):
         return filepath
 
     def expect_prompt(self, other_messages=None):
-        match = super(SwitchExpect, self).expect_prompt(other_messages)
+        match = super().expect_prompt(other_messages)
 
         if not self.dryrun:
             # load swtch state
@@ -125,3 +126,12 @@ class SwitchExpect(DeviceExpect):
             self.__exec = self.connection.match.groupdict().get('exec', None)
 
         return match
+
+    def execute(self, command_name, *args, **kwargs):
+        try:
+            return super().execute(command_name, *args, **kwargs)
+        except CommandSyntaxErrorException:
+            self.log_critical("Script will terminate changes are not written")
+            self.log_debug(self.before())
+            self.log_debug(self.after())
+            quit()

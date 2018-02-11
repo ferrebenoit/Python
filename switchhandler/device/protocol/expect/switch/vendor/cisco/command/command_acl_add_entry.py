@@ -5,9 +5,12 @@ Created on 9 mai 2017
 @author: ferreb
 '''
 from switchhandler.device.executable.command.command_base import CommandBase
+from switchhandler.device.protocol.expect.switch.vendor.cisco import CATEGORY_CISCO
+from switchhandler.utils.decorator.class_register import registered_class
 from switchhandler.utils.net_tools import convert_to_wildcard
 
 
+@registered_class(category=CATEGORY_CISCO, registered_name="acl_add_entry")
 class CommandACLAddEntry(CommandBase):
     '''Ajoute une liegne dans l'acl courante
 
@@ -63,10 +66,6 @@ class CommandACLAddEntry(CommandBase):
         self.add_argument(name='dst_port', required=True)
         self.add_argument(name='log', required=True)
         self.add_argument(name='inverse_src_and_dst', default=False)
-
-    def arg_default(self):
-        # self.inverse_src_and_dst = getattr(self, 'inverse_src_and_dst', False)
-        pass
 
     def do_run(self):
                 # if protocol is ICMP and not inverse_src_and_dst assign echo_reply to  src_port_operator

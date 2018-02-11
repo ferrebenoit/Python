@@ -15,4 +15,4 @@ class BashExpect(DeviceExpect):
         '''
         Constructor
         '''
-        super(BashExpect, self).__init__('bash', IP, vendor, site, dryrun)
+        super().__init__('bash', IP, vendor, site, dryrun)

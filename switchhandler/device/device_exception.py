@@ -16,3 +16,7 @@ class CommandNotFoundException(deviceHandlerException):
 
 class CommandParameterNotFoundException(deviceHandlerException):
     pass
+
+
+class CommandSyntaxErrorException(deviceHandlerException):
+    pass

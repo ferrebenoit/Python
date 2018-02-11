@@ -11,18 +11,23 @@ from switchhandler.device.protocol.expect.switch.vendor.cisco.switch_cisco impor
 
 
 @pytest.fixture(autouse=True, scope="module")
-def switch_cisco():
+def switch():
     return SwitchCisco('127.0.0.1', dryrun=True)
 
 
-def test_write(switch_cisco):
-    assert switch_cisco.execute('write')
+def test_write(switch):
+    assert switch.execute('write')
 
 
-def test_int_vlan(switch_cisco):
-    assert switch_cisco.execute('int_vlan', id='80')
+def test_int_vlan(switch):
+    assert switch.execute('int_vlan', id='80')
 
 
 @pytest.mark.xfail(raises=CommandParameterNotFoundException)
-def test_int_vlan_exception(switch_cisco):
-    assert switch_cisco.execute('int_vlan')
+def test_int_vlan_exception(switch):
+    assert switch.execute('int_vlan')
+
+
+@pytest.mark.xfail(raises=CommandParameterNotFoundException)
+def test_acl_add_row(switch):
+    assert switch.execute('acl_add_row')

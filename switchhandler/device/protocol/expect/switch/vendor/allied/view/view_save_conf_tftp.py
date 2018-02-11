@@ -7,8 +7,11 @@ Created on 9 mai 2017
 import datetime
 
 from switchhandler.device.executable.command.command_base import CommandBase
+from switchhandler.device.protocol.expect.switch.vendor.allied import CATEGORY_ALLIED
+from switchhandler.utils.decorator.class_register import registered_class
 
 
+@registered_class(category=CATEGORY_ALLIED, registered_name="save_conf_tftp")
 class ViewSaveConfTFTP(CommandBase):
     '''Charger un fichier sur le switch
 
@@ -36,11 +39,6 @@ class ViewSaveConfTFTP(CommandBase):
         self.add_argument(name='tftp_ip', required=True)
         self.add_argument(name='folder', required=True, default=None)
         self.add_argument(name='add_timestamp', required=True, default=False)
-
-    def arg_default(self):
-        # self.folder = getattr(self, 'folder', None)
-        # self.add_timestamp = getattr(self, 'add_timestamp', False)
-        pass
 
     def _build_tftp_filepath(self, folder, add_timestamp):
         filepath = "{}_{}_{}".format(self.switch.IP, self.switch.hostname, self.switch.vendor)

@@ -5,9 +5,12 @@ Created on 9 mai 2017
 @author: ferreb
 '''
 from switchhandler.device.executable.command.command_base import CommandBase
+from switchhandler.device.protocol.expect.switch.vendor.hp import CATEGORY_HP
+from switchhandler.utils.decorator.class_register import registered_class
 from switchhandler.utils.net_tools import convert_to_netmask
 
 
+@registered_class(category=CATEGORY_HP, registered_name="ip_address")
 class CommandIPAddress(CommandBase):
     '''configurer un adresse ip
 

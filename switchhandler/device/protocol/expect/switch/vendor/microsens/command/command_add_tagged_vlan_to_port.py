@@ -5,9 +5,12 @@ Created on 9 mai 2017
 @author: ferreb
 '''
 from switchhandler.device.executable.command.command_base import CommandBase
+from switchhandler.device.protocol.expect.switch.vendor.microsens import CATEGORY_MICROSENS
 from switchhandler.device.protocol.expect.switch.vendor.microsens.utils import convert_vlan_id_to_vlan_filter
+from switchhandler.utils.decorator.class_register import registered_class
 
 
+@registered_class(category=CATEGORY_MICROSENS, registered_name='save_conf_file')
 class CommandAddTaggedVlanToPort(CommandBase):
     '''Créer/se placer dans la configuration d'une ACL
 
@@ -30,6 +33,7 @@ class CommandAddTaggedVlanToPort(CommandBase):
 
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
+
     def define_argument(self):
         self.add_argument(name='vlan_id', required=True)
         self.add_argument(name='port', required=True)

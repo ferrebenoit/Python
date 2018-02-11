@@ -5,14 +5,16 @@ Created on 19 janv. 2018
 '''
 from abc import abstractmethod
 
+import pexpect
+
+from switchhandler.device.device import Device
+from switchhandler.device.device_exception import CommandSyntaxErrorException
+
+
 try:  # to permit tests on windows platform
     from pexpect import pxssh
 except ImportError:
     pass
-
-import pexpect
-
-from switchhandler.device.device import Device
 
 
 class DeviceExpect(Device):
@@ -24,7 +26,7 @@ class DeviceExpect(Device):
         '''
         Constructor
         '''
-        super(DeviceExpect, self).__init__(
+        super().__init__(
             device, 'expect', IP, vendor, site, dryrun)
 
         self._connection = None
@@ -132,13 +134,16 @@ class DeviceExpect(Device):
             return
 
         self.connection.PROMPT
-        expect_list = [self._PROMPT]
+        expect_list = [self._PROMPT, '% Invalid input detected at \'\^\' marker.']
         if (other_messages is not None):
             expect_list.extend(other_messages)
 
         match = self.connection.expect(expect_list)
 
-        return match
+        if match == 1:
+            raise CommandSyntaxErrorException(self.after())
+
+        return match - 1  # to ignore the '^' index that indicate syntax error
 
     @abstractmethod
     def _ssh_login(self, login, password):
@@ -158,7 +163,8 @@ class DeviceExpect(Device):
             else:
                 self.log_warning("SSH Login failed as user {}".format(login))
                 return False
-        except Exception:
+        except Exception as e:
+            raise e
             self.log_error('Connection failed with exception')
 
             self.log_warning("SSH Login failed as user {}".format(login))
