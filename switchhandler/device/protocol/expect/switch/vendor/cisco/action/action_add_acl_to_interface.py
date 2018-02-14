@@ -5,8 +5,11 @@ Created on 9 mai 2017
 @author: ferreb
 '''
 from switchhandler.device.executable.action.action_base import ActionBase
+from switchhandler.device.protocol.expect.switch.vendor.cisco import CATEGORY_CISCO
+from switchhandler.utils.decorator.class_register import registered_class
 
 
+@registered_class(category=CATEGORY_CISCO, registered_name="add_acl_to_interface")
 class ActionAddACLToInterface(ActionBase):
     '''Assigner une ACL à une Interface
 
@@ -37,10 +40,6 @@ class ActionAddACLToInterface(ActionBase):
         self.add_argument(name='acl_name', required=True)
         self.add_argument(name='interface_name', required=True)
         self.add_argument(name='inbound', default=True)
-
-    def arg_default(self):
-        # self.inbound = getattr(self, 'inbound', True)
-        pass
 
     def do_run(self):
         self.switch.execute('end')

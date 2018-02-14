@@ -1,13 +1,16 @@
 from switchhandler.device.device_exception import CommandNotFoundException,\
     CommandParameterNotFoundException
 from switchhandler.device.protocol.expect.switch.switch_expect import SwitchExpect, ConfigMode, Exec
-from switchhandler.device.protocol.expect.switch.vendor.hp import switchHPCommands
+from switchhandler.device.protocol.expect.switch.vendor.hp import CATEGORY_HP
+from switchhandler.utils.decorator.class_register import get_registered_classes,\
+    registered_class_scan
 
 
+@registered_class_scan(BasePackage='switchhandler.device.protocol.expect.switch.vendor.hp')
 class SwitchHP(SwitchExpect):
 
     def __init__(self, IP, site=None, dryrun=False):
-        super(SwitchHP, self).__init__(IP, 'hp', site, dryrun)
+        super().__init__(IP, 'hp', site, dryrun)
 
         # prompt rexex
         self._PROMPT = '(?:tty=(?:ansi|none) )*(?P<hostname>[A-Za-z0-9\-]*)(?P<configModeWithParenthesis>\((?P<configMode>.*)\))*(?P<exec>[>#]) '
@@ -17,8 +20,8 @@ class SwitchHP(SwitchExpect):
     def hostname(self):
         ''' strip the initial '1H' from the host name
         '''
-        hostname = super(SwitchHP, self).hostname
-        if not super(SwitchHP, self).hostname == 'None':
+        hostname = super().hostname
+        if not super().hostname == 'None':
             hostname = hostname[2:]
 
         return hostname
@@ -92,4 +95,4 @@ class SwitchHP(SwitchExpect):
             return False
 
     def getCommands(self):
-        return switchHPCommands
+        return get_registered_classes(CATEGORY_HP)

@@ -31,9 +31,6 @@ class CommandBase(metaclass=ABCMeta):
 
         self.define_argument()
 
-    def arg_default(self):
-        pass
-
     def run(self):
         return self.do_run()
 

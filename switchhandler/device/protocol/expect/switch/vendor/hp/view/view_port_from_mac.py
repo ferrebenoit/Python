@@ -7,9 +7,12 @@ Created on 9 mai 2017
 import re
 
 from switchhandler.device.executable.command.command_base import CommandBase
+from switchhandler.device.protocol.expect.switch.vendor.hp import CATEGORY_HP
+from switchhandler.utils.decorator.class_register import registered_class
 from switchhandler.utils.net_tools import convert_mac_HP
 
 
+@registered_class(category=CATEGORY_HP, registered_name="port_from_mac")
 class ViewPortFromMac(CommandBase):
     '''visualiser le port à l'quel une mac est associé
 
@@ -34,10 +37,6 @@ class ViewPortFromMac(CommandBase):
     def define_argument(self):
         self.add_argument(name='mac', required=True)
         self.add_argument(name='ip', default=None)
-
-    def arg_default(self):
-        # self.ip = getattr(self, 'ip', None)
-        pass
 
     def do_run(self):
         self.switch.execute('end')

@@ -4,11 +4,13 @@ Created on 9 mai 2017
 
 @author: ferreb
 '''
+from switchhandler.device.executable.command.command_base import CommandBase
+from switchhandler.device.protocol.expect.switch.vendor.allied import CATEGORY_ALLIED
+from switchhandler.utils.decorator.class_register import registered_class
 from switchhandler.utils.net_tools import convert_to_cidr
 
-from switchhandler.device.executable.command.command_base import CommandBase
 
-
+@registered_class(category=CATEGORY_ALLIED, registered_name="ip_address")
 class CommandIPAddress(CommandBase):
     '''configurer un adresse ip
 
@@ -28,6 +30,7 @@ class CommandIPAddress(CommandBase):
 
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
+
     def define_argument(self):
         self.add_argument(name='ip', required=True)
         self.add_argument(name='network_id', required=True)

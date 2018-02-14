@@ -5,8 +5,11 @@ Created on 9 mai 2017
 @author: ferreb
 '''
 from switchhandler.device.executable.command.command_base import CommandBase
+from switchhandler.device.protocol.expect.switch.vendor.hp import CATEGORY_HP
+from switchhandler.utils.decorator.class_register import registered_class
 
 
+@registered_class(category=CATEGORY_HP, registered_name="add_tagged_vlan_to_port")
 class CommandAddTaggedVlanToPort(CommandBase):
     '''Créer/se placer dans la configuration d'une ACL
 
@@ -32,6 +35,7 @@ class CommandAddTaggedVlanToPort(CommandBase):
 
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
+
     def define_argument(self):
         self.add_argument(name='vlan_id', required=True)
         self.add_argument(name='port', required=True)

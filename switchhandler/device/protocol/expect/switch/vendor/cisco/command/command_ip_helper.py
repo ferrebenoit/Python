@@ -6,8 +6,11 @@ Created on 9 mai 2017
 '''
 
 from switchhandler.device.executable.command.command_base import CommandBase
+from switchhandler.device.protocol.expect.switch.vendor.cisco import CATEGORY_CISCO
+from switchhandler.utils.decorator.class_register import registered_class
 
 
+@registered_class(category=CATEGORY_CISCO, registered_name="ip_helper")
 class CommandIPHelper(CommandBase):
     '''configurer un ip helper
 
@@ -25,6 +28,7 @@ class CommandIPHelper(CommandBase):
 
     '''
     # TODO: Check configMode self.getConfigMode() == ConfigMode.GLOBAL
+
     def define_argument(self):
         self.add_argument(name='ip', required=True)
 

@@ -4,17 +4,19 @@ Created on 8 juin 2017
 @author: ferreb
 '''
 
-from switchhandler.device.protocol.expect.switch.switch_expect import SwitchExpect, ConfigMode, Exec
-
-from switchhandler.device.protocol.expect.switch.vendor.microsens import switchMicrosensCommands
 from switchhandler.device.device_exception import CommandNotFoundException,\
     CommandParameterNotFoundException
+from switchhandler.device.protocol.expect.switch.switch_expect import SwitchExpect, ConfigMode, Exec
+from switchhandler.device.protocol.expect.switch.vendor.microsens import CATEGORY_MICROSENS
+from switchhandler.utils.decorator.class_register import registered_class_scan,\
+    get_registered_classes
 
 
+@registered_class_scan(BasePackage='switchhandler.device.protocol.expect.switch.vendor.microsens')
 class SwitchMicrosens(SwitchExpect):
 
     def __init__(self, IP, site=None, dryrun=False):
-        super(SwitchMicrosens, self).__init__(IP, 'microsens', site, dryrun)
+        super().__init__(IP, 'microsens', site, dryrun)
 
         self._PROMPT = 'Console(?P<exec>[>#])'
 
@@ -28,7 +30,7 @@ class SwitchMicrosens(SwitchExpect):
         ConfigMode.GLOBAL
 
     def expect_prompt(self):
-        return super(SwitchMicrosens, self).expect_prompt()
+        return super().expect_prompt()
 
     def send_line(self, s=''):
         if (s == ''):
@@ -74,4 +76,4 @@ class SwitchMicrosens(SwitchExpect):
             return False
 
     def getCommands(self):
-        return switchMicrosensCommands
+        return get_registered_classes(CATEGORY_MICROSENS)

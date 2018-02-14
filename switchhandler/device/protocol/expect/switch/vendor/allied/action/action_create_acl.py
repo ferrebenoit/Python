@@ -4,8 +4,11 @@ Created on 9 mai 2017
 @author: ferreb
 '''
 from switchhandler.device.executable.action.action_base import ActionBase
+from switchhandler.device.protocol.expect.switch.vendor.allied import CATEGORY_ALLIED
+from switchhandler.utils.decorator.class_register import registered_class
 
 
+@registered_class(category=CATEGORY_ALLIED, registered_name="create_acl")
 class ActionCreateACL(ActionBase):
     '''Créé une acl et y insert des entées depuis un fichier CSV
     si lacl existe déjà elle est effacée puis re-créée
@@ -31,12 +34,6 @@ class ActionCreateACL(ActionBase):
         self.add_argument(name='acl_replace', default=None)
         self.add_argument(name='inverse_src_and_dst', default=False)
         self.add_argument(name='acl_conditions', default=None)
-
-    def arg_default(self):
-        # self.acl_replace = getattr(self, 'acl_replace', None)
-        # self.inverse_src_and_dst = getattr(self, 'inverse_src_and_dst', False)
-        # self.acl_conditions = getattr(self, 'acl_conditions', None)
-        pass
 
     def do_run(self):
         self.switch.execute('end')

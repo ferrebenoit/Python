@@ -7,10 +7,10 @@ from abc import ABCMeta, abstractmethod
 import logging
 
 from switchhandler.device.device_exception import CommandNotFoundException,\
-    CommandParameterNotFoundException
+    CommandParameterNotFoundException, CommandSyntaxErrorException
 
 
-class Device(metaclass=ABCMeta):
+class Device(object, metaclass=ABCMeta):
     '''
     classdocs
     '''
@@ -105,3 +105,6 @@ class Device(metaclass=ABCMeta):
             return command.run()
         except AttributeError as e:
             raise CommandParameterNotFoundException(e)
+        except CommandSyntaxErrorException as e:
+            self.log_critical("Syntax error in command {}".format(command_name))
+            raise e

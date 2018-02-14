@@ -5,9 +5,12 @@ Created on 9 mai 2017
 '''
 
 from switchhandler.device.executable.action.action_base import ActionBase
+from switchhandler.device.protocol.expect.switch.vendor.microsens import CATEGORY_MICROSENS
 from switchhandler.device.protocol.expect.switch.vendor.microsens.utils import convert_vlan_id_to_vlan_filter
+from switchhandler.utils.decorator.class_register import registered_class
 
 
+@registered_class(category=CATEGORY_MICROSENS, registered_name='create_vlan')
 class ActionCreateVlan(ActionBase):
     '''Ajouter un Vlan avec son Id, nom, IP, netmask, ip helper
 
@@ -42,12 +45,6 @@ class ActionCreateVlan(ActionBase):
         self.add_argument(name='ip', default=None)
         self.add_argument(name='network_id', default=None)
         self.add_argument(name='ip_helper', default=None)
-
-    def arg_default(self):
-        # self.ip = getattr(self, 'ip', None)
-        # self.network_id = getattr(self, 'network_id', None)
-        # self.ip_helper = getattr(self, 'ip_helper', None)
-        pass
 
     def do_run(self):
         self.switch.send_line('set vlan filter {} en'.format(

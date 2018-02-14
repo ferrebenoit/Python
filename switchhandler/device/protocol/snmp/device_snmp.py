@@ -15,5 +15,5 @@ class DeviceSnmp(Device):
         '''
         Constructor
         '''
-        super(DeviceSnmp, self).__init__(
+        super().__init__(
             device, 'snmp', IP, vendor, site, dryrun)

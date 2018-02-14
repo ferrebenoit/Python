@@ -8,8 +8,11 @@ import datetime
 import os
 
 from switchhandler.device.executable.command.command_base import CommandBase
+from switchhandler.device.protocol.expect.switch.vendor.hp import CATEGORY_HP
+from switchhandler.utils.decorator.class_register import registered_class
 
 
+@registered_class(category=CATEGORY_HP, registered_name="save_conf_file")
 class ViewSaveConfFile(CommandBase):
     '''Charger un fichier sur le switch
 
@@ -34,11 +37,6 @@ class ViewSaveConfFile(CommandBase):
     def define_argument(self):
         self.add_argument(name='folder', default=None)
         self.add_argument(name='add_timestamp', default=False)
-
-    def arg_default(self):
-        # self.folder = getattr(self, 'folder', None)
-        # self.add_timestamp = getattr(self, 'add_timestamp', False)
-        pass
 
     def _build_filepath(self, folder, add_timestamp):
         filepath = "{}_{}_{}".format(
