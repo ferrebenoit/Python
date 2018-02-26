@@ -3,7 +3,7 @@ Created on 23 févr. 2018
 
 @author: ferre
 '''
-from pysnmp.hlapi import *
+#from pysnmp.hlapi import *
 from pysnmp.entity.engine import SnmpEngine
 from pysnmp.hlapi.auth import CommunityData
 from pysnmp.hlapi.context import ContextData
@@ -21,7 +21,7 @@ def t1():
         mvc = MibViewController(se.getMibBuilder())
     #
     # # 1.3.6.1.2.1.2.2 ('iso', 'org', 'dod', 'internet', 'mgmt', 'mib-2', 'interfaces', 'ifTable')
-    oid_iftable = ObjectIdentity('1.3.6.1.2.1.2.2')
+    oid_iftable = ObjectIdentity('IF-MIB', 'ifTable')
     oid_iftable.resolveWithMib(mvc)
 
     print("Root oid")
@@ -31,7 +31,7 @@ def t1():
     print(oid_iftable.getMibSymbol())
 
     g = nextCmd(SnmpEngine(), CommunityData('public', mpModel=1), UdpTransportTarget(
-        ('demo.snmplabs.com', 161)), ContextData(), ObjectType(ObjectIdentity('1.3.6.1.2.1.2.2')), lexicographicMode=False)
+        ('demo.snmplabs.com', 161)), ContextData(), ObjectType(ObjectIdentity('IF-MIB', 'ifTable')), lexicographicMode=False)
 
     print("\nWalking table")
     data = []
@@ -40,9 +40,9 @@ def t1():
     for errorIndication, errorStatus, errorIndex, varBinds in g:
 
         if errorIndication:
-            print('-> error', errorIndication)
+            print(errorIndication)
         elif errorStatus:
-            print('=> %s at %s' % (
+            print('%s at %s' % (
                 errorStatus.prettyPrint(),
                 errorIndex and varBinds[int(errorIndex) - 1][0] or '?'
             )
@@ -54,12 +54,10 @@ def t1():
 
                 oid = varBind[0]
                 value = varBind[1]
-                print('oid', oid.prettyPrint(), 'value', value.prettyPrint())
-                print('oid', oid, 'value', value)
-                print('oid', oid.getMibSymbol()[-1][0], 'value', value)
+
                 label = oid.getLabel()
-                #print("Label:", label)
-                #print("Mib Symbol:", oid.getMibSymbol().prettyPrint())
+                print("Label:", label)
+                print("Mib Symbol:", oid.getMibSymbol())
                 key = str(oid.getMibSymbol()[-1][0])
 
                 if not key in dIndex:
@@ -77,7 +75,6 @@ def t1():
 
 def table():
     item = 0
-
     for errorIndication, \
         errorStatus, \
         errorIndex, \
@@ -113,8 +110,10 @@ def table():
 
 
 def snmpwalk():
+    # g = nextCmd(SnmpEngine(), CommunityData('public', mpModel=1), UdpTransportTarget(
+    #    ('demo.snmplabs.com', 161)), ContextData(), ObjectType(ObjectIdentity('SNMPv2-MIB', 'sysObjectID', 0)))
     g = nextCmd(SnmpEngine(), CommunityData('public', mpModel=1), UdpTransportTarget(
-        ('demo.snmplabs.com', 161)), ContextData(), ObjectType(ObjectIdentity('SNMPv2-MIB', 'sysObjectID', 0)))
+        ('demo.snmplabs.com', 161)), ContextData(), ObjectType(ObjectIdentity('1.3.6.1.2.1.2.2')))
 
     for errorIndication, errorStatus, errorIndex, varBinds in g:
 

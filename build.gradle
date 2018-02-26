@@ -46,7 +46,9 @@ dependencies {
     python 'pypi:pexpect:4.3.1'
     python 'pypi:ptyprocess:0.5.2'
     //python 'pypi:pysmi:0.2.2'
-    python 'pypi:pysnmp:4.4.3'
+    python 'pypi:pysnmp:4.4.4'
+    python 'pypi:pysnmp-mibs:0.1.6'
+    
     //python 'pypi:packaging:16.8'
     //python 'pypi:appdirs:1.4.3'
     //test 'pypi:mock:1.3.0'
@@ -161,7 +163,7 @@ task createlocalrepo (type:Exec){
 		workingDir 'bin/'
 		commandLine 'cmd', '/c', 'IF not exist '+localRepo+' (mkdir '+localRepo+')'
 //		commandLine "java.exe", "-jar", "pivy-importer-0.6.9-all.jar", "--repo", localRepo, "setuptools:38.2.4", "pip:9.0.1", "pysnmp:4.4.3", "pexpect:4.3.1", "ptyprocess:0.5.2", "--force", "babel:1.0" 
-		commandLine "java.exe", "-jar", "pivy-importer-0.6.9-all.jar", "--repo", localRepo, "pysnmp:4.4.3", "pexpect:4.3.1", "ptyprocess:0.5.2", "--force", "babel:1.0" 
+		commandLine "java.exe", "-jar", "pivy-importer-0.6.9-all.jar", "--repo", localRepo, "pysnmp:4.4.4", "pexpect:4.3.1", "ptyprocess:0.5.2", "pysnmp-mibs:0.1.6", "--force", "babel:1.0" 
 //		commandLine "java.exe", "-jar", "pivy-importer-0.6.9-all.jar", "--repo", localRepo, "pysmi:0.2.2", "pexpect:4.3.1", "ptyprocess:0.5.2", "--force", "babel:1.0" 
     }
         
