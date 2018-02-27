@@ -11,6 +11,7 @@ from pysnmp.smi.rfc1902 import ObjectIdentity, ObjectType
 from pysnmp.hlapi.asyncore.sync.cmdgen import nextCmd, getCmd
 from pysnmp.hlapi.asyncore.transport import UdpTransportTarget
 from pysnmp.smi.view import MibViewController
+from switchhandler.utils.SNMP.snmp_client import SNMPClient
 
 
 def t1():
@@ -155,4 +156,6 @@ def get():
             print(' = '.join([x.prettyPrint() for x in varBind]))
 
 
-t1()
+# get()
+snmp = SNMPClient('demo.snmplabs.com', 'public', 'public')
+print(snmp.get_value(mib='SNMPv2-MIB', value='sysLocation'))

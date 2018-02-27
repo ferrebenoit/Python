@@ -85,5 +85,6 @@ encoding//switchhandler/device/protocol/expect/switch/vendor/microsens/view/view
 encoding//switchhandler/device/protocol/snmp/switch/switch_snmp.py=UTF-8
 encoding//switchhandler/device/protocol/snmp/switch/vendor/cisco/switch_snmp_cisco.py=UTF-8
 encoding//switchhandler/device/protocol/snmp/switch/vendor/cisco/view/view_sysdescr.py=UTF-8
+encoding//switchhandler/utils/SNMP/snmp_client.py=UTF-8
 encoding//switchhandler/utils/decorator/class_register.py=UTF-8
 encoding//switchhandler/utils/net_tools.py=utf-8
