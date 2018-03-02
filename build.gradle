@@ -166,3 +166,9 @@ task createlocalrepo (type:Exec){
     }
         
 }
+
+task buildSwitchReport (type:Exec){
+	doFirst {
+        commandLine 'python', 'analyse/doc_generator.py', "C:/Users/ferreb/git/SwitchHandler/resources/switchports.jinja", "C:/Users/ferreb/git/SwitchHandler/resources/index.jinja", "C:/Users/ferreb/Desktop/backup plan ip/csv/sauvegarde-switch", "C:/Users/ferreb/Documents/documentation_switch/source"
+	} 
+}

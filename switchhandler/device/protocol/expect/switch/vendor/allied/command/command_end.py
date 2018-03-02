@@ -5,6 +5,8 @@ Created on 9 mai 2017
 @author: ferreb
 '''
 from switchhandler.device.executable.command.command_base import CommandBase
+from switchhandler.device.protocol.expect.switch.switch_expect import ConfigMode,\
+    Exec
 from switchhandler.device.protocol.expect.switch.vendor.allied import CATEGORY_ALLIED
 from switchhandler.utils.decorator.class_register import registered_class
 
@@ -23,5 +25,6 @@ class CommandEnd(CommandBase):
         pass
 
     def do_run(self):
-        self.switch.send_line('end')
-        self.switch.expect_prompt()
+        if (not self.switch.getConfigMode() == ConfigMode.GLOBAL) and (self.switch.getExecLevel() == Exec.PRIVILEGED):
+            self.switch.send_line('end')
+            self.switch.expect_prompt()

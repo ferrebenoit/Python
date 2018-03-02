@@ -68,6 +68,8 @@ class ViewSaveConfFile(CommandBase):
     def do_run(self):
         self.switch.send_line('terminal length 0')
         self.switch.expect_prompt()
+
+        self.switch.execute('enable')
         self.switch.send_line('show running-config')
         self.switch.expect_prompt()
 

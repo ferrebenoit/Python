@@ -58,7 +58,7 @@ class AddVlanToPort(SwitchScripter):
     def _define_args(self):
         super()._define_args()
         self._arg_parser.add_argument('--port', help='The Port to configure')
-        self._arg_parser.add_argument('--vlan', help='The vlan to add')
+        self._arg_parser.add_argument('--vlan', help='The vlan to remove')
         self._arg_parser.add_argument('--description', help='set the port description', default='')
         self._arg_parser.add_argument('--portcsv', help='CSV file that contains port list')
 
@@ -73,15 +73,14 @@ class AddVlanToPort(SwitchScripter):
                     reader = csv.DictReader(csv_file, delimiter=';')
 
                     for row in reader:
-                        switch.execute('add_tagged_vlan_to_port',
+                        switch.execute('remove_tagged_vlan_from_port',
                                        vlan_id=args['vlan'],
                                        port=row['port'],
                                        description=args['description']
                                        )
 
-                switch.execute('write')
             elif ('port' in args) and ('vlan' in args):
-                switch.execute('add_tagged_vlan_to_port',
+                switch.execute('remove_tagged_vlan_from_port',
                                vlan_id=args['vlan'],
                                port=args['port'],
                                description=args['description']

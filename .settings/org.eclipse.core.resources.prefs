@@ -23,6 +23,7 @@ encoding//switchhandler/device/protocol/expect/switch/vendor/allied/command/comm
 encoding//switchhandler/device/protocol/expect/switch/vendor/allied/command/command_ip_address.py=utf-8
 encoding//switchhandler/device/protocol/expect/switch/vendor/allied/command/command_ip_helper.py=utf-8
 encoding//switchhandler/device/protocol/expect/switch/vendor/allied/command/command_no_acl.py=utf-8
+encoding//switchhandler/device/protocol/expect/switch/vendor/allied/command/command_remove_tagged_vlan_from_port.py=utf-8
 encoding//switchhandler/device/protocol/expect/switch/vendor/allied/command/command_username.py=utf-8
 encoding//switchhandler/device/protocol/expect/switch/vendor/allied/command/command_vlan.py=utf-8
 encoding//switchhandler/device/protocol/expect/switch/vendor/allied/command/command_write.py=utf-8
@@ -80,6 +81,7 @@ encoding//switchhandler/device/protocol/expect/switch/vendor/hp/view/view_save_c
 encoding//switchhandler/device/protocol/expect/switch/vendor/hp/view/view_save_conf_tftp.py=utf-8
 encoding//switchhandler/device/protocol/expect/switch/vendor/hp/view/view_upload_file_tftp.py=utf-8
 encoding//switchhandler/device/protocol/expect/switch/vendor/microsens/command/command_add_tagged_vlan_to_port.py=utf-8
+encoding//switchhandler/device/protocol/expect/switch/vendor/microsens/command/command_remove_tagged_vlan_from_port.py=utf-8
 encoding//switchhandler/device/protocol/expect/switch/vendor/microsens/command/command_write.py=utf-8
 encoding//switchhandler/device/protocol/expect/switch/vendor/microsens/utils.py=utf-8
 encoding//switchhandler/device/protocol/expect/switch/vendor/microsens/view/view_save_conf_file.py=utf-8

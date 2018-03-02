@@ -9,14 +9,14 @@ from switchhandler.device.protocol.expect.switch.vendor.allied import CATEGORY_A
 from switchhandler.utils.decorator.class_register import registered_class
 
 
-@registered_class(category=CATEGORY_ALLIED, registered_name="add_tagged_vlan_to_port")
-class CommandAddTaggedVlanToPort(CommandBase):
-    '''Créer/se placer dans la configuration d'une ACL
+@registered_class(category=CATEGORY_ALLIED, registered_name="remove_tagged_vlan_from_port")
+class CommandRemoveTaggedVlanFromPort(CommandBase):
+    '''enlever un vlan d'un port
 
-    def add_tagged_vlan_to_port(self, vlan_id, port, description=None):
-    :param vlan_id: le nom de l'ACL
+    def remove_tagged_vlan_from_port(self, vlan_id, port, description=None):
+    :param vlan_id: le nom du vlan
     :type vlan_id: int
-    :param port: le port à assigner
+    :param port: le port
     :type port: str
     :param description: la desription du port
     :type description: str
@@ -25,11 +25,11 @@ class CommandAddTaggedVlanToPort(CommandBase):
 
     Commandes exécutées::
 
-      CommandAddTaggedVlanToPort(vlan_id=80, port=port1.1.8, description="Imprimante")
+      CommandRemoveTaggedVlanFromPort(vlan_id=80, port=port1.1.8, description="Microsens")
 
       prompt# int port1.1.8
-      prompt# description Imprimante
-      prompt# 'switchport trunk allowed vlan add 80
+      prompt# description Microsens
+      prompt# 'switchport trunk allowed vlan remove 80
       prompt#
 
     '''
@@ -52,6 +52,6 @@ class CommandAddTaggedVlanToPort(CommandBase):
             self.switch.send_line('description {}'.format(self.description))
             self.switch.expect_prompt()
 
-        self.switch.send_line('switchport trunk allowed vlan add {}'.format(self.vlan_id))
+        self.switch.send_line('switchport trunk allowed vlan remove {}'.format(self.vlan_id))
         self.switch.expect_prompt()
         self.switch.execute('write')

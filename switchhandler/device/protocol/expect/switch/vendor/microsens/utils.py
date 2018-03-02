@@ -22,6 +22,7 @@ vlan_table = {
     '100': '11',
 }
 __REGEX_VLAN = 'VLAN filtering is globally (?P<status>enabled)|Port default VLAN ID is (?P<forcevid>not forced)|VLAN ID   (?P<voicevlan>\d*) is used for voice|(?P<vlanport>\s*(?P<port>[\dM])\s*(Port \d|Manager)\s*(?P<mode>hybrid|trunk|access)\s*(?P<defaultvid>\d*))|(?P<vlanfilter>^\s*(?P<vlanidx>[\d]*)\s*(?P<vlanenable>on|off)\s*VLAN filter\s\d*\s*(?P<vid>\d+)\s*off\s*0\s*(?P<portmembers>([-\dM]\s*)*)$)'
+__REGEX_POE = 'Total Input Power\s*:\s*(?P<syspow>[0-9\.]*)\sW|\s*\d\s*\(TX\)\s*(?P<powmode>auto|forced|disable)\s*(?P<powstatus>powered|off)\s*(unknown|Class (?P<powclass>\d))\s*(?P<mpower>[\d.]*)\s*W\s*(?P<mvoltage>[\d.]*)\s*V\s*(?P<maxpower>[\d.]*)\s*W\s*(unknown|Class (?P<maxpowclass>\d))'
 
 
 def convert_vlan_id_to_vlan_filter(vlan_id):
@@ -47,11 +48,16 @@ def parse_vlan(switch_conf):
         elif vlan.groupdict()['vlanfilter'] is not None:
             if vlan.groupdict()['vlanenable'] == 'on':
                 result.append('set vlan filter {} en'.format(vlan.groupdict()['vlanidx']))
-            if not vlan.groupdict()['vid'] == '0':
-                result.append('set vlan filter {} id {}'.format(vlan.groupdict()['vlanidx'], vlan.groupdict()['vid']))
+            else:
+                result.append('set vlan filter {} dis'.format(vlan.groupdict()['vlanidx']))
+            result.append('set vlan filter {} id {}'.format(vlan.groupdict()['vlanidx'], vlan.groupdict()['vid']))
 
+            port_idx = 0
             for port in re.compile('(?P<port>[-\dM])', re.MULTILINE).finditer(vlan.groupdict()['portmembers']):
-                if not port.groupdict()['port'] == '-':
+                port_idx = port_idx + 1
+                if port.groupdict()['port'] == '-':
+                    result.append('set vlan filter {} port {} dis'.format(vlan.groupdict()['vlanidx'], port_idx))
+                else:
                     result.append('set vlan filter {} port {} en'.format(vlan.groupdict()['vlanidx'], port.groupdict()['port']))
 
     return "\n".join(result)

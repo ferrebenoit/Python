@@ -41,7 +41,6 @@ class ActionCreateVlan(ActionBase):
 
     def define_argument(self):
         self.add_argument(name='name', required=True)
-        self.add_argument(name='acl_entries', required=True)
         self.add_argument(name='ip', default=None)
         self.add_argument(name='network_id', default=None)
         self.add_argument(name='ip_helper', default=None)
@@ -55,5 +54,8 @@ class ActionCreateVlan(ActionBase):
             convert_vlan_id_to_vlan_filter(self.id)))
         self.switch.send_line('set vlan filter {} port manager en'.format(
             convert_vlan_id_to_vlan_filter(self.id)))
+
+        self.switch.send_line('set system group {}'.format(
+            self.name.upper()))
 
         self.switch.execute('write')

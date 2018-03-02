@@ -10,8 +10,8 @@ from switchhandler.device.protocol.expect.switch.vendor.microsens.utils import c
 from switchhandler.utils.decorator.class_register import registered_class
 
 
-@registered_class(category=CATEGORY_MICROSENS, registered_name='add_tagged_vlan_to_port')
-class CommandAddTaggedVlanToPort(CommandBase):
+@registered_class(category=CATEGORY_MICROSENS, registered_name='remove_tagged_vlan_from_port')
+class CommandRemoveTaggedVlanFromPort(CommandBase):
     '''Créer/se placer dans la configuration d'une ACL
 
     def add_tagged_vlan_to_port(self, vlan_id, port, description=None):
@@ -41,19 +41,19 @@ class CommandAddTaggedVlanToPort(CommandBase):
 
     def do_run(self):
         self.switch.send_line(
-            'set vlan filter {} port {} en'.format(
+            'set vlan filter {} port {} dis'.format(
                 convert_vlan_id_to_vlan_filter(self.vlan_id), self.port
             )
         )
         self.switch.expect_prompt()
 
         self.switch.send_line(
-            'set vlan port {} access'.format(self.port)
+            'set vlan port {} hybrid'.format(self.port)
         )
         self.switch.expect_prompt()
 
         self.switch.send_line(
-            'set vlan port {} id {}'.format(self.port, self.vlan_id)
+            'set vlan port {} id {}'.format(self.port, 1)
         )
         self.switch.expect_prompt()
 

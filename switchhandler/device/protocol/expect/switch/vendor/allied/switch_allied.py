@@ -22,7 +22,7 @@ class SwitchAllied(SwitchExpect):
             return Exec.PRIVILEGED
 
     def getConfigMode(self):
-        if self.configMode == '':
+        if self.configMode is None:
             return ConfigMode.GLOBAL
         elif self.configMode == 'config':
             return ConfigMode.TERMINAL

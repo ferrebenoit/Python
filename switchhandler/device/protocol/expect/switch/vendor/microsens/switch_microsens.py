@@ -29,8 +29,8 @@ class SwitchMicrosens(SwitchExpect):
     def getConfigMode(self):
         ConfigMode.GLOBAL
 
-    def expect_prompt(self):
-        return super().expect_prompt()
+    def expect_prompt(self, other_messages=None):
+        return super().expect_prompt(other_messages)
 
     def send_line(self, s=''):
         if (s == ''):
@@ -50,17 +50,17 @@ class SwitchMicrosens(SwitchExpect):
         self.connection._spawn("telnet {}".format(self.IP))
 
         # in telnet microsens switch expect only password
-        self.connection.expect('Password:')
-        self.connection.send_line('{}\r\n'.format(password))
-
-        # self.send_line()
-        self.expect_prompt()
+        if self.expect_prompt(other_messages=['[Pp]assword:']) == 1:
+            print()
+            self.connection.sendline('{}\r\n'.format(password))
+            self.log_info('Password Sent')
+            # self.send_line()
+            self.expect_prompt()
 
         return True
 
     def logout(self):
         try:
-            self.execute('end')
             self.send_line('logout')
             self.log_info('Logout')
 

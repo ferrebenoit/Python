@@ -39,9 +39,13 @@ class CommandAddTaggedVlanToPort(CommandBase):
     def define_argument(self):
         self.add_argument(name='vlan_id', required=True)
         self.add_argument(name='port', required=True)
-        self.add_argument(name='description', required=True)
+        self.add_argument(name='description', required=False, default=None)
 
     def do_run(self):
+        self.switch.execute('end')
+        self.switch.execute('enable')
+        self.switch.execute('conft')
+
         self.switch.send_line('vlan {}'.format(self.vlan_id))
         self.switch.expect_prompt()
 
@@ -53,3 +57,5 @@ class CommandAddTaggedVlanToPort(CommandBase):
             self.switch.expect_prompt()
             self.switch.send_line('name {}'.format(self.description))
             self.switch.expect_prompt()
+
+        self.switch.execute('write')
