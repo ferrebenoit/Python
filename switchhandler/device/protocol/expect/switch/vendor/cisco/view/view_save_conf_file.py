@@ -6,7 +6,6 @@ Created on 9 mai 2017
 '''
 import datetime
 import os
-import re
 
 from switchhandler.device.executable.command.command_base import CommandBase
 from switchhandler.device.protocol.expect.switch.vendor.cisco import CATEGORY_CISCO
@@ -57,35 +56,19 @@ class ViewSaveConfFile(CommandBase):
 
         return filepath
 
-    def sanitize(self, confStr):
-        confStr = re.sub(r'show running-config.*\s*\n', '', confStr, flags=re.MULTILINE)
-        confStr = re.sub(r'Building configuration...\s*\n', '', confStr, flags=re.MULTILINE)
-        confStr = re.sub(r'Current configuration .*\s*\n', '', confStr, flags=re.MULTILINE)
-        confStr = re.sub(r'! Last configuration change at .*\s*\n', '', confStr, flags=re.MULTILINE)
-        confStr = re.sub(r'! NVRAM config last updated at .*\s*\n', '', confStr, flags=re.MULTILINE)
-        confStr = re.sub(r'! No configuration change since last restart\s*\n', '', confStr, flags=re.MULTILINE)
-
-        confStr = re.sub(r'ntp clock-period [0-9]*\s*\n', '', confStr, flags=re.MULTILINE)
-
-        return confStr
-
     def do_run(self):
-        self.switch.execute('end')
+        conf = self.switch.get_fact('conf')
+        if conf is None:
+            self.switch.logger.error(
+                'Backup error: Could not get configuration')
+            return False
 
-        self.switch.send_line('terminal length 0')
-        self.switch.expect_prompt()
-
-        # self.switch.send_line('show running-config view full')
-        self.switch.send_line('show running-config')
-        self.switch.expect_prompt()
-
-        confStr = self.sanitize(self.switch.before())
         try:
             if not os.path.exists(self.folder):
                 os.makedirs(self.folder)
 
             with open(self._build_filepath(self.folder, self.add_timestamp), 'w') as f:
-                f.write(confStr)
+                f.write(conf['sanitized'])
 
             self.switch.logger.info('Backup complete')
             return True

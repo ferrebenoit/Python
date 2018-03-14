@@ -19,6 +19,8 @@ class Device(object, metaclass=ABCMeta):
         '''
         Constructor
         '''
+
+        self.__fact_cache = {}
         # Create logger
         if site:
             self.logger = logging.getLogger(
@@ -91,6 +93,16 @@ class Device(object, metaclass=ABCMeta):
     def getCommands(self):
         pass
 
+    def get_fact(self, fact_name, *args, **kwargs):
+        if fact_name in self.__fact_cache:
+            return self.__fact_cache[fact_name]
+        else:
+            fact_result = self.execute(
+                'fact_{}'.format(fact_name), *args, **kwargs)
+            if fact_result is not None:
+                self.__fact_cache[fact_name] = fact_result
+            return fact_result
+
     def execute(self, command_name, *args, **kwargs):
         command_class = self.getCommands().get(command_name, None)
 
@@ -106,5 +118,6 @@ class Device(object, metaclass=ABCMeta):
         except AttributeError as e:
             raise CommandParameterNotFoundException(e)
         except CommandSyntaxErrorException as e:
-            self.log_critical("Syntax error in command {}".format(command_name))
+            self.log_critical(
+                "Syntax error in command {}".format(command_name))
             raise e
