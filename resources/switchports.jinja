@@ -19,10 +19,10 @@ Switch {{ switch.hostname }} ({{ switch.ip }})
      - Vlan
      - Speed
      - Duplex{% for interface in switch.interfaces %}
-   * - {{ interface.portspeed+interface.portnumber }}
-     - {{ interface.desc }}
-     - {{ interface.trunkingmode }}
-     - {% if interface.vlanaccess == 'None' %}{{ interface.vlanaccess }} {% else %} {{ interface.vlantagged }} {% endif %}
-     - {{ interface.speed }}
-     - {{ interface.duplex }}{% endfor %}
+   * - {{ interface.groupdict()["portspeed"]+interface.groupdict()["portnumber"] }}
+     - {{ interface.groupdict()["desc"] }}
+     - {{ interface.groupdict()["trunkingmode"] }}
+     - {% if interface.groupdict()["vlanaccess"] != 'None' %}{{ interface.groupdict()["vlanaccess"] }} {% else %} {{ interface.groupdict()["vlantagged"] }} {% endif %}
+     - {{ interface.groupdict()["speed"] }}
+     - {{ interface.groupdict()["duplex"] }}{% endfor %}
 {% endfor %}

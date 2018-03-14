@@ -164,12 +164,12 @@ class DeviceExpect(Device):
                 self.log_warning("SSH Login failed as user {}".format(login))
                 return False
         except Exception as e:
-            raise e
             self.log_error('Connection failed with exception')
 
             self.log_warning("SSH Login failed as user {}".format(login))
             self.log_debug(self.connection.before)
             self.log_debug(self.connection.after)
+            self.log_debug('Exception {}'.format(e))
             return False
 
     def try_telnet_login(self, login, password):
@@ -182,9 +182,10 @@ class DeviceExpect(Device):
             else:
                 self.log_warning("TELNET Login failed as user {}".format(login))
                 return False
-        except Exception:
+        except Exception as e:
             self.log_error('Connection failed with exception')
             self.log_warning("TELNET Login failed as user {}".format(login))
+            self.log_debug('exception : {}'.format(e))
             self.log_debug(self.connection.before)
             self.log_debug(self.connection.after)
             return False

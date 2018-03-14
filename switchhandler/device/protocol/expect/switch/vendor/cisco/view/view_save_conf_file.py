@@ -75,7 +75,8 @@ class ViewSaveConfFile(CommandBase):
         self.switch.send_line('terminal length 0')
         self.switch.expect_prompt()
 
-        self.switch.send_line('show running-config view full')
+        # self.switch.send_line('show running-config view full')
+        self.switch.send_line('show running-config')
         self.switch.expect_prompt()
 
         confStr = self.sanitize(self.switch.before())
