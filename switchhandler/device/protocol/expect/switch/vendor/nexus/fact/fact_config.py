@@ -6,11 +6,11 @@ Created on 4 févr. 2018
 import re
 
 from switchhandler.device.executable.fact.fact_base import FactBase
-from switchhandler.device.protocol.expect.switch.vendor.cisco import CATEGORY_CISCO
+from switchhandler.device.protocol.expect.switch.vendor.nexus import CATEGORY_NEXUS
 from switchhandler.utils.decorator.class_register import registered_class
 
 
-@registered_class(category=CATEGORY_CISCO, registered_name="fact_config")
+@registered_class(category=CATEGORY_NEXUS, registered_name="fact_config")
 class FactConfig(FactBase):
     '''
     retourne un dict avec deux entr�es :
@@ -26,17 +26,10 @@ class FactConfig(FactBase):
 
         confStr = re.sub(r'show running-config.*\s*\n',
                          '', confStr, flags=re.MULTILINE)
-        confStr = re.sub(r'Building configuration...\s*\n',
+        confStr = re.sub(r'!Command: show running-config.*\s*\n',
                          '', confStr, flags=re.MULTILINE)
-        confStr = re.sub(r'Current configuration .*\s*\n',
+        confStr = re.sub(r'!Time: .*\s*\n',
                          '', confStr, flags=re.MULTILINE)
-        confStr = re.sub(r'! Last configuration change at .*\s*\n',
-                         '', confStr, flags=re.MULTILINE)
-        confStr = re.sub(r'! NVRAM config last updated at .*\s*\n',
-                         '', confStr, flags=re.MULTILINE)
-        confStr = re.sub(
-            r'! No configuration change since last restart\s*\n', '', confStr, flags=re.MULTILINE)
-
         confStr = re.sub(
             r'ntp clock-period [0-9]*\s*\n', '', confStr, flags=re.MULTILINE)
 

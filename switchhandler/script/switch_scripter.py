@@ -12,6 +12,7 @@ from switchhandler.device.protocol.expect.switch.vendor.allied.switch_allied imp
 from switchhandler.device.protocol.expect.switch.vendor.cisco.switch_cisco import SwitchCisco
 from switchhandler.device.protocol.expect.switch.vendor.hp.switch_HP import SwitchHP
 from switchhandler.device.protocol.expect.switch.vendor.microsens.switch_microsens import SwitchMicrosens
+from switchhandler.device.protocol.expect.switch.vendor.nexus.switch_nexus import SwitchNexus
 from switchhandler.device.protocol.snmp.switch.vendor.cisco.switch_snmp_cisco import SwitchSnmpCisco
 from switchhandler.script.arg_from_csv import ArgFromCSV
 
@@ -23,6 +24,7 @@ class SwitchScripter(ArgFromCSV):
         ArgFromCSV.__init__(self, description, args, self._script_worker)
 
         self._logging_config(self._arguments['loglevel'].upper(), self._arguments['screenlog'] == 'yes', self._arguments['filelog'])
+        self._sharedResult = {}
 
     def _logging_config(self, loglevel, screenlog, fileLog):
         logger = logging.getLogger('switch')
@@ -73,6 +75,9 @@ class SwitchScripter(ArgFromCSV):
                 if(re.compile('cisco', flags=re.IGNORECASE).search(args['vendor'])):
                     # if(args['vendor'].lower().contains('cisco')):
                     self._script_content_cisco(SwitchCisco(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
+                if(re.compile('nexus', flags=re.IGNORECASE).search(args['vendor'])):
+                    # if(args['vendor'].lower().contains('cisco')):
+                    self._script_content_nexus(SwitchNexus(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
                 if(re.compile('hp', flags=re.IGNORECASE).search(args['vendor'])):
                     # elif(args['vendor'].lower().contains('hp')):
                     self._script_content_hp(SwitchHP(args['ip'], args.get('site', None), args['dryrun'] == 'yes'), args)
@@ -94,6 +99,9 @@ class SwitchScripter(ArgFromCSV):
 
     def _script_content_cisco(self, switch_cisco, args):
         self._common_actions(switch_cisco, args)
+
+    def _script_content_nexus(self, switch_nexus, args):
+        self._common_actions(switch_nexus, args)
 
     def _script_content_hp(self, switch_hp, args):
         self._common_actions(switch_hp, args)

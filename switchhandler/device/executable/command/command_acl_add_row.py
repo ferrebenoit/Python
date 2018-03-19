@@ -57,7 +57,7 @@ class CommandACLAddRow(CommandBase):
                 if(k in self.acl_replace):
                     self.row[k] = self.row[k].format(**self.acl_replace[k])
 
-        condition_str = getattr(self.row, 'condition', '')
+        condition_str = self.row.get('condition', '')
 
         if condition_str == '':
             condition_str = '{}'
@@ -65,7 +65,6 @@ class CommandACLAddRow(CommandBase):
 
         for k in self.acl_conditions.keys():
             if re.search(conditions.get(k, '.*'), self.acl_conditions[k], re.IGNORECASE):
-                #:
 
                 self.switch.execute('acl_add_entry',
                                     name=self.name,

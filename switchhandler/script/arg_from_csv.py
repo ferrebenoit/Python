@@ -15,7 +15,7 @@ import re
 from switchhandler.script.custom_argparse import CustomArgumentParser
 
 
-class ArgFromCSV:
+class ArgFromCSV(object):
     """This class accept a csv file as argument to fill options
 
     """
@@ -31,6 +31,12 @@ class ArgFromCSV:
         self._arguments = self._parse_argv(args)
 
         self.future_function = future_function
+
+    def before_process(self):
+        pass
+
+    def after_process(self):
+        pass
 
     def __remove_none_args(self, param_dict):
         return {k: v for k, v in param_dict.items() if v is not None}
@@ -107,7 +113,9 @@ class ArgFromCSV:
         """
             La fonction à appeler pour exécuter le script
         """
+        self.before_process()
 
+        # when reached the end of the with statement self.executor.shutdown() is called that wait for all thread completion
         with ThreadPoolExecutor(max_workers=int(self._arguments['workers'])) as self.executor:
             # Script called without csv file
             if('csvfile' not in self._arguments):
@@ -137,3 +145,5 @@ class ArgFromCSV:
 
                     for row in dict_reader:
                         self.__execute_with_csv_row(row, dict_reader.line_num == 2)  # dict_reader.line_num == 2 to check if this is the first iteration
+
+        self.after_process()

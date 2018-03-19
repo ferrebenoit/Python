@@ -5,24 +5,7 @@
    
 Site {{ site_name }} 
 ==================================================================
+le {{ datetime }}
 {% for switch in switchs %}
-Switch {{ switch.hostname }} ({{ switch.ip }})
-------------------------------------------------------------------
-
-.. list-table:: Ports du switch 
-   :header-rows: 1 
-   :stub-columns: 1 
-
-   * - Port Name 
-     - Description
-     - Trunking Mode 
-     - Vlan
-     - Speed
-     - Duplex{% for interface in switch.interfaces %}
-   * - {{ interface.groupdict()["portspeed"]+interface.groupdict()["portnumber"] }}
-     - {{ interface.groupdict()["desc"] }}
-     - {{ interface.groupdict()["trunkingmode"] }}
-     - {% if interface.groupdict()["vlanaccess"] != 'None' %}{{ interface.groupdict()["vlanaccess"] }} {% else %} {{ interface.groupdict()["vlantagged"] }} {% endif %}
-     - {{ interface.groupdict()["speed"] }}
-     - {{ interface.groupdict()["duplex"] }}{% endfor %}
+.. include:: {{site_name}}_{{switch.ip}}.rst
 {% endfor %}

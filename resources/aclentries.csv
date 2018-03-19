@@ -1,50 +1,51 @@
-index;action;protocol;src1;src2;src_port_operator;src_port;dst1;dst2;dst_port_operator;dst_port;log;comment
-10;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;443;172.17.0.0;0.0.255.255;;;;permettre l acces aux imprimantes depuis les ips de la DN
-20;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;8080;172.17.0.0;0.0.255.255;;;;permettre l acces aux imprimantes depuis les ips de la DN
-30;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;8083;172.17.0.0;0.0.255.255;;;;permettre l acces aux imprimantes depuis les ips de la DN
-40;permit;icmp;10.{vlanid}.{siteid}.0;24;;;172.17.0.0;0.0.255.255;;;;
-50;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;443;host;172.18.5.141;;;;permettre l acces aux imprimantes depuis vmp-imp1
-60;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;8080;host;172.18.5.141;;;;permettre l acces aux imprimantes depuis vmp-imp1
-70;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;8083;host;172.18.5.141;;;;permettre l acces aux imprimantes depuis vmp-imp1
-80;permit;icmp;10.{vlanid}.{siteid}.0;24;;;host;172.18.5.141;;;;
-90;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;443;host;172.18.5.142;;;;permettre l acces aux imprimantes depuis vmp-imp2
-100;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;8080;host;172.18.5.142;;;;permettre l acces aux imprimantes depuis vmp-imp2
-110;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;8083;host;172.18.5.142;;;;permettre l acces aux imprimantes depuis vmp-imp2
-120;permit;icmp;10.{vlanid}.{siteid}.0;24;;;host;172.18.5.142;;;;
-130;permit;ip;10.{vlanid}.{siteid}.0;24;;;host;192.168.7.11;;;;
-140;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;80;host;192.168.2.31;;;;
-150;permit;udp;10.{vlanid}.{siteid}.0;24;eq;162;host;192.168.2.31;;;;
-160;permit;udp;10.{vlanid}.{siteid}.0;24;eq;161;host;192.168.2.31;;;;
-170;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;80;host;192.168.2.32;;;;
-180;permit;udp;10.{vlanid}.{siteid}.0;24;eq;162;host;192.168.2.32;;;;
-190;permit;udp;10.{vlanid}.{siteid}.0;24;eq;161;host;192.168.2.32;;;;
-200;permit;tcp;10.{vlanid}.{siteid}.0;24;;;host;{secondaryserver};eq;9193;;
-210;permit;tcp;10.{vlanid}.{siteid}.0;24;;;host;{secondaryserver};eq;9192;;
-220;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;9100;host;{secondaryserver};;;;
-230;permit;tcp;10.{vlanid}.{siteid}.0;24;;;host;{secondaryserver};eq;9191;;
-240;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;80;host;{secondaryserver};;;;
-250;permit;udp;10.{vlanid}.{siteid}.0;24;eq;162;host;{secondaryserver};;;;
-260;permit;udp;10.{vlanid}.{siteid}.0;24;eq;161;host;{secondaryserver};;;;
-270;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;515;host;{secondaryserver};;;;
-280;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;80;host;172.18.5.145;;;;
-290;permit;udp;10.{vlanid}.{siteid}.0;24;eq;162;host;172.18.5.145;;;;
-300;permit;udp;10.{vlanid}.{siteid}.0;24;eq;161;host;172.18.5.145;;;;
-310;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;9090;host;172.18.5.145;;;;
-320;permit;udp;10.{vlanid}.{siteid}.0;24;eq;9090;host;172.18.5.145;;;;
-330;permit;udp;10.{vlanid}.{siteid}.0;24;eq;161;host;172.18.5.141;;;;
-340;permit;udp;10.{vlanid}.{siteid}.0;24;eq;162;host;172.18.5.141;;;;
-350;permit;tcp;10.{vlanid}.{siteid}.0;24;;;host;172.18.5.141;eq;9191;;
-360;permit;tcp;10.{vlanid}.{siteid}.0;24;;;host;172.18.5.141;eq;9192;;
-370;permit;udp;host;0.0.0.0;eq;68;host;255.255.255.255;eq;67;;
-380;permit;udp;10.{vlanid}.{siteid}.0;24;;;host;172.18.2.50;eq;123;;
-390;permit;udp;10.{vlanid}.{siteid}.0;24;;;host;172.18.2.50;eq;53;;
-400;permit;udp;10.{vlanid}.{siteid}.0;24;;;host;172.18.2.50;eq;137;;
-410;permit;udp;10.{vlanid}.{siteid}.0;24;;;host;172.18.2.60;eq;53;;
-420;permit;udp;10.{vlanid}.{siteid}.0;24;;;host;172.18.2.60;eq;137;;
-430;permit;udp;10.{vlanid}.{siteid}.0;24;;;host;172.17.2.3;eq;53;;
-440;permit;udp;10.{vlanid}.{siteid}.0;24;;;host;172.17.2.3;eq;137;;
-450;permit;tcp;10.{vlanid}.{siteid}.0;24;;;host;172.18.3.2;eq;389;;
-460;permit;tcp;10.{vlanid}.{siteid}.0;24;;;host;172.17.2.3;eq;389;;
-470;permit;tcp;10.{vlanid}.{siteid}.0;24;;;host;172.18.3.39;eq;25;;
-480;deny;udp;10.{vlanid}.{siteid}.0;24;eq;68;any;;eq;67;;
-490;deny;ip;any;;;;any;;;;log;
+index;action;protocol;src1;src2;src_port_operator;src_port;dst1;dst2;dst_port_operator;dst_port;log;comment;condition
+10;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;443;172.17.0.0;0.0.255.255;;;;permettre l acces aux imprimantes depuis les ips de la DN;
+20;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;8080;172.17.0.0;0.0.255.255;;;;permettre l acces aux imprimantes depuis les ips de la DN;
+30;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;8083;172.17.0.0;0.0.255.255;;;;permettre l acces aux imprimantes depuis les ips de la DN;
+40;permit;icmp;10.{vlanid}.{siteid}.0;24;;;172.17.0.0;0.0.255.255;;;;;
+50;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;443;host;172.18.5.141;;;;permettre l acces aux imprimantes depuis vmp-imp1;
+60;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;8080;host;172.18.5.141;;;;permettre l acces aux imprimantes depuis vmp-imp1;
+70;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;8083;host;172.18.5.141;;;;permettre l acces aux imprimantes depuis vmp-imp1;
+80;permit;icmp;10.{vlanid}.{siteid}.0;24;;;host;172.18.5.141;;;;;
+90;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;443;host;172.18.5.142;;;;permettre l acces aux imprimantes depuis vmp-imp2;
+100;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;8080;host;172.18.5.142;;;;permettre l acces aux imprimantes depuis vmp-imp2;
+110;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;8083;host;172.18.5.142;;;;permettre l acces aux imprimantes depuis vmp-imp2;
+120;permit;icmp;10.{vlanid}.{siteid}.0;24;;;host;172.18.5.142;;;;;
+130;permit;ip;10.{vlanid}.{siteid}.0;24;;;host;192.168.7.11;;;;;
+140;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;80;host;192.168.2.31;;;;;
+150;permit;udp;10.{vlanid}.{siteid}.0;24;eq;162;host;192.168.2.31;;;;;
+160;permit;udp;10.{vlanid}.{siteid}.0;24;eq;161;host;192.168.2.31;;;;;
+170;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;80;host;192.168.2.32;;;;;
+180;permit;udp;10.{vlanid}.{siteid}.0;24;eq;162;host;192.168.2.32;;;;;
+190;permit;udp;10.{vlanid}.{siteid}.0;24;eq;161;host;192.168.2.32;;;;;
+200;permit;tcp;10.{vlanid}.{siteid}.0;24;;;host;{secondaryserver};eq;9193;;;
+210;permit;tcp;10.{vlanid}.{siteid}.0;24;;;host;{secondaryserver};eq;9192;;;
+220;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;9100;host;{secondaryserver};;;;;
+230;permit;tcp;10.{vlanid}.{siteid}.0;24;;;host;{secondaryserver};eq;9191;;;
+240;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;80;host;{secondaryserver};;;;;
+250;permit;udp;10.{vlanid}.{siteid}.0;24;eq;162;host;{secondaryserver};;;;;
+260;permit;udp;10.{vlanid}.{siteid}.0;24;eq;161;host;{secondaryserver};;;;;
+270;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;515;host;{secondaryserver};;;;;
+280;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;80;host;172.18.5.145;;;;;
+290;permit;udp;10.{vlanid}.{siteid}.0;24;eq;162;host;172.18.5.145;;;;;
+300;permit;udp;10.{vlanid}.{siteid}.0;24;eq;161;host;172.18.5.145;;;;;
+310;permit;tcp;10.{vlanid}.{siteid}.0;24;eq;9090;host;172.18.5.145;;;;;
+320;permit;udp;10.{vlanid}.{siteid}.0;24;eq;9090;host;172.18.5.145;;;;;
+330;permit;udp;10.{vlanid}.{siteid}.0;24;eq;161;host;172.18.5.141;;;;;
+340;permit;udp;10.{vlanid}.{siteid}.0;24;eq;162;host;172.18.5.141;;;;;
+350;permit;tcp;10.{vlanid}.{siteid}.0;24;;;host;172.18.5.141;eq;9191;;;
+360;permit;tcp;10.{vlanid}.{siteid}.0;24;;;host;172.18.5.141;eq;9192;;;
+370;permit;udp;host;0.0.0.0;eq;68;host;255.255.255.255;eq;67;;;
+380;permit;udp;10.{vlanid}.{siteid}.0;24;;;host;172.18.2.50;eq;123;;;
+390;permit;udp;10.{vlanid}.{siteid}.0;24;;;host;172.18.2.50;eq;53;;;
+400;permit;udp;10.{vlanid}.{siteid}.0;24;;;host;172.18.2.50;eq;137;;;
+410;permit;udp;10.{vlanid}.{siteid}.0;24;;;host;172.18.2.60;eq;53;;;
+420;permit;udp;10.{vlanid}.{siteid}.0;24;;;host;172.18.2.60;eq;137;;;
+430;permit;udp;10.{vlanid}.{siteid}.0;24;;;host;172.17.2.3;eq;53;;;
+440;permit;udp;10.{vlanid}.{siteid}.0;24;;;host;172.17.2.3;eq;137;;;
+450;permit;tcp;10.{vlanid}.{siteid}.0;24;;;host;172.18.3.2;eq;389;;;
+460;permit;tcp;10.{vlanid}.{siteid}.0;24;;;host;172.17.2.3;eq;389;;;
+470;permit;tcp;10.{vlanid}.{siteid}.0;24;;;host;172.18.3.39;eq;25;;;
+480;deny;udp;10.{vlanid}.{siteid}.0;24;eq;68;any;;eq;67;;;
+490;deny;ip;any;;;;any;;;;log;;"{""vendor"":""^(?!.*allied)""}"
+490;deny;ip;10.{vlanid}.{siteid}.0;24;;;any;;;;log;;"{""vendor"":""allied""}"

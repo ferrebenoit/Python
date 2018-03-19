@@ -1,0 +1,20 @@
+
+Switch {{ switch.hostname }} ({{ switch.ip }}) 
+------------------------------------------------------------------
+
+.. list-table:: Ports du switch le {{ datetime }}
+   :header-rows: 1 
+   :stub-columns: 1 
+
+   * - Port Name 
+     - Description
+     - Trunking Mode 
+     - Vlan
+     - Speed
+     - Duplex{% for interface in switch.interfaces.values() %}
+   * - {{ interface.name }}
+     - {{ interface.description }}
+     - {{ interface.trunkingmode }}
+     - {% if interface.trunkingmode == 'access' %}{{ interface.vlanaccess }} {% else %} {{ interface.vlantagged }} {% endif %}
+     - {{ interface.speed }}
+     - {{ interface.duplex }}{% endfor %}
