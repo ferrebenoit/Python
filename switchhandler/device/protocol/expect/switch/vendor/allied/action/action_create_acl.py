@@ -36,6 +36,9 @@ class ActionCreateACL(ActionBase):
         self.add_argument(name='acl_conditions', default=None)
 
     def do_run(self):
+        if self.inverse_src_and_dst:
+            self.switch.log_info('Skip out access list for allied switch')
+            return
         self.switch.execute('end')
         self.switch.execute('enable')
         self.switch.execute('conft')

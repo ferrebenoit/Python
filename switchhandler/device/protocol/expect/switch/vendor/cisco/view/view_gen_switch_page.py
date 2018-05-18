@@ -5,15 +5,14 @@ Created on 9 mai 2017
 @author: ferreb
 '''
 import datetime
-import os
 
 from switchhandler.device.executable.command.command_base import CommandBase
 from switchhandler.device.protocol.expect.switch.vendor.cisco import CATEGORY_CISCO
 from switchhandler.utils.decorator.class_register import registered_class
 
 
-@registered_class(category=CATEGORY_CISCO, registered_name='save_conf_file')
-class ViewSaveConfFile(CommandBase):
+@registered_class(category=CATEGORY_CISCO, registered_name='gen_switch_page')
+class ViewGenSwitchPage(CommandBase):
     '''Charger un fichier sur le switch
 
 
@@ -57,21 +56,32 @@ class ViewSaveConfFile(CommandBase):
         return filepath
 
     def do_run(self):
-        conf = self.switch.get_fact('config')
-        if conf is None:
+        interfaces = self.switch.get_fact('int')
+        if interfaces is None:
             self.switch.logger.error(
-                'Backup error: Could not get configuration')
+                'Switch report error: Could not get interfaces')
             return False
 
-        try:
-            if not os.path.exists(self.folder):
-                os.makedirs(self.folder)
+        # for value in interfaces.values():
+        #    print(value.name)
+        #    print(value.portspeed)
+        #    print(value.portnumber)
+        #    print(value.description)
+        #    print(value.trunkingmode)
+        #    print(value.vlanaccess)
+        #    print(value.vlantagged)
+        #    print(value.speed)
+        #    print(value.duplex)
 
-            with open(self._build_filepath(self.folder, self.add_timestamp), 'w') as f:
-                f.write(conf['sanitized'])
-
-            self.switch.logger.info('Backup complete')
-            return True
-        except FileNotFoundError as e:
-            self.switch.logger.error('Backup error {}'.format(e))
-            return False
+        # try:
+        #    if not os.path.exists(self.folder):
+        #        os.makedirs(self.folder)
+        #
+        #    with open(self._build_filepath(self.folder, self.add_timestamp), 'w') as f:
+        #        f.write(conf['sanitized'])
+        #
+        #    self.switch.logger.info('Backup complete')
+        #    return True
+        # except FileNotFoundError as e:
+        #    self.switch.logger.error('Backup error {}'.format(e))
+        #    return False

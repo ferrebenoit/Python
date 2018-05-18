@@ -56,31 +56,19 @@ class ViewSaveConfFile(CommandBase):
 
         return filepath
 
-    def sanitize(self, confStr):
-        # str = re.sub(r'^show running-config$', '', str, flags=re.MULTILINE)
-        # str = re.sub(r'^Building configuration...$', '', str, flags=re.MULTILINE)
-        # str = re.sub(r'^Current configuration :.*$', '', str, flags=re.MULTILINE)
-        # str = re.sub(r'^! Last configuration change at .*$', '', str, flags=re.MULTILINE)
-        # str = re.sub(r'^! NVRAM config last updated at .*$', '', str, flags=re.MULTILINE)
-
-        return "\n".join(confStr.split('\n')[1:])
-
     def do_run(self):
-        self.switch.send_line('terminal length 0')
-        self.switch.expect_prompt()
-
-        self.switch.execute('enable')
-        self.switch.send_line('show running-config')
-        self.switch.expect_prompt()
-
-        confStr = self.sanitize(self.switch.before())
+        conf = self.switch.get_fact('config')
+        if conf is None:
+            self.switch.logger.error(
+                'Backup error: Could not get configuration')
+            return False
 
         try:
             if not os.path.exists(self.folder):
                 os.makedirs(self.folder)
 
             with open(self._build_filepath(self.folder, self.add_timestamp), 'w') as f:
-                f.write(confStr)
+                f.write(conf['sanitized'])
 
             self.switch.logger.info('Backup complete')
             return True

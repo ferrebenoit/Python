@@ -6,8 +6,7 @@ Created on 22 d�c. 2017
 from abc import ABCMeta, abstractmethod
 import logging
 
-from switchhandler.device.device_exception import CommandNotFoundException,\
-    CommandParameterNotFoundException, CommandSyntaxErrorException
+from switchhandler.device.device_exception import CommandParameterNotFoundException, CommandSyntaxErrorException
 
 
 class Device(object, metaclass=ABCMeta):
@@ -19,6 +18,8 @@ class Device(object, metaclass=ABCMeta):
         '''
         Constructor
         '''
+
+        self.__fact_cache = {}
         # Create logger
         if site:
             self.logger = logging.getLogger(
@@ -91,13 +92,30 @@ class Device(object, metaclass=ABCMeta):
     def getCommands(self):
         pass
 
+    def get_fact(self, fact_name, *args, **kwargs):
+        self.log_info('Fact : Load "{}"'.format(fact_name))
+        if fact_name in self.__fact_cache:
+            self.log_info('Fact : Get "{}" from cache'.format(fact_name))
+            return self.__fact_cache[fact_name]
+        else:
+            self.log_info('Fact : Retreive "{}" from device'.format(fact_name))
+            fact_result = self.execute(
+                'fact_{}'.format(fact_name), *args, **kwargs)
+            if fact_result is not None:
+                self.__fact_cache[fact_name] = fact_result
+                self.log_info('Fact : Store "{}" to cache'.format(fact_name))
+
+            return fact_result
+
     def execute(self, command_name, *args, **kwargs):
         command_class = self.getCommands().get(command_name, None)
 
         # TODO: Raise excpetion or add an log entry warning
         if command_class is None:
-            raise CommandNotFoundException(
-                "command with Name {} not implemented".format(command_name))
+            self.log_warning("command with Name {} not implemented".format(command_name))
+            return False
+            # raise CommandNotFoundException(
+            #    "command with Name {} not implemented".format(command_name))
 
         command = command_class(self, *args, **kwargs)
 
@@ -106,5 +124,6 @@ class Device(object, metaclass=ABCMeta):
         except AttributeError as e:
             raise CommandParameterNotFoundException(e)
         except CommandSyntaxErrorException as e:
-            self.log_critical("Syntax error in command {}".format(command_name))
+            self.log_critical(
+                "Syntax error in command {}".format(command_name))
             raise e

@@ -20,7 +20,7 @@ class SwitchCisco(SwitchExpect):
         super().__init__(IP, 'cisco', site, dryrun)
 
         # prompt rexex
-        self._PROMPT = '(?P<hostname>[A-Za-z0-9\-]*)(?P<configModeWithParenthesis>\((?P<configMode>.*)\))*(?P<exec>[$#])$'
+        self._PROMPT = '(?P<hostname>[A-Za-z0-9\-]*)(?P<configModeWithParenthesis>\((?P<configMode>.*)\))*(?P<exec>[$#])\s*$'
 
     def getExecLevel(self):
         if self.exec_mode == '$':

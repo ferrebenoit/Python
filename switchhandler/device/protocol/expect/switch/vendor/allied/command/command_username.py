@@ -40,4 +40,6 @@ class CommandUsername(CommandBase):
             self.level,
             self.userpassword))
         self.switch.expect_prompt()
+        self.switch.send_line('ssh server allow-users {}'.format(self.username))
+        self.switch.expect_prompt()
         return True
