@@ -134,16 +134,8 @@ class DeviceExpect(Device):
             return
 
         self.connection.PROMPT
-        expect_list = [self._PROMPT, '% Invalid input detected at \'\^\' marker.']
-        if (other_messages is not None):
-            expect_list.extend(other_messages)
 
-        match = self.connection.expect(expect_list)
-
-        if match == 1:
-            raise CommandSyntaxErrorException(self.after())
-
-        return match - 1  # to ignore the '^' index that indicate syntax error
+        return self.connection.expect(other_messages)
 
     @abstractmethod
     def _ssh_login(self, login, password):
@@ -180,7 +172,8 @@ class DeviceExpect(Device):
                 self.logger.info("TELNET Login ok as user {}".format(login))
                 return True
             else:
-                self.log_warning("TELNET Login failed as user {}".format(login))
+                self.log_warning(
+                    "TELNET Login failed as user {}".format(login))
                 return False
         except Exception as e:
             self.log_error('Connection failed with exception')

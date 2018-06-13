@@ -3,10 +3,12 @@ from switchhandler.device.device_exception import CommandNotFoundException,\
 from switchhandler.device.protocol.expect.switch.switch_expect import SwitchExpect, ConfigMode, Exec
 from switchhandler.device.protocol.expect.switch.vendor.allied import CATEGORY_ALLIED
 from switchhandler.utils.decorator.class_register import get_registered_classes,\
-    registered_class_scan
+    registered_class_scan, registered_class
+from switchhandler.device import CATEGORY_DEVICE
 
 
 @registered_class_scan(BasePackage='switchhandler.device.protocol.expect.switch.vendor.allied')
+@registered_class(category=CATEGORY_DEVICE, registered_name='allied')
 class SwitchAllied(SwitchExpect):
 
     def __init__(self, IP, site=None, dryrun=False):
@@ -36,7 +38,8 @@ class SwitchAllied(SwitchExpect):
 
     def _ssh_login(self, login, password):
         self.connect()
-        self.connection._spawn("ssh {}@{} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null".format(login, self.IP))
+        self.connection._spawn(
+            "ssh {}@{} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null".format(login, self.IP))
 
         # Password is found send password
         if self.expect_prompt(other_messages=['[Pp]assword:']) == 1:

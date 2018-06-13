@@ -3,10 +3,10 @@ Created on 19 janv. 2018
 
 @author: ferre
 '''
-from switchhandler.device.protocol.expect.unix.unix_expect import UnixExpect
+from switchhandler.device.protocol.expect.device_expect import DeviceExpect
 
 
-class BashExpect(UnixExpect):
+class UnixExpect(DeviceExpect):
     '''
     classdocs
     '''
@@ -15,4 +15,4 @@ class BashExpect(UnixExpect):
         '''
         Constructor
         '''
-        super().__init__('bash', IP, vendor, site, dryrun)
+        super().__init__('unix', IP, vendor, site, dryrun)

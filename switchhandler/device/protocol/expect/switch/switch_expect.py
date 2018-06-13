@@ -115,7 +115,15 @@ class SwitchExpect(DeviceExpect):
         return filepath
 
     def expect_prompt(self, other_messages=None):
+        expect_list = ['% Invalid input detected at \'\^\' marker.',
+                       self._PROMPT]
+        if (other_messages is not None):
+            expect_list.extend(other_messages)
+
         match = super().expect_prompt(other_messages)
+
+        if match == 1:
+            raise CommandSyntaxErrorException(self.after())
 
         if not self.dryrun:
             # load swtch state
@@ -125,7 +133,7 @@ class SwitchExpect(DeviceExpect):
             self.__configMode = self.connection.match.groupdict().get('configMode', None)
             self.__exec = self.connection.match.groupdict().get('exec', None)
 
-        return match
+        return match - 1  # to ignore the '^' index that indicate syntax error
 
     def execute(self, command_name, *args, **kwargs):
         try:
