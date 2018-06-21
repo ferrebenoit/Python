@@ -8,8 +8,6 @@ from abc import abstractmethod
 import pexpect
 
 from switchhandler.device.device import Device
-from switchhandler.device.device_exception import CommandSyntaxErrorException
-
 
 try:  # to permit tests on windows platform
     from pexpect import pxssh

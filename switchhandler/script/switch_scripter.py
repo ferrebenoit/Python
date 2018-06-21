@@ -14,7 +14,7 @@ from switchhandler.utils.decorator.class_register import registered_class_scan,\
 from switchhandler.device import CATEGORY_DEVICE_EXPECT, CATEGORY_DEVICE_SNMP
 
 
-@registered_class_scan(BasePackage='switchhandler.device.protocol', MaxDepth=4)
+@registered_class_scan(BasePackage='switchhandler.device.protocol.expect', MaxDepth=4)
 class SwitchScripter(ArgFromCSV):
     "Class That add common options for switch handling"
 

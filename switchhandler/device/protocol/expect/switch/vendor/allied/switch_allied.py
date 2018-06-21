@@ -4,11 +4,11 @@ from switchhandler.device.protocol.expect.switch.switch_expect import SwitchExpe
 from switchhandler.device.protocol.expect.switch.vendor.allied import CATEGORY_ALLIED
 from switchhandler.utils.decorator.class_register import get_registered_classes,\
     registered_class_scan, registered_class
-from switchhandler.device import CATEGORY_DEVICE
+from switchhandler.device import CATEGORY_DEVICE_EXPECT
 
 
 @registered_class_scan(BasePackage='switchhandler.device.protocol.expect.switch.vendor.allied')
-@registered_class(category=CATEGORY_DEVICE, registered_name='allied')
+@registered_class(category=CATEGORY_DEVICE_EXPECT, registered_name='allied')
 class SwitchAllied(SwitchExpect):
 
     def __init__(self, IP, site=None, dryrun=False):

@@ -28,10 +28,24 @@ def registered_class(*decorator_args, **decorator_kwargs):
 
         registered_name = decorator_kwargs.get('registered_name', None)
 
-        category[registered_name] = cls
+        if registered_name not in category.keys():
+            print("register module: " + registered_name)
+            category[registered_name] = cls
 
         return cls
     return decorated
+
+
+def recursive_walk(package, func_ptr=None, max_depth=-1):
+
+    for _, modname, ispkg in pkgutil.iter_modules(path=package.__path__):
+        print("DEPTH {} > load module: {}".format(
+            max_depth, package.__name__ + '.' + modname))
+        module = importlib.import_module('.' + modname, package.__name__)
+        if ispkg and max_depth != 0:
+            print("DEPTH  {} > walk: {}".format(max_depth,
+                                                package.__name__ + '.' + modname))
+            recursive_walk(module, func_ptr, (max_depth - 1))
 
 
 def registered_class_scan(*decorator_args, **decorator_kwargs):
@@ -41,16 +55,27 @@ def registered_class_scan(*decorator_args, **decorator_kwargs):
     @registered_class_scan(BasePackage='switchhandler.device.protocol.expect.switch.vendor.cisco')
     '''
     def decorated(cls):
+        print("search Basepackage: " + decorator_kwargs['BasePackage'])
         # import base package
         package = importlib.import_module(decorator_kwargs['BasePackage'])
-        # for each module check if this is a package
-        for _, modname, ispkg in pkgutil.iter_modules(package.__path__):
-            if ispkg:
-                # if this is a package scan its content and import modules not packages
-                sub_package = importlib.import_module('.' + modname, package.__name__)
-                for _, sub_modname, sub_ispkg in pkgutil.iter_modules(sub_package.__path__):
-                    if not sub_ispkg:
-                        importlib.import_module('.' + sub_modname, sub_package.__name__)
+        recursive_walk(package, max_depth=-1)
+#        for _, modname, ispkg in pkgutil.walk_packages(path=package.__path__):
+#            print("load package: " + modname)
+#            if not ispkg:
+#                print("load module: " + modname)
+#                importlib.import_module('.' + modname, package.__name__)
+#
+#        # for each module check if this is a package
+#        for _, modname, ispkg in pkgutil.iter_modules(package.__path__):
+#            if ispkg:
+#                # if this is a package scan its content and import modules not
+#                # packages
+#                sub_package = importlib.import_module(
+#                    '.' + modname, package.__name__)
+#                for _, sub_modname, sub_ispkg in pkgutil.iter_modules(sub_package.__path__):
+#                    if not sub_ispkg:
+#                        importlib.import_module(
+#                            '.' + sub_modname, sub_package.__name__)
 
         return cls
         # use wrapt if subclassing

@@ -16,4 +16,6 @@ class SwitchNexus(SwitchCisco):
 
     def getCommands(self):
         # merge two dict category nexus replace category cisco
-        return {**get_registered_classes(CATEGORY_CISCO), **get_registered_classes(CATEGORY_NEXUS)}
+        # return {**get_registered_classes(CATEGORY_CISCO),
+        # **get_registered_classes(CATEGORY_NEXUS)}
+        return get_registered_classes(CATEGORY_CISCO)
