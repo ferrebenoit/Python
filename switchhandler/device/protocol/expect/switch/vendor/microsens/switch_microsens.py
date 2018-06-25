@@ -9,10 +9,12 @@ from switchhandler.device.device_exception import CommandNotFoundException,\
 from switchhandler.device.protocol.expect.switch.switch_expect import SwitchExpect, ConfigMode, Exec
 from switchhandler.device.protocol.expect.switch.vendor.microsens import CATEGORY_MICROSENS
 from switchhandler.utils.decorator.class_register import registered_class_scan,\
-    get_registered_classes
+    get_registered_classes, registered_class
+from switchhandler.device import CATEGORY_DEVICE_EXPECT
 
 
 @registered_class_scan(BasePackage='switchhandler.device.protocol.expect.switch.vendor.microsens')
+@registered_class(category=CATEGORY_DEVICE_EXPECT, registered_name='allied')
 class SwitchMicrosens(SwitchExpect):
 
     def __init__(self, IP, site=None, dryrun=False):

@@ -3,10 +3,12 @@ from switchhandler.device.device_exception import CommandNotFoundException,\
 from switchhandler.device.protocol.expect.switch.switch_expect import SwitchExpect, ConfigMode, Exec
 from switchhandler.device.protocol.expect.switch.vendor.hp import CATEGORY_HP
 from switchhandler.utils.decorator.class_register import get_registered_classes,\
-    registered_class_scan
+    registered_class_scan, registered_class
+from switchhandler.device import CATEGORY_DEVICE_EXPECT
 
 
 @registered_class_scan(BasePackage='switchhandler.device.protocol.expect.switch.vendor.hp')
+@registered_class(category=CATEGORY_DEVICE_EXPECT, registered_name='allied')
 class SwitchHP(SwitchExpect):
 
     def __init__(self, IP, site=None, dryrun=False):
@@ -14,7 +16,8 @@ class SwitchHP(SwitchExpect):
 
         # prompt rexex
         self._PROMPT = '(?:tty=(?:ansi|none) )*(?P<hostname>[A-Za-z0-9\-]*)(?P<configModeWithParenthesis>\((?P<configMode>.*)\))*(?P<exec>[>#]) '
-        # self._PROMPT = '(?:tty=(?:ansi|none) )*([A-Za-z0-9\-]*)(\((.*)\))*([>#])'
+        # self._PROMPT = '(?:tty=(?:ansi|none)
+        # )*([A-Za-z0-9\-]*)(\((.*)\))*([>#])'
 
     @property
     def hostname(self):
@@ -43,7 +46,8 @@ class SwitchHP(SwitchExpect):
 
     def _ssh_login(self, login, password):
         self.connect()
-        self.connection._spawn("ssh {}@{} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null".format(login, self.IP))
+        self.connection._spawn(
+            "ssh {}@{} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null".format(login, self.IP))
 
         if password is not None:
             self.connection.expect('[Pp]assword:')

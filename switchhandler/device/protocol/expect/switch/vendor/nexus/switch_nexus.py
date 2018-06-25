@@ -8,10 +8,12 @@ from switchhandler.device.protocol.expect.switch.vendor.cisco import CATEGORY_CI
 from switchhandler.device.protocol.expect.switch.vendor.cisco.switch_cisco import SwitchCisco
 from switchhandler.device.protocol.expect.switch.vendor.nexus import CATEGORY_NEXUS
 from switchhandler.utils.decorator.class_register import registered_class_scan,\
-    get_registered_classes
+    get_registered_classes, registered_class
+from switchhandler.device import CATEGORY_DEVICE_EXPECT
 
 
 @registered_class_scan(BasePackage='switchhandler.device.protocol.expect.switch.vendor.nexus')
+@registered_class(category=CATEGORY_DEVICE_EXPECT, registered_name='allied')
 class SwitchNexus(SwitchCisco):
 
     def getCommands(self):
